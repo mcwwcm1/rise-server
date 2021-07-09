@@ -9,10 +9,10 @@ This document was looking a bit lonely so I added a pic:
 
 ## How to compile
 1. Be cool
-2. Have gcc and make installed, hopefully recent versions or whatever
+2. Have gcc and make installed, most recent version of each
 3. Also have libboost-dev or equivalent installed
-4. Go-Go Gadget to root directory
-5. make all
+4. Navigate to project directory
+5. "make all"
 
 ## Helpful Links:
 
