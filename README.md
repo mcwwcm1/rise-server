@@ -17,5 +17,4 @@ This document was looking a bit lonely so I added a pic:
 ## Helpful Links:
 
 * https://github.com/boostorg/beast
-* https://github.com/jtv/libpqxx
 * Link to cppcon18 talk describing beast usage: https://youtu.be/7FQwAjELMek
