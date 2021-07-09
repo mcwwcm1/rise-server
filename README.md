@@ -4,9 +4,18 @@
 
 A game server written primarily in C++ using Beast and libpqxx.
 
-## Helpful Links
-### Github links
-https://github.com/boostorg/beast
-https://github.com/jtv/libpqxx
-### References
-Link to cppcon18 talk describing beast usage: https://youtu.be/7FQwAjELMek
+This document was looking a bit lonely so I added a pic:
+![Cool baby](https://media.discordapp.net/attachments/457351677452877835/863124884565786655/14919_mirror.jpg?width=737&height=460)
+
+## How to compile
+1. Be cool
+2. Have gcc and make installed, hopefully recent versions or whatever
+3. Also have libboost-dev or equivalent installed
+4. Go-Go Gadget to root directory
+5. make all
+
+## Helpful Links:
+
+* https://github.com/boostorg/beast
+* https://github.com/jtv/libpqxx
+* Link to cppcon18 talk describing beast usage: https://youtu.be/7FQwAjELMek
