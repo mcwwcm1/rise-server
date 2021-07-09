@@ -5,7 +5,7 @@
 A game server written primarily in C++ using Beast and SQLite.
 
 This document was looking a bit lonely so I added a pic:
-![Cool baby](https://media.discordapp.net/attachments/457351677452877835/863124884565786655/14919_mirror.jpg?width=737&height=460)
+![Cool baby](https://media.discordapp.net/attachments/457351677452877835/863124884565786655/14919_mirror.jpg?width=200&height=100)
 
 ## How to compile
 1. Be cool
