@@ -25,6 +25,15 @@ void fail(beast::error_code ec, char const* what)
 	std::cerr << what << ": " << ec.message() << "\n";
 }
 
+struct grossGarbageDataType{
+	enum {is_int, is_float, is_double} type;
+	union {
+		int ival;
+		float fval;
+		double dval;
+	} var;
+};
+
 // Echoes back all received WebSocket messages
 class session : public std::enable_shared_from_this<session>
 {
