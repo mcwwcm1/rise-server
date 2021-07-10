@@ -23,13 +23,17 @@ struct Float3
 	Float3 normalized();
 	Float3 absolute();
 	Float3 sign();
+	Float3 round();
+	bool isUniform();
 
 	string str();
 };
 
-static float dot(Float3 a, Float3 b);
-static Float3 cross(Float3 a, Float3 b);
-static Float3 reflect(Float3 vec, Float3 norm);
+float dot(Float3 a, Float3 b);
+Float3 cross(Float3 a, Float3 b);
+Float3 tripleProduct(Float3 a, Float3 b, Float3 c);
+Float3 reflect(Float3 vec, Float3 norm);
+Float3 clamp(Float3 vec, Float3 min, Float3 max);
 
 Float3 operator + (const Float3 a, const Float3 b);
 Float3 operator - (const Float3 a, const Float3 b);
