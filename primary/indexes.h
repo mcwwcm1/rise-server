@@ -32,7 +32,7 @@ void EchoTest()
 	double testDouble = argumentBuffer.get().var.dval;
 	bufferAccessMutex.unlock();
 
-	std::cout << "Primary Function has run" << std::endl;
+	printf("Primary Function has run\n");
 }
 
 void EchoTestParser(std::string& arguments)
@@ -46,7 +46,7 @@ void EchoTestParser(std::string& arguments)
 	//Unlock buffers
 	bufferAccessMutex.unlock();
 
-	std::cout << "Parsing Function has run" << "/n";
+	printf("Parsing Function has run\n");
 }
 
 

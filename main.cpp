@@ -21,6 +21,9 @@ namespace websocket = beast::websocket;
 namespace net = boost::asio;
 using tcp = boost::asio::ip::tcp;
 
+//Declare the map to be used for command parsing (populated in main)
+std::unordered_map<std::string, parsing_function> parseMap;
+
 //Failure Reporting
 void fail(beast::error_code ec, char const* what)
 {
@@ -32,12 +35,6 @@ class session : public std::enable_shared_from_this<session>
 {
 	websocket::stream<beast::tcp_stream> ws_;
 	beast::flat_buffer buffer_;
-
-	// Initialize buffers for arguments and functions
-	// CircularBuffer<int> functionBuffer;
-	// CircularBuffer<PrimaryArgument> argumentBuffer;
-
-
 
 public:
 	// Take ownership of the socket
@@ -122,6 +119,9 @@ public:
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));
+		// Copy data to string for passing
+		std::string arguments = "";
+		parseMap["echo"](arguments);
 	}
 
 	void on_write(
@@ -233,14 +233,10 @@ private:
 int main(int argc, char* argv[])
 {
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
-
-	//Declare parsing map to be populated with strings and associate parsing functions
-	std::unordered_map<std::string, parsing_function> parseMap;
-
 	//Populate parseMap
 	parseMap["echo"] = EchoTestParser;
 
-	//-----------------------End of function initialization step----------------------------------
+	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments
 	if (argc != 4)
 	{
@@ -269,5 +265,6 @@ int main(int argc, char* argv[])
 		{
 			ioc.run();
 		});
+	ioc.run();
 	return EXIT_SUCCESS;
 }
