@@ -13,7 +13,7 @@ public:
 
 	void put(T item)
 	{
-		std::lock_guard<std::mutex> lock(mutex_);
+		//std::lock_guard<std::mutex> lock(mutex_);
 
 		buf_[head_] = item;
 
@@ -29,7 +29,7 @@ public:
 
 	T get()
 	{
-		std::lock_guard<std::mutex> lock(mutex_);
+		//std::lock_guard<std::mutex> lock(mutex_);
 
 		if(empty())
 		{
@@ -46,7 +46,7 @@ public:
 
 	void reset()
 	{
-		std::lock_guard<std::mutex> lock(mutex_);
+		//std::lock_guard<std::mutex> lock(mutex_);
 		head_ = tail_;
 		full_ = false;
 	}
@@ -86,6 +86,16 @@ public:
 
 		return size;
 	}
+	/*
+	void unconditionalLock()
+	{
+		mutex_.lock();
+	}
+	void unconditionalUnlock()
+	{
+		mutex_.unlock();
+	}
+	*/
 
 private:
 	std::mutex mutex_;

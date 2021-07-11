@@ -4,7 +4,9 @@
 #ifndef INDEXES_H
 #define INDEXES_H
 
-#include <unordered_map>
+//Declare a test type for function pointer
+typedef void (*primary_function) ();
+typedef void (*parsing_function) (std::string&);
 
 //Define struct for containing function arguments
 struct PrimaryArgument {
@@ -16,24 +18,36 @@ struct PrimaryArgument {
 	} var;
 };
 
+//Set up global mutex for managing buffer access
+std::mutex bufferAccessMutex;
+//Scopeless declaration of buffers
+CircularBuffer<primary_function> functionBuffer(1000);
+CircularBuffer<PrimaryArgument> argumentBuffer(1000);
+
 // Just to test if this all is even possible
-void EchoTest(CircularBuffer<PrimaryArgument>& argumentBuffer)
+void EchoTest()
 {
-	std::cout << "Test";
+	//See Parser for explanation
+	bufferAccessMutex.lock();
+	double testDouble = argumentBuffer.get().var.dval;
+	bufferAccessMutex.unlock();
+
+	std::cout << "Primary Function has run" << std::endl;
 }
 
-//Declare a test type for function pointer
-typedef void (*parsing_function) (std::string&);
-typedef void (*primary_function) (CircularBuffer<PrimaryArgument>&);
+void EchoTestParser(std::string& arguments)
+{
+	//Parsing shit goes here
 
-//Declare parsing map to be populated with strings and associate parsing functions
-std::unordered_map<std::string, parsing_function> parseMap;
-//Declare array of ints to be associated with executing functions in the main thread
-primary_function funcArr[1];
+	//Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+	//Put function pointer
+	functionBuffer.put(EchoTest);
+	//Unlock buffers
+	bufferAccessMutex.unlock();
 
-//Populate parseMap
-parseMap["echo"] = EchoTest;
+	std::cout << "Parsing Function has run" << "/n";
+}
 
-//Populate funcArr
 
 #endif

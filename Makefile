@@ -1,6 +1,6 @@
 #Environment
 CXX = g++
-CXXFLAGS = -g -Wall -Werror -pthread
+CXXFLAGS = -g -Wall -pthread -std=c++20
 
 #The build target
 TARGETS=buffertest

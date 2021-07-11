@@ -10,6 +10,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <unordered_map>
 
 #include "circularbuffer/circularbuffer.h"
 #include "primary/indexes.h"
@@ -24,13 +25,19 @@ using tcp = boost::asio::ip::tcp;
 void fail(beast::error_code ec, char const* what)
 {
 	std::cerr << what << ": " << ec.message() << "\n";
-}	
+}
 
 // Echoes back all received WebSocket messages
 class session : public std::enable_shared_from_this<session>
 {
 	websocket::stream<beast::tcp_stream> ws_;
 	beast::flat_buffer buffer_;
+
+	// Initialize buffers for arguments and functions
+	// CircularBuffer<int> functionBuffer;
+	// CircularBuffer<PrimaryArgument> argumentBuffer;
+
+
 
 public:
 	// Take ownership of the socket
@@ -223,16 +230,24 @@ private:
 };
 //-------------------End of listener description-------------------------
 
-
 int main(int argc, char* argv[])
 {
+	//-------------------------Intialize function parsing map, array and buffers---------------------------
+
+	//Declare parsing map to be populated with strings and associate parsing functions
+	std::unordered_map<std::string, parsing_function> parseMap;
+
+	//Populate parseMap
+	parseMap["echo"] = EchoTestParser;
+
+	//-----------------------End of function initialization step----------------------------------
 	// Check command line arguments
 	if (argc != 4)
 	{
 		std::cerr <<
-			"Usage: websocket-server-async <address> <port> <threads>\n" <<
+			"Usage: <address> <port> <threads>\n" <<
             "Example:\n" <<
-            "    websocket-server-async 0.0.0.0 8080 1\n";
+            "    executablename 0.0.0.0 8080 1\n";
 		return EXIT_FAILURE;
 	}
 	auto const address = net::ip::make_address(argv[1]);
@@ -254,7 +269,5 @@ int main(int argc, char* argv[])
 		{
 			ioc.run();
 		});
-	ioc.run();
-
 	return EXIT_SUCCESS;
 }
