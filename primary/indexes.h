@@ -28,7 +28,6 @@ CircularBuffer<PrimaryArgument> argumentBuffer(1000);
 // Just to test if this all is even possible
 void EchoTest()
 {
-	//See Parser for explanation
 	double testDouble = argumentBuffer.get().var.dval;
 
 	printf("Primary Function has run\n");
