@@ -1,17 +1,16 @@
 #include <memory>
 #include <mutex>
 
-template <class T>
-class CircularBuffer {
+class FunctionBuffer {
 public:
-	explicit CircularBuffer(size_t size) :
-		buf_(std::unique_ptr<T[]>(new T[size])),
+	explicit FunctionBuffer(size_t size) :
+		buf_(std::unique_ptr<void (*)(CircularBuffer<int>)[]>(new void (*)(CircularBuffer<int>)[size])),
 		max_size_(size)
 	{
 
 	}
 
-	void put(T item)
+	void put(void (*)(CircularBuffer<int>) item)
 	{
 		std::lock_guard<std::mutex> lock(mutex_);
 
@@ -27,13 +26,13 @@ public:
 		full_ = head_ == tail_;
 	}
 
-	T get()
+	void (*)(CircularBuffer<int>) get()
 	{
 		std::lock_guard<std::mutex> lock(mutex_);
 
 		if(empty())
 		{
-			return T();
+			return void (*)(CircularBuffer<int>)();
 		}
 
 		//Read data and advance the tail (we now have a free space)

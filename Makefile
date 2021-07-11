@@ -9,7 +9,7 @@ buffertest: main.o
 	$(CXX) $(CXXFLAGS) -o buffertest main.o
 
 #The Ingredients
-main.o: main.cpp circularbuffer/circularbuffer.h
+main.o: main.cpp circularbuffer/circularbuffer.h primary/indexes.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
 # utility
