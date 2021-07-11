@@ -11,6 +11,8 @@
 #include <thread>
 #include <vector>
 #include <unordered_map>
+#include <chrono>
+
 
 #include "circularbuffer/circularbuffer.h"
 #include "primary/indexes.h"
@@ -119,9 +121,14 @@ public:
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));
-		// Copy data to string for passing
-		std::string arguments = "";
-		parseMap["echo"](arguments);
+
+		//Separate function call and arguments
+		std::string message = boost::beast::buffers_to_string(buffer_.data());
+		std::string function = message.substr(0, message.find(" "));
+		std::string arguments = message.substr(message.find(" ") + 1, message.length());
+
+		//Call function
+		parseMap[function](arguments);
 	}
 
 	void on_write(
@@ -265,6 +272,19 @@ int main(int argc, char* argv[])
 		{
 			ioc.run();
 		});
-	ioc.run();
+
+	std::chrono::milliseconds timespan(1000); //defines sleep timespan in ms
+	while(true)
+	{
+		bufferAccessMutex.lock();
+		//Iterate over all elements in function buffer until empty
+		while(!functionBuffer.empty())
+		{
+			functionBuffer.get()();
+		}
+		bufferAccessMutex.unlock();
+		printf("Loop iteration completed\n");
+		std::this_thread::sleep_for(timespan);
+	}
 	return EXIT_SUCCESS;
 }
