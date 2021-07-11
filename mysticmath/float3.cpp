@@ -3,6 +3,7 @@
 
 #include "float3.h"
 #include "mysticmath.h"
+#include <algorithm>
 
 Float3::Float3(float x, float y, float z)
 {
@@ -42,6 +43,16 @@ Float3 Float3::sign()
 	return Float3(x > 0, y > 0, z > 0) - Float3(x < 0, y < 0, z < 0);
 }
 
+Float3 Float3::round()
+{
+	return Float3(roundf(x), roundf(y), roundf(z));
+}
+
+bool Float3::isUniform()
+{
+	return x == y && y == z;
+}
+
 string Float3::str()
 {
 	stringstream ss;
@@ -57,6 +68,16 @@ float dot(Float3 a, Float3 b)
 Float3 cross(Float3 a, Float3 b)
 {
 	return Float3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+}
+
+Float3 tripleProduct(Float3 a, Float3 b, Float3 c)
+{
+	return cross(a, cross(b, c));
+}
+
+Float3 clamp(Float3 vec, Float3 min, Float3 max)
+{
+	return Float3(std::min(std::max(vec.x, min.x), max.x), std::min(std::max(vec.y, min.y), max.y), std::min(std::max(vec.z, min.z), max.z));
 }
 
 Float3 operator + (Float3 a,Float3 b)
