@@ -12,6 +12,7 @@
 #include <vector>
 #include <unordered_map>
 #include <chrono>
+#include <pqxx/pqxx>
 
 
 #include "circularbuffer/circularbuffer.h"
@@ -239,6 +240,9 @@ private:
 
 int main(int argc, char* argv[])
 {
+	//connection to the db. Just for testing, don't uncomment.
+	//pqxx::connection dbConn("dbname=rise-server user=rise-server password=HfUK6+{Cb!LS=~52 host=funnyanimalfacts.com port=5432");
+
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
 	parseMap["echo"] = EchoTestParser;
