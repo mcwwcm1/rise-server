@@ -6,11 +6,12 @@ std::unordered_map<std::string, parsing_function> parseMap;
 
 //Define struct for containing function arguments
 struct PrimaryArgument {
-	enum {is_int, is_float, is_double} type;
+	enum {is_int, is_float, is_double, is_string} type;
 	union {
 		int ival;
 		float fval;
 		double dval;
+		std::string* sval;
 	} var;
 };
 
@@ -22,6 +23,6 @@ CircularBuffer<primary_function> functionBuffer(1000);
 CircularBuffer<PrimaryArgument> argumentBuffer(1000);
 
 //Forward declaration
-class session;
+//class session;
 //Pointer to session object of headless user
-session* headlessSession = NULL;
+//std::weak_ptr<session> headlessSession;

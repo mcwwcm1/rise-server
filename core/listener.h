@@ -82,7 +82,16 @@ private:
 		else
 		{
 			// Create the session and run it
-			std::make_shared<session>(std::move(socket))->run();
+			std::shared_ptr<session> newSession = std::make_shared<session>(std::move(socket));
+			newSession->run();
+			/*
+			//Check if headless has been selected and initialize self as headless if not
+			std::shared_ptr<session> sp(headlessSession);
+			if(!sp) {
+				headlessSession = newSession;
+				printf("Pointer has been set.");
+			}
+			*/
 		}
 
 		// Accept another connection

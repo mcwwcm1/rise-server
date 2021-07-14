@@ -50,12 +50,8 @@ public:
 	void
     on_accept(beast::error_code ec)
     {
-        if(ec)
+        if(ec) {
             return fail(ec, "accept");
-
-		//Check if headless has been selected and initialize self as headless if not
-		if(headlessSession != NULL) {
-			headlessSession = this;
 		}
         // Read a message
         do_read();
