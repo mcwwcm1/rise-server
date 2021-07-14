@@ -30,14 +30,14 @@ void fail(beast::error_code ec, char const* what)
 	std::cerr << what << ": " << ec.message() << "\n";
 }
 
-//Declare the map to be used for command parsing (populated in main)
-std::unordered_map<std::string, parsing_function> parseMap;
-
+// Include core headers
 #include "core/circularbuffer.h"
-#include "primary/indexes.h"
-
+#include "core/globals.h"
 #include "core/session.h"
 #include "core/listener.h"
+
+// Include primary functions
+#include "primary/echotest.h"
 
 int main(int argc, char* argv[])
 {

@@ -9,7 +9,7 @@ buffertest: main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 #The Ingredients
-main.o: main.cpp core/circularbuffer.h core/session.h core/listener.h primary/indexes.h
+main.o: main.cpp core/circularbuffer.h core/session.h core/listener.h core/globals.h primary/echotest.h
 
 # utility
 clean:
