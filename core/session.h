@@ -9,6 +9,7 @@ class session : public std::enable_shared_from_this<session>
 {
 	websocket::stream<beast::tcp_stream> ws_;
 	beast::flat_buffer buffer_;
+	std::vector<boost::shared_ptr<std::string const>> queue_;
 public:
 	// Take ownership of the socket
 	explicit
@@ -51,6 +52,11 @@ public:
     {
         if(ec)
             return fail(ec, "accept");
+
+		//Check if headless has been selected and initialize self as headless if not
+		if(headlessSession != NULL) {
+			headlessSession = this;
+		}
         // Read a message
         do_read();
     }
@@ -74,6 +80,7 @@ public:
 			return;
 		if(ec)
 			fail(ec, "read");
+
 		// Echo the message
 		ws_.text(ws_.got_text());
 		ws_.async_write(
@@ -81,6 +88,7 @@ public:
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));
+
 		//Separate function call and arguments
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
@@ -100,6 +108,47 @@ public:
 		// Do another read
 		do_read();
 	}
+	void on_send(boost::shared_ptr<std::string const> const& ss)
+	{
+		// Always add to queue
+		queue_.push_back(ss);
+
+		// Are we already writing?
+		if(queue_.size() > 1)
+			return;
+
+		// We are not currently writing, so send this immediately
+		ws_.async_write(
+			net::buffer(*queue_.front()),
+			beast::bind_front_handler(
+				&session::on_write,
+				shared_from_this()));
+	}
+	void send(boost::shared_ptr<std::string const> const& ss)
+	{
+		// Post our work to the strand, this ensures
+    	// that the members of `this` will not be
+    	// accessed concurrently.
+
+    	net::post(
+        	ws_.get_executor(),
+        	beast::bind_front_handler(
+            	&session::on_send,
+            	shared_from_this(),
+            	ss));
+	}
+	/*
+	void send_message(std::string& message)
+	{
+		ws_.text(ws_.got_text());
+		ws_.async_write(
+			,
+			beast::bind_front_handler(
+				&session::on_write,
+				shared_from_this()));
+	}
+	*/
+
 };
 
 #endif

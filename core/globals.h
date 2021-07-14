@@ -16,6 +16,12 @@ struct PrimaryArgument {
 
 //Set up global mutex for managing buffer access
 std::mutex bufferAccessMutex;
+
 //Scopeless declaration of buffers
 CircularBuffer<primary_function> functionBuffer(1000);
 CircularBuffer<PrimaryArgument> argumentBuffer(1000);
+
+//Forward declaration
+class session;
+//Pointer to session object of headless user
+session* headlessSession = NULL;
