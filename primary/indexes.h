@@ -4,12 +4,6 @@
 #ifndef INDEXES_H
 #define INDEXES_H
 
-namespace beast = boost::beast;
-namespace http = beast::http;
-namespace websocket = beast::websocket;
-namespace net = boost::asio;
-using tcp = boost::asio::ip::tcp;
-
 //Define struct for containing function arguments
 struct PrimaryArgument {
 	enum {is_int, is_float, is_double} type;
