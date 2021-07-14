@@ -3,7 +3,7 @@
 
 #include "matrix4x4.h"
 
-Matrix4x4::Matrix4x4(float v0, float v1, float v2, float v3, float v4, float v5, float v6, float v7, float v8, float v9, float v10, float v11, float v12, float v13, float v14, float v15)
+Matrix4x4::Matrix4x4(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7, double v8, double v9, double v10, double v11, double v12, double v13, double v14, double v15)
 {
 	this->v0 = v0;
 	this->v1 = v1;
@@ -33,7 +33,7 @@ const Matrix4x4 Matrix4x4::identity = Matrix4x4(1,0,0,0,
 												0,0,1,0,
 												0,0,0,1);
 
-float * Matrix4x4::operator[](int index)
+double * Matrix4x4::operator[](int index)
 {
 	switch(index)
 	{
@@ -74,7 +74,7 @@ float * Matrix4x4::operator[](int index)
 	throw 0;
 }
 
-Matrix4x4 Matrix4x4::translate(Float3 delta)
+Matrix4x4 Matrix4x4::translate(Double3 delta)
 {
 	*this = *this * getTranslationMatrix(delta);
 	return *this;
@@ -86,13 +86,13 @@ Matrix4x4 Matrix4x4::rotate(Quaternion rotation)
 	return *this;
 }
 
-Matrix4x4 Matrix4x4::scale(Float3 v)
+Matrix4x4 Matrix4x4::scale(Double3 v)
 {
 	*this = *this * getScaleMatrix(v);
 	return *this;
 }
 
-Matrix4x4 getTranslationMatrix(Float3 translation)
+Matrix4x4 getTranslationMatrix(Double3 translation)
 {
 	return Matrix4x4(	1,0,0,translation.x,
 						0,1,0,translation.y,
@@ -102,7 +102,7 @@ Matrix4x4 getTranslationMatrix(Float3 translation)
 
 Matrix4x4 getRotationMatrix(Quaternion rotation)
 {
-	Float3 radEuler = rotation.toEuler() * DEG2RAD;
+	Double3 radEuler = rotation.toEuler() * DEG2RAD;
 
 	Matrix4x4 x = Matrix4x4(
 		1, 0, 0, 0,
@@ -128,7 +128,7 @@ Matrix4x4 getRotationMatrix(Quaternion rotation)
 	return x * y * z;
 }
 
-Matrix4x4 getScaleMatrix(Float3 scale)
+Matrix4x4 getScaleMatrix(Double3 scale)
 {
 	return Matrix4x4(	scale.x, 0, 0, 0,
 				0, scale.y, 0, 0,
@@ -136,12 +136,12 @@ Matrix4x4 getScaleMatrix(Float3 scale)
 				0, 0, 0, 1);
 }
 
-Matrix4x4 getTRSMatrix(Float3 position, Quaternion rotation, Float3 scale)
+Matrix4x4 getTRSMatrix(Double3 position, Quaternion rotation, Double3 scale)
 {
 	return getScaleMatrix(scale) * getRotationMatrix(rotation) * getTranslationMatrix(position);
 }
 
-Matrix4x4 operator * (Matrix4x4 m, float f)
+Matrix4x4 operator * (Matrix4x4 m, double f)
 {
 	return Matrix4x4(	m.v0 * f, 	m.v1 * f, 	m.v2 * f, 	m.v3 * f,
 							m.v4 * f, 	m.v5 * f, 	m.v6 * f, 	m.v7 * f,
@@ -149,9 +149,9 @@ Matrix4x4 operator * (Matrix4x4 m, float f)
 							m.v12 * f, 	m.v13 * f, 	m.v14 * f, 	m.v15 * f);
 }
 
-Float3 operator * (Float3 vec, Matrix4x4 m)
+Double3 operator * (Double3 vec, Matrix4x4 m)
 {
-	Float3 r;
+	Double3 r;
 	r.x = vec.x * *m[0] + vec.y * *m[1] + vec.z * *m[2] + *m[3];
 	r.y = vec.x * *m[4] + vec.y * *m[5] + vec.z * *m[6] + *m[7];
 	r.z = vec.x * *m[8] + vec.y * *m[9] + vec.z * *m[10] + *m[11];

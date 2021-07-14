@@ -38,6 +38,7 @@ void fail(beast::error_code ec, char const* what)
 
 // Include primary functions
 #include "primary/echotest.h"
+#include "primary/physicstick.h"
 
 int main(int argc, char* argv[])
 {
@@ -47,6 +48,10 @@ int main(int argc, char* argv[])
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
 	parseMap["echo"] = EchoTestParser;
+	parseMap["tickphysics"] = PhysicsTickParser;
+	parseMap["setthrottle"] = SetThrottleParser;
+	parseMap["setpitch"] = SetPitchParser;
+	parseMap["setyaw"] = SetYawParser;
 
 	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments

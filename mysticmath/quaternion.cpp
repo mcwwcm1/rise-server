@@ -3,7 +3,7 @@
 
 #include "quaternion.h"
 
-Quaternion::Quaternion(float x, float y, float z, float w)
+Quaternion::Quaternion(double x, double y, double z, double w)
 {
 	this->x = x;
 	this->y = y;
@@ -17,27 +17,27 @@ Quaternion::Quaternion()
 }
 const Quaternion Quaternion::identity = Quaternion(0, 0, 0, 1);
 
-Quaternion Quaternion::conjugate()
+Quaternion Quaternion::conjugate() const
 {
 	return Quaternion(x * -1, y * -1, z * -1, w);
 }
 
-Float3 Quaternion::toEuler()
+Double3 Quaternion::toEuler()
 {
-	Float3 euler;
+	Double3 euler;
 
-	float sinr_cosp = 2 * (w * x + y * z);
-	float cosr_cosp = 1 - 2 * (x * x + y * y);
+	double sinr_cosp = 2 * (w * x + y * z);
+	double cosr_cosp = 1 - 2 * (x * x + y * y);
 	euler.x = std::atan2(sinr_cosp, cosr_cosp);
 
-	float sinp = 2 * (w * y - z * x);
+	double sinp = 2 * (w * y - z * x);
 	if (std::abs(sinp) >= 1)
 		euler.y = std::copysignf(PI / 2, sinp);
 	else
 		euler.y = std::asin(sinp);
 
-	float siny_cosp = 2 * (w * z + x * y);
-	float cosy_cosp = 1 - 2 * (y * y + z * z);
+	double siny_cosp = 2 * (w * z + x * y);
+	double cosy_cosp = 1 - 2 * (y * y + z * z);
 	euler.z = std::atan2(siny_cosp, cosy_cosp);
 
 	euler = euler * RAD2DEG;
@@ -52,7 +52,7 @@ string Quaternion::str()
 	return ss.str();
 }
 
-Quaternion Quaternion::fromEuler(Float3 euler)
+Quaternion Quaternion::fromEuler(Double3 euler)
 {
 	euler = euler * DEG2RAD;
 	
@@ -73,17 +73,35 @@ Quaternion Quaternion::fromEuler(Float3 euler)
     return q;
 }
 
-Quaternion operator + (Quaternion a, Quaternion b)
+Quaternion& Quaternion::operator += (const Quaternion& b)
+{
+	*this = *this + b;
+	return *this;
+}
+
+Quaternion& Quaternion::operator -= (const Quaternion& b)
+{
+	*this = *this - b;
+	return *this;
+}
+
+Quaternion& Quaternion::operator *= (const Quaternion& b)
+{
+	*this = *this * b;
+	return *this;
+}
+
+Quaternion operator + (const Quaternion& a, const Quaternion& b)
 {
 	return Quaternion(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 }
 
-Quaternion operator - (Quaternion a, Quaternion b)
+Quaternion operator - (const Quaternion& a, const Quaternion& b)
 {
 	return Quaternion(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
 
-Quaternion operator * (Quaternion a, Quaternion b)
+Quaternion operator * (const Quaternion& a, const Quaternion& b)
 {
 	return Quaternion(	a.x * b.w + a.y * b.z - a.z * b.y + a.w * b.x,
 						-a.x * b.z + a.y * b.w + a.z * b.x + a.w * b.y,
@@ -91,9 +109,9 @@ Quaternion operator * (Quaternion a, Quaternion b)
 						-a.x * b.x - a.y * b.y - a.z * b.z + a.w * b.w);
 }
 
-Float3 operator * (Float3 a, Quaternion b)
+Double3 operator * (const Double3& a, const Quaternion& b)
 {
 	Quaternion c = Quaternion(a.x, a.y, a.z, 0);
 	Quaternion r = b * c * b.conjugate();
-	return Float3(r.x, r.y, r.z);
+	return Double3(r.x, r.y, r.z);
 }
