@@ -13,8 +13,12 @@
 #include <unordered_map>
 #include <chrono>
 
+// Include core components
+#include "core/fail.h"
+#include "core/circularbuffer.h"
+#include "core/session.h"
 
-#include "circularbuffer/circularbuffer.h"
+// Include primary functions
 #include "primary/indexes.h"
 
 namespace beast = boost::beast;
@@ -24,14 +28,15 @@ namespace net = boost::asio;
 using tcp = boost::asio::ip::tcp;
 
 //Declare the map to be used for command parsing (populated in main)
-std::unordered_map<std::string, parsing_function> parseMap;
-
+//std::unordered_map<std::string, parsing_function> parseMap;
+/*
 //Failure Reporting
 void fail(beast::error_code ec, char const* what)
 {
 	std::cerr << what << ": " << ec.message() << "\n";
 }
-
+*/
+/*
 // Echoes back all received WebSocket messages
 class session : public std::enable_shared_from_this<session>
 {
@@ -70,7 +75,7 @@ public:
 			{
 				res.set(http::field::server,
 					std::string(BOOST_BEAST_VERSION_STRING) +
-						" my dumb websocket server");
+						" rise server");
 			}));
 
 		// Accept the websocket handshake
@@ -147,7 +152,7 @@ public:
 		do_read();
 	}
 };
-
+*/
 //-----------------End of session descriptions------------------------
 
 // Accepts incoming connections and launches the sessions
