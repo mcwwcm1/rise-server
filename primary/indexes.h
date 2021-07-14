@@ -4,9 +4,11 @@
 #ifndef INDEXES_H
 #define INDEXES_H
 
-//Declare a test type for function pointer
-typedef void (*primary_function) ();
-typedef void (*parsing_function) (std::string&);
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace websocket = beast::websocket;
+namespace net = boost::asio;
+using tcp = boost::asio::ip::tcp;
 
 //Define struct for containing function arguments
 struct PrimaryArgument {
