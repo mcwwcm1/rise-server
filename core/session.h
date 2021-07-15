@@ -13,17 +13,17 @@ class session : public std::enable_shared_from_this<session>
 	std::mutex mutex_;
 	// Holds current UserID
 	std::string userID = "";
-	// Destructor to clean up registeredUsers
-	~session()
-	{
-		UnRegisterUser(userID);
-	}
 public:
 	// Take ownership of the socket
 	explicit
 	session(tcp::socket&& socket)
 		: ws_(std::move(socket))
 	{
+	}
+	// Destructor to clean up registeredUsers
+	~session()
+	{
+		UnRegisterUser(userID);
 	}
 	// Get on the correct executor
 	void run()

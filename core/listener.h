@@ -92,7 +92,7 @@ private:
 			if(!headlessSession) {
 				std::lock_guard<std::mutex> lck(headlessPointerMutex);
 				headlessSession = newSession.get();
-				printf("Headless pointer set!");
+				printf("Headless pointer set!\n");
 			}
 			newSession->run();
 			/*

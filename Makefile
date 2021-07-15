@@ -13,7 +13,7 @@ rise-server: main.o
 	$(CXX) $(BDFLAGS) -o $@ $^ $(LPQFLAGS)
 
 #The Ingredients
-main.o: main.cpp core/circularbuffer.h core/session.h core/listener.h core/globals.h core/send.h core/register.h primary/echotest.h primary/echo.h
+main.o: main.cpp core/circularbuffer.h core/session.h core/listener.h core/globals.h core/send.h core/register.h primary/echotest.h primary/echo.h primary/echoto.h
 
 # utility
 clean:
