@@ -33,6 +33,7 @@ void fail(beast::error_code ec, char const* what)
 // Include core headers
 #include "core/circularbuffer.h"
 #include "core/globals.h"
+#include "core/register.h"
 #include "core/session.h"
 #include "core/listener.h"
 #include "core/send.h"
@@ -41,6 +42,7 @@ void fail(beast::error_code ec, char const* what)
 #include "primary/echotest.h"
 #include "primary/echo.h"
 #include "primary/physicstick.h"
+#include "primary/echoto.h"
 
 int main(int argc, char* argv[])
 {
@@ -50,6 +52,8 @@ int main(int argc, char* argv[])
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
 	parseMap["echo"] = EchoTestParser;
+	parseMap["echotest"] = EchoTestParser;
+	parseMap["echoto"] = EchoToParser;
 	parseMap["tickphysics"] = PhysicsTickParser;
 	parseMap["setthrottle"] = SetThrottleParser;
 	parseMap["setpitch"] = SetPitchParser;
