@@ -9,6 +9,8 @@ class session : public std::enable_shared_from_this<session>
 {
 	websocket::stream<beast::tcp_stream> ws_;
 	beast::flat_buffer buffer_;
+	// Declare mutex to protect against overlapping writes
+	std::mutex mutex_;
 public:
 	// Take ownership of the socket
 	explicit
@@ -49,8 +51,9 @@ public:
 	void
     on_accept(beast::error_code ec)
     {
-        if(ec)
+        if(ec) {
             return fail(ec, "accept");
+		}
         // Read a message
         do_read();
     }
@@ -74,19 +77,18 @@ public:
 			return;
 		if(ec)
 			fail(ec, "read");
-		// Echo the message
-		ws_.text(ws_.got_text());
-		ws_.async_write(
-			buffer_.data(),
-			beast::bind_front_handler(
-				&session::on_write,
-				shared_from_this()));
+
 		//Separate function call and arguments
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
 		//Call function
 		parseMap[function](arguments);
+		// Clear the buffer
+		buffer_.consume(buffer_.size());
+
+		//Do another read
+		do_read();
 	}
 	void on_write(
 		beast::error_code ec,
@@ -97,9 +99,36 @@ public:
 			return fail(ec, "write");
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
-		// Do another read
-		do_read();
+		// Release the lock
+		mutex_.unlock();
 	}
+	void on_send(boost::shared_ptr<std::string const> const& ss)
+	{
+		// We are not currently writing, so send this immediately
+		ws_.async_write(
+			net::buffer(*ss),
+			beast::bind_front_handler(
+				&session::on_write,
+				shared_from_this()));
+		printf("on_send ran\n");
+	}
+	void send(boost::shared_ptr<std::string const> const& ss)
+	{
+		// Grab a lock
+		mutex_.lock();
+
+		// Post our work to the strand, this ensures
+    	// that the members of `this` will not be
+    	// accessed concurrently.
+    	net::post(
+        	ws_.get_executor(),
+        	beast::bind_front_handler(
+            	&session::on_send,
+            	shared_from_this(),
+            	ss));
+		printf("send ran\n");
+	}
+
 };
 
 #endif

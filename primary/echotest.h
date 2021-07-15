@@ -7,7 +7,17 @@
 // Just to test if this all is even possible
 void EchoTest()
 {
-	double testDouble = argumentBuffer.get().var.dval;
+	//std::string* testString = argumentBuffer.get().var.sval;
+	//int testInt = argumentBuffer.get().var.ival;
+	std::string* argumentString = argumentBuffer.get().var.sval;
+	auto const ss = boost::make_shared<std::string const>(std::move(*argumentString));
+	//headlessSession->mutex_.lock();
+	headlessSession->send(ss);
+	//headlessSession->mutex_.unlock();
+	if(*argumentString=="test") {
+		printf("Test received!\n");
+	}
+	delete argumentString;
 
 	printf("Primary Function has run\n");
 }
@@ -21,10 +31,13 @@ void EchoTestParser(std::string& arguments)
 	//Put function pointer
 	functionBuffer.put(EchoTest);
 	//Put test element on the argument buffer
-	PrimaryArgument currentArgument;
-	currentArgument.type = PrimaryArgument::is_double;
-	currentArgument.var.dval = 1.12342423423;
-	argumentBuffer.put(currentArgument);
+	//PrimaryArgument currentArgument;
+	//currentArgument.type = PrimaryArgument::is_int;
+	//currentArgument.var.ival = 6;
+	//currentArgument.type = PrimaryArgument::is_string;
+	//currentArgument.var.sval = new std::string(arguments);
+	//printf(("Argument placed: "+ *currentArgument.var.sval + "\n").c_str());
+	argumentBuffer.put(PrimaryArgument(new std::string(arguments)));
 	//Unlock buffers
 	bufferAccessMutex.unlock();
 
