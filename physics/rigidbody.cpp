@@ -22,6 +22,11 @@ void Rigidbody::AddTorque(const Double3& torque)
 	bufferedTorque += torque;
 }
 
+void Rigidbody::AddTorque(const Quaternion& torque)
+{
+	AddTorque(torque.toEuler());
+}
+
 void Rigidbody::AddImpulseTorque(const Double3& torque)
 {
 	this->torque += torque;
@@ -43,5 +48,5 @@ void Rigidbody::RunTick(float dt)
 
 	// Apply position / rotation change 
 	position += velocity * dt;
-	rotation *= Quaternion::fromEuler(torque * dt);
+	rotation = Quaternion::fromEuler(torque * dt) * rotation;
 }

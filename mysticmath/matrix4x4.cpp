@@ -92,6 +92,18 @@ Matrix4x4 Matrix4x4::scale(Double3 v)
 	return *this;
 }
 
+string Matrix4x4::str()
+{
+	stringstream ss;
+	ss << "[";
+	ss << v0	<< ";"	<< v1	<< ";"	<< v2	<< ";"	<< v3	<< ";";
+	ss << v4	<< ";"	<< v5	<< ";"	<< v6	<< ";"	<< v7	<< ";";
+	ss << v8	<< ";"	<< v9	<< ";"	<< v10	<< ";"	<< v11	<< ";";
+	ss << v12	<< ";"	<< v13	<< ";"	<< v14	<< ";"	<< v15	<< ";";
+	ss << "]";
+	return ss.str();
+}
+
 Matrix4x4 getTranslationMatrix(Double3 translation)
 {
 	return Matrix4x4(	1,0,0,translation.x,

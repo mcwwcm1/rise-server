@@ -16,7 +16,14 @@ Airship airship = Airship(space);
 void PhysicsTick()
 {
 	airship.RunTick();
-	space.RunTick();
+	airship.rigidbody.RunTick(1.0f/20.0f);
+	//space.RunTick();
+
+	std::string response = "P" + airship.GetPosition().str() + "R" + airship.GetRotation().str();
+
+	// Call Send function with string pointer from the argument buffer
+	Send(&response);
+
 	printf("Physics tick was run\n");
 }
 
@@ -31,13 +38,13 @@ void PhysicsTickParser(std::string& arguments)
 	// Unlock buffers
 	bufferAccessMutex.unlock();
 	
-	printf("Parsed Physics Tick");
+	printf("Parsed Physics Tick\n");
 }
 
 void SetThrottle()
 {
 	airship.throttle = argumentBuffer.get().var.fval;
-	printf("Physics tick was run\n");
+	printf("Set throttle to %1.2f \n", airship.throttle);
 }
 
 void SetThrottleParser(std::string& arguments)
@@ -49,28 +56,25 @@ void SetThrottleParser(std::string& arguments)
 
 	// Put function pointer
 	functionBuffer.put(SetThrottle);
-
-	// Put test element on the argument buffer
-	PrimaryArgument throttleArg;
-	throttleArg.type = PrimaryArgument::is_double;
-	throttleArg.var.fval = throttle;
-	argumentBuffer.put(throttleArg);
+	
+	// Put argument
+	argumentBuffer.put(PrimaryArgument(throttle));
 
 	// Unlock buffers
 	bufferAccessMutex.unlock();
 	
-	printf("Parsed Physics Tick");
+	printf("Parsed Set Throttle\n");
 }
 
 void SetPitch()
 {
 	airship.pitch = argumentBuffer.get().var.fval;
-	printf("Physics tick was run\n");
+	printf("Set Pitch was run\n");
 }
 
 void SetPitchParser(std::string& arguments)
 {
-	float pitch = stof(arguments);
+	float pitch = stof(arguments) * 2 - 1;
 
 	// Lock the buffers to safely write to them
 	bufferAccessMutex.lock();
@@ -78,27 +82,24 @@ void SetPitchParser(std::string& arguments)
 	// Put function pointer
 	functionBuffer.put(SetPitch);
 
-	// Put test element on the argument buffer
-	PrimaryArgument pitchArg;
-	pitchArg.type = PrimaryArgument::is_double;
-	pitchArg.var.fval = pitch;
-	argumentBuffer.put(pitchArg);
+	// Put argument
+	argumentBuffer.put(PrimaryArgument(pitch));
 
 	// Unlock buffers
 	bufferAccessMutex.unlock();
 	
-	printf("Parsed Physics Tick");
+	printf("Parsed Set Pitch\n");
 }
 
 void SetYaw()
 {
-	airship.pitch = argumentBuffer.get().var.fval;
-	printf("Physics tick was run\n");
+	airship.yaw = argumentBuffer.get().var.fval;
+	printf("Set Yaw was run\n");
 }
 
 void SetYawParser(std::string& arguments)
 {
-	float yaw = stof(arguments);
+	float yaw = stof(arguments) * 2 - 1;
 
 	// Lock the buffers to safely write to them
 	bufferAccessMutex.lock();
@@ -106,16 +107,13 @@ void SetYawParser(std::string& arguments)
 	// Put function pointer
 	functionBuffer.put(SetYaw);
 
-	// Put test element on the argument buffer
-	PrimaryArgument yawArg;
-	yawArg.type = PrimaryArgument::is_double;
-	yawArg.var.fval = yaw;
-	argumentBuffer.put(yawArg);
+	// Put argument
+	argumentBuffer.put(PrimaryArgument(yaw));
 
 	// Unlock buffers
 	bufferAccessMutex.unlock();
 	
-	printf("Parsed Physics Tick");
+	printf("Parsed Set Yaw\n");
 }
 
 #endif

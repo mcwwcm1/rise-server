@@ -9,21 +9,33 @@ Airship::Airship(const PhysicsSpace& space)
 	this->space.AddBody(rigidbody);
 }
 
-Matrix4x4 Airship::GetTransformMatrix()
-{
-	return getTRSMatrix(rigidbody.position, rigidbody.rotation, rigidbody.scale);
-}
+Matrix4x4 Airship::GetTransformMatrix() { return getTRSMatrix(rigidbody.position, rigidbody.rotation, rigidbody.scale); }
+
+Double3 Airship::GetPosition() { return rigidbody.position; }
+Quaternion Airship::GetRotation() { return rigidbody.rotation; }
+Double3 Airship::GetScale() { return rigidbody.scale; }
 
 void Airship::RunTick()
 {
+	Double3 forward, right, up;
+
+	forward = GetForward();
+	right = GetRight();
+	up = GetUp();
+	
+	float speed = rigidbody.velocity.magnitude();
+
 	// Apply thrust
-	rigidbody.AddForce(GetForward() * throttle);
+	rigidbody.AddForce(forward * throttle * 2);
 
 	// Apply yaw steering
-	rigidbody.AddTorque(GetUp() * yaw);
+	rigidbody.AddTorque(up * yaw * speed * 10);
 
 	// Apply pitch steering
-	rigidbody.AddForce(GetRight() * pitch);
+	rigidbody.AddTorque(right * pitch * speed);
+
+	// Self-righting
+	rigidbody.AddTorque(cross(Double3(0, -1, 0), up) * 50);
 }
 
 Double3 Airship::GetForward()

@@ -40,6 +40,7 @@ void fail(beast::error_code ec, char const* what)
 // Include primary functions
 #include "primary/echotest.h"
 #include "primary/echo.h"
+#include "primary/physicstick.h"
 
 int main(int argc, char* argv[])
 {
@@ -84,7 +85,7 @@ int main(int argc, char* argv[])
 			ioc.run();
 		});
 
-	std::chrono::milliseconds timespan(1000); //defines sleep timespan in ms
+	std::chrono::milliseconds timespan(50); //defines sleep timespan in ms
 	while(true)
 	{
 		bufferAccessMutex.lock();

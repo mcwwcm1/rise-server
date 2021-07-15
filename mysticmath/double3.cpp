@@ -17,43 +17,43 @@ Double3::Double3()
 	x = y = z = 0;
 }
 
-double Double3::magnitudeSquared()
+double Double3::magnitudeSquared() const
 {
 	return x * x + y * y + z * z;
 }
 
-double Double3::magnitude()
+double Double3::magnitude() const
 {
 	return sqrt(magnitudeSquared());
 }
 
-Double3 Double3::normalized()
+Double3 Double3::normalized() const
 {
 	double m = magnitude();
 	return Double3(x / m, y / m, z / m);
 }
 
-Double3 Double3::absolute()
+Double3 Double3::absolute() const
 {
 	return *this * this->sign();
 }
 
-Double3 Double3::sign()
+Double3 Double3::sign() const
 {
 	return Double3(x > 0, y > 0, z > 0) - Double3(x < 0, y < 0, z < 0);
 }
 
-Double3 Double3::round()
+Double3 Double3::round() const
 {
 	return Double3(std::round(x), std::round(y), std::round(z));
 }
 
-bool Double3::isUniform()
+bool Double3::isUniform() const
 {
 	return x == y && y == z;
 }
 
-string Double3::str()
+string Double3::str() const
 {
 	stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << "]";

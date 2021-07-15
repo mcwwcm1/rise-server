@@ -10,7 +10,7 @@
 class PhysicsSpace
 {
 	public:
-		std::vector<Rigidbody> bodies;
+		std::vector<Rigidbody> bodies = std::vector<Rigidbody>(1);
 
 		double updateRate;
 		double fixedDT;

@@ -16,11 +16,13 @@ struct Matrix4x4
 		double v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15;
 		static const Matrix4x4 identity;
 	
-	double * operator [] (int index);
-	
-	Matrix4x4 translate(Double3 delta);
-	Matrix4x4 rotate(Quaternion rotation);
-	Matrix4x4 scale(Double3 v);
+		double * operator [] (int index);
+		
+		Matrix4x4 translate(Double3 delta);
+		Matrix4x4 rotate(Quaternion rotation);
+		Matrix4x4 scale(Double3 v);
+
+		string str();
 };
 
 Matrix4x4 getTranslationMatrix(Double3 translation);

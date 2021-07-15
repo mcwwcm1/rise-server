@@ -18,15 +18,15 @@ struct Double3
 		Double3(double x, double y, double z);
 		Double3();
 
-		double magnitude();
-		double magnitudeSquared();
-		Double3 normalized();
-		Double3 absolute();
-		Double3 sign();
-		Double3 round();
-		bool isUniform();
+		double magnitude() const;
+		double magnitudeSquared() const;
+		Double3 normalized() const;
+		Double3 absolute() const;
+		Double3 sign() const;
+		Double3 round() const;
+		bool isUniform() const;
 
-		string str();
+		string str() const;
 
 		// Assignment operator overloads
 		Double3& operator += (const Double3& b);

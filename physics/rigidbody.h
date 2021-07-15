@@ -30,6 +30,7 @@ class Rigidbody
 		void AddImpulseForce(const Double3& force);
 
 		void AddTorque(const Double3& torque);
+		void AddTorque(const Quaternion& torque);
 		void AddImpulseTorque(const Double3& torque);
 
 		void RunTick(float dt);

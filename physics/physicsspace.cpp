@@ -13,13 +13,17 @@ PhysicsSpace::PhysicsSpace(double updateRate)
 
 void PhysicsSpace::AddBody(Rigidbody rigidbody)
 {
-	bodies.push_back(rigidbody);
+	printf("ADDED BODY\n");
+	bodies[0] = rigidbody;
 }
 
 void PhysicsSpace::RunTick()
 {
+	printf("STARTED RUNNING TICK FOR BODIES\n");
+	printf("%ld\n", bodies.size());
 	for(Rigidbody body : bodies)
 	{
+		printf("RUNNING TICK FOR BODY\n");
 		body.RunTick(fixedDT);
 	}
 }

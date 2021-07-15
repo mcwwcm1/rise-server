@@ -13,16 +13,31 @@ Quaternion::Quaternion(double x, double y, double z, double w)
 
 Quaternion::Quaternion()
 {
-	x = 1;
+	w = 1;
 }
 const Quaternion Quaternion::identity = Quaternion(0, 0, 0, 1);
+
+double Quaternion::magnitudeSquared() const
+{
+	return x * x + y * y + z * z + w * w;
+}
+
+double Quaternion::magnitude() const
+{
+	return sqrt(magnitudeSquared());
+}
 
 Quaternion Quaternion::conjugate() const
 {
 	return Quaternion(x * -1, y * -1, z * -1, w);
 }
 
-Double3 Quaternion::toEuler()
+Quaternion Quaternion::normalized() const
+{
+	return *this * magnitude();
+}
+
+Double3 Quaternion::toEuler() const
 {
 	Double3 euler;
 
@@ -73,6 +88,17 @@ Quaternion Quaternion::fromEuler(Double3 euler)
     return q;
 }
 
+Quaternion FromToRotation(const Quaternion& a, const Quaternion& b)
+{
+	return a.conjugate() * b;
+}
+
+Quaternion FromToRotation(const Double3& a, const Double3& b)
+{
+	Double3 c = cross(a, b);
+	return Quaternion(c.x, c.y, c.z, sqrt(a.magnitudeSquared() * b.magnitudeSquared()) + dot(a, b)).normalized();
+}
+
 Quaternion& Quaternion::operator += (const Quaternion& b)
 {
 	*this = *this + b;
@@ -91,6 +117,13 @@ Quaternion& Quaternion::operator *= (const Quaternion& b)
 	return *this;
 }
 
+Quaternion& Quaternion::operator *= (double b)
+{
+	*this = *this * b;
+	return *this;
+}
+
+
 Quaternion operator + (const Quaternion& a, const Quaternion& b)
 {
 	return Quaternion(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
@@ -103,10 +136,11 @@ Quaternion operator - (const Quaternion& a, const Quaternion& b)
 
 Quaternion operator * (const Quaternion& a, const Quaternion& b)
 {
-	return Quaternion(	a.x * b.w + a.y * b.z - a.z * b.y + a.w * b.x,
-						-a.x * b.z + a.y * b.w + a.z * b.x + a.w * b.y,
-						a.x * b.y - a.y * b.x + a.z * b.w + a.w * b.z,
-						-a.x * b.x - a.y * b.y - a.z * b.z + a.w * b.w);
+	return Quaternion(	
+		(a.x * b.w + b.x * a.w + a.y * b.z) - (a.z * b.y),
+		(a.y * b.w + b.y * a.w + a.z * b.x) - (a.x * b.z),
+		(a.z * b.w + b.z * a.w + a.x * b.y) - (a.y * b.x),
+		(a.w * b.w) - (a.x * b.x + a.y * b.y + a.z * b.z));
 }
 
 Double3 operator * (const Double3& a, const Quaternion& b)
@@ -114,4 +148,9 @@ Double3 operator * (const Double3& a, const Quaternion& b)
 	Quaternion c = Quaternion(a.x, a.y, a.z, 0);
 	Quaternion r = b * c * b.conjugate();
 	return Double3(r.x, r.y, r.z);
+}
+
+Quaternion operator * (const Quaternion& a, double b)
+{
+	return Quaternion(a.x * b, a.y * b, a.z * b, a.w * b);
 }

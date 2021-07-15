@@ -22,8 +22,11 @@ struct Quaternion
 	Quaternion(double x, double y, double z, double w);
 	Quaternion();
 	
+	double magnitude() const;
+	double magnitudeSquared() const;
 	Quaternion conjugate() const;
-	Double3 toEuler();
+	Quaternion normalized() const;
+	Double3 toEuler() const;
 
 	static Quaternion fromEuler(Double3 euler);
 	
@@ -32,11 +35,16 @@ struct Quaternion
 	Quaternion& operator += (const Quaternion& b);
 	Quaternion& operator -= (const Quaternion& b);
 	Quaternion& operator *= (const Quaternion& b);
+	Quaternion& operator *= (double b);
 };
+
+Quaternion FromToRotation(const Quaternion& a, const Quaternion& b);
+Quaternion FromToRotation(const Double3& a, const Double3& b);
 
 Quaternion operator + (const Quaternion& a, const Quaternion& b);
 Quaternion operator - (const Quaternion& a, const Quaternion& b);
 Quaternion operator * (const Quaternion& a, const Quaternion& b);
 Double3 operator * (const Double3& a, const Quaternion& b);
+Quaternion operator * (const Quaternion& a, double b);
 
 #endif

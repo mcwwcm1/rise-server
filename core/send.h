@@ -9,7 +9,7 @@ void Send(std::string* sendString)
 	// Invoke the send function of the headless' websocket session
 	headlessSession->send(boost::make_shared<std::string const>(std::move(*sendString)));
 	// Debug
-	printf(("Sent: " + *sendString + "\n").c_str());
+	printf("Sent: %s\n", (*sendString).c_str());
 }
 
 #endif

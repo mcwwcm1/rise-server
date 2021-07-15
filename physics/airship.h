@@ -18,6 +18,9 @@ class Airship
 		Airship(const PhysicsSpace& space);
 
 		Matrix4x4 GetTransformMatrix();
+		Double3 GetPosition();
+		Quaternion GetRotation();
+		Double3 GetScale();
 
 		void RunTick();
 
