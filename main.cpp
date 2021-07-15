@@ -38,6 +38,7 @@ void fail(beast::error_code ec, char const* what)
 
 // Include primary functions
 #include "primary/echotest.h"
+#include "primary/echo.h"
 
 int main(int argc, char* argv[])
 {
@@ -46,7 +47,8 @@ int main(int argc, char* argv[])
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
-	parseMap["echo"] = EchoTestParser;
+	parseMap["echo"] = EchoParser;
+	parseMap["echotest"] = EchoTestParser;
 
 	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments
