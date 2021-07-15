@@ -33,6 +33,7 @@ void fail(beast::error_code ec, char const* what)
 // Include core headers
 #include "core/circularbuffer.h"
 #include "core/globals.h"
+#include "core/register.h"
 #include "core/session.h"
 #include "core/listener.h"
 #include "core/send.h"

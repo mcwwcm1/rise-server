@@ -11,6 +11,13 @@ class session : public std::enable_shared_from_this<session>
 	beast::flat_buffer buffer_;
 	// Declare mutex to protect against overlapping writes
 	std::mutex mutex_;
+	// Holds current UserID
+	std::string userID = "";
+	// Destructor to clean up registeredUsers
+	~session()
+	{
+		UnRegisterUser(userID);
+	}
 public:
 	// Take ownership of the socket
 	explicit
@@ -40,7 +47,7 @@ public:
 			{
 				res.set(http::field::server,
 					std::string(BOOST_BEAST_VERSION_STRING) +
-						" rise server");
+						" rise-server");
 			}));
 		// Accept the websocket handshake
 		ws_.async_accept(
@@ -82,8 +89,15 @@ public:
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
-		//Call function
-		parseMap[function](arguments);
+
+		// Check if user is making a registration call
+		if(function=="register") {
+			RegisterUser(arguments, this);
+			userID = arguments;
+		} else {
+			// Call the function
+			parseMap[function](arguments);
+		}
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
 
@@ -96,8 +110,6 @@ public:
 	{
 		boost::ignore_unused(bytes_transferred);
 		if(ec)
-			// Release the lock
-			mutex_.unlock();
 			return fail(ec, "write");
 		// Clear the buffer
 		buffer_.consume(buffer_.size());

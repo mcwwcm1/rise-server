@@ -90,7 +90,9 @@ private:
 			*/
 			std::shared_ptr<session> newSession = std::make_shared<session>(std::move(socket));
 			if(!headlessSession) {
+				std::lock_guard<std::mutex> lck(headlessPointerMutex);
 				headlessSession = newSession.get();
+				printf("Headless pointer set!");
 			}
 			newSession->run();
 			/*

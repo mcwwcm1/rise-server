@@ -42,5 +42,8 @@ CircularBuffer<PrimaryArgument> argumentBuffer(2000);
 
 //Forward declaration
 class session;
+//Mutex to protect headlessSession pointer
+std::mutex headlessPointerMutex;
 //Pointer to session object of headless user
 session* headlessSession = NULL;
+std::unordered_map<std::string, session*> registeredUsers;
