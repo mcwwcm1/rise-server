@@ -83,6 +83,10 @@ private:
 		{
 			// Create the session and run it
 			std::shared_ptr<session> newSession = std::make_shared<session>(std::move(socket));
+			if(!headlessSession) {
+				headlessSession = newSession.get();
+				printf("Pointer has been set.\n");
+			}
 			newSession->run();
 			/*
 			//Check if headless has been selected and initialize self as headless if not

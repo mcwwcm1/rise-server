@@ -23,6 +23,6 @@ CircularBuffer<primary_function> functionBuffer(1000);
 CircularBuffer<PrimaryArgument> argumentBuffer(1000);
 
 //Forward declaration
-//class session;
+class session;
 //Pointer to session object of headless user
-//std::weak_ptr<session> headlessSession;
+session* headlessSession = NULL;

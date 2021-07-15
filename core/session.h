@@ -119,6 +119,7 @@ public:
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));
+		printf("on_send ran\n");
 	}
 	void send(boost::shared_ptr<std::string const> const& ss)
 	{
@@ -132,6 +133,7 @@ public:
             	&session::on_send,
             	shared_from_this(),
             	ss));
+		printf("send ran\n");
 	}
 	/*
 	void send_message(std::string& message)
