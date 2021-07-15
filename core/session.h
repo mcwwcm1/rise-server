@@ -11,8 +11,6 @@ class session : public std::enable_shared_from_this<session>
 	beast::flat_buffer buffer_;
 	std::vector<boost::shared_ptr<std::string const>> queue_;
 public:
-	//Lock for preventing concurrent access
-	//std::mutex mutex_;
 	// Take ownership of the socket
 	explicit
 	session(tcp::socket&& socket)
@@ -56,7 +54,6 @@ public:
             return fail(ec, "accept");
 		}
         // Read a message
-		//mutex_.lock();
         do_read();
     }
 	void
@@ -80,15 +77,6 @@ public:
 		if(ec)
 			fail(ec, "read");
 
-		// Echo the message
-		/*
-		ws_.text(ws_.got_text());
-		ws_.async_write(
-			buffer_.data(),
-			beast::bind_front_handler(
-				&session::on_write,
-				shared_from_this()));
-		*/
 		//Separate function call and arguments
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
@@ -97,8 +85,7 @@ public:
 		parseMap[function](arguments);
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
-		//Allow a chance to steal
-		//mutex_.unlock();
+
 		//Do another read
 		do_read();
 	}
@@ -111,19 +98,11 @@ public:
 			return fail(ec, "write");
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
-		// Do another read
-		//mutex_.lock();
-		//do_read();
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{
 		// Always add to queue
 		queue_.push_back(ss);
-
-		// Are we already writing?
-		//if(queue_.size() > 1)
-			//return;
-
 		// We are not currently writing, so send this immediately
 		ws_.async_write(
 			net::buffer(*queue_.front()),
@@ -146,17 +125,6 @@ public:
             	ss));
 		printf("send ran\n");
 	}
-	/*
-	void send_message(std::string& message)
-	{
-		ws_.text(ws_.got_text());
-		ws_.async_write(
-			,
-			beast::bind_front_handler(
-				&session::on_write,
-				shared_from_this()));
-	}
-	*/
 
 };
 
