@@ -11,6 +11,8 @@ class session : public std::enable_shared_from_this<session>
 	beast::flat_buffer buffer_;
 	std::vector<boost::shared_ptr<std::string const>> queue_;
 public:
+	//Lock for preventing concurrent access
+	//std::mutex mutex_;
 	// Take ownership of the socket
 	explicit
 	session(tcp::socket&& socket)
@@ -54,6 +56,7 @@ public:
             return fail(ec, "accept");
 		}
         // Read a message
+		//mutex_.lock();
         do_read();
     }
 	void
@@ -78,19 +81,26 @@ public:
 			fail(ec, "read");
 
 		// Echo the message
+		/*
 		ws_.text(ws_.got_text());
 		ws_.async_write(
 			buffer_.data(),
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));
-
+		*/
 		//Separate function call and arguments
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
 		//Call function
 		parseMap[function](arguments);
+		// Clear the buffer
+		buffer_.consume(buffer_.size());
+		//Allow a chance to steal
+		//mutex_.unlock();
+		//Do another read
+		do_read();
 	}
 	void on_write(
 		beast::error_code ec,
@@ -102,7 +112,8 @@ public:
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
 		// Do another read
-		do_read();
+		//mutex_.lock();
+		//do_read();
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{

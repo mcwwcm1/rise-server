@@ -9,9 +9,11 @@ void EchoTest()
 {
 	//std::string* testString = argumentBuffer.get().var.sval;
 	//int testInt = argumentBuffer.get().var.ival;
-	//auto const ss = boost::make_shared<std::string const>(std::move(*testString));
 	std::string* argumentString = argumentBuffer.get().var.sval;
-	//headlessSession->send(ss);
+	auto const ss = boost::make_shared<std::string const>(std::move(*argumentString));
+	//headlessSession->mutex_.lock();
+	headlessSession->send(ss);
+	//headlessSession->mutex_.unlock();
 	if(*argumentString=="test") {
 		printf("Test received!\n");
 	}

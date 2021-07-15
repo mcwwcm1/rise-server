@@ -89,6 +89,9 @@ private:
 			}
 			*/
 			std::shared_ptr<session> newSession = std::make_shared<session>(std::move(socket));
+			if(!headlessSession) {
+				headlessSession = newSession.get();
+			}
 			newSession->run();
 			/*
 			//Check if headless has been selected and initialize self as headless if not

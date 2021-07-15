@@ -41,6 +41,6 @@ CircularBuffer<primary_function> functionBuffer(1000);
 CircularBuffer<PrimaryArgument> argumentBuffer(2000);
 
 //Forward declaration
-//class session;
+class session;
 //Pointer to session object of headless user
-//std::shared_ptr<session> headlessSession;
+session* headlessSession = NULL;
