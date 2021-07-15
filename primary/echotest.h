@@ -7,14 +7,15 @@
 // Just to test if this all is even possible
 void EchoTest()
 {
-	std::string* testString = argumentBuffer.get().var.sval;
+	//std::string* testString = argumentBuffer.get().var.sval;
 	//int testInt = argumentBuffer.get().var.ival;
-	auto const ss = boost::make_shared<std::string const>(std::move(*testString));
-	headlessSession->send(ss);
-	if(*testString=="test") {
-		printf("Argument received!\n");
+	//auto const ss = boost::make_shared<std::string const>(std::move(*testString));
+	std::string* argumentString = argumentBuffer.get().var.sval;
+	//headlessSession->send(ss);
+	if(*argumentString=="test") {
+		printf("Test received!\n");
 	}
-	delete testString;
+	delete argumentString;
 
 	printf("Primary Function has run\n");
 }
@@ -28,13 +29,13 @@ void EchoTestParser(std::string& arguments)
 	//Put function pointer
 	functionBuffer.put(EchoTest);
 	//Put test element on the argument buffer
-	PrimaryArgument currentArgument;
+	//PrimaryArgument currentArgument;
 	//currentArgument.type = PrimaryArgument::is_int;
 	//currentArgument.var.ival = 6;
-	currentArgument.type = PrimaryArgument::is_string;
-	currentArgument.var.sval = new std::string(arguments);
-	printf(("Argument placed: "+ *currentArgument.var.sval + "\n").c_str());
-	argumentBuffer.put(currentArgument);
+	//currentArgument.type = PrimaryArgument::is_string;
+	//currentArgument.var.sval = new std::string(arguments);
+	//printf(("Argument placed: "+ *currentArgument.var.sval + "\n").c_str());
+	argumentBuffer.put(PrimaryArgument(new std::string(arguments)));
 	//Unlock buffers
 	bufferAccessMutex.unlock();
 

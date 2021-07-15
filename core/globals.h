@@ -13,6 +13,24 @@ struct PrimaryArgument {
 		double dval;
 		std::string* sval;
 	} var;
+	//Simple constructors
+	PrimaryArgument() {}
+	PrimaryArgument(int i) {
+		var.ival = i;
+		type = is_int;
+	}
+	PrimaryArgument(float f) {
+		var.fval = f;
+		type = is_float;
+	}
+	PrimaryArgument(double d) {
+		var.dval = d;
+		type = is_double;
+	}
+	PrimaryArgument(std::string* s) {
+		var.sval = s;
+		type = is_string;
+	}
 };
 
 //Set up global mutex for managing buffer access
@@ -20,9 +38,9 @@ std::mutex bufferAccessMutex;
 
 //Scopeless declaration of buffers
 CircularBuffer<primary_function> functionBuffer(1000);
-CircularBuffer<PrimaryArgument> argumentBuffer(1000);
+CircularBuffer<PrimaryArgument> argumentBuffer(2000);
 
 //Forward declaration
-class session;
+//class session;
 //Pointer to session object of headless user
-session* headlessSession = NULL;
+//std::shared_ptr<session> headlessSession;
