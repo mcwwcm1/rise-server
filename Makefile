@@ -1,7 +1,8 @@
 #Environment
 CXX = g++
-DBFLAGS = -g -Wall -pthread -std=c++20 -lpqxx -lpq
-BDFLAGS = -Wall -o2 -pthread -std=c++20 -lpqxx -lpq
+DBFLAGS = -g -Wall -pthread -std=c++20
+BDFLAGS = -Wall -o2 -pthread -std=c++20
+LPQFLAGS = -lpqxx -lpq
 
 #The build target
 TARGETS=rise-test rise-server

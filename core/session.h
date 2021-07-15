@@ -96,6 +96,8 @@ public:
 	{
 		boost::ignore_unused(bytes_transferred);
 		if(ec)
+			// Release the lock
+			mutex_.unlock();
 			return fail(ec, "write");
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
