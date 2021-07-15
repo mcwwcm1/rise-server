@@ -91,11 +91,9 @@ public:
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
 
 		// Check if user is making a registration call
-		if(function=="register") {
-			if(userID=="") {
-				RegisterUser(arguments, this);
-				userID = arguments;
-			}
+		if(function=="register" && userID=="") {
+			RegisterUser(arguments, this);
+			userID = arguments;
 		} else {
 			// Call the function
 			parseMap[function](arguments);
