@@ -10,6 +10,8 @@ class session : public std::enable_shared_from_this<session>
 	websocket::stream<beast::tcp_stream> ws_;
 	beast::flat_buffer buffer_;
 	std::vector<boost::shared_ptr<std::string const>> queue_;
+	// Declare mutex to protect against overlapping writes
+	std::mutex mutex_;
 public:
 	// Take ownership of the socket
 	explicit
@@ -98,11 +100,14 @@ public:
 			return fail(ec, "write");
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
+		// Release the lock
+		mutex_.unlock();
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{
 		// Always add to queue
 		queue_.push_back(ss);
+
 		// We are not currently writing, so send this immediately
 		ws_.async_write(
 			net::buffer(*queue_.front()),
@@ -113,10 +118,12 @@ public:
 	}
 	void send(boost::shared_ptr<std::string const> const& ss)
 	{
+		// Grab a lock
+		mutex_.lock();
+
 		// Post our work to the strand, this ensures
     	// that the members of `this` will not be
     	// accessed concurrently.
-
     	net::post(
         	ws_.get_executor(),
         	beast::bind_front_handler(
