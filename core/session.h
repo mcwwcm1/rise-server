@@ -9,7 +9,6 @@ class session : public std::enable_shared_from_this<session>
 {
 	websocket::stream<beast::tcp_stream> ws_;
 	beast::flat_buffer buffer_;
-	std::vector<boost::shared_ptr<std::string const>> queue_;
 	// Declare mutex to protect against overlapping writes
 	std::mutex mutex_;
 public:
@@ -105,12 +104,9 @@ public:
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{
-		// Always add to queue
-		queue_.push_back(ss);
-
 		// We are not currently writing, so send this immediately
 		ws_.async_write(
-			net::buffer(*queue_.front()),
+			net::buffer(*ss),
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));

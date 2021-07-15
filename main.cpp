@@ -35,6 +35,7 @@ void fail(beast::error_code ec, char const* what)
 #include "core/globals.h"
 #include "core/session.h"
 #include "core/listener.h"
+#include "core/send.h"
 
 // Include primary functions
 #include "primary/echotest.h"

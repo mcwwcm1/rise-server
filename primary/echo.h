@@ -6,14 +6,8 @@
 
 void Echo()
 {
-	// Grab string pointer from the buffer and store it
-	std::string* argumentString = argumentBuffer.get().var.sval;
-	// Attempt to assign the appropriate type to this god damn variable
-	auto const ss = boost::make_shared<std::string const>(std::move(*argumentString));
-	// Invoke the send function of the headless' websocket session
-	headlessSession->send(ss);
-	// Delete the old string to avoid leak
-	delete argumentString;
+	// Call Send function with string pointer from the argument buffer
+	Send(argumentBuffer.get().var.sval);
 	// Debug
 	printf("Function: Echo\n");
 }
