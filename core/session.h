@@ -92,8 +92,10 @@ public:
 
 		// Check if user is making a registration call
 		if(function=="register") {
-			RegisterUser(arguments, this);
-			userID = arguments;
+			if(userID=="") {
+				RegisterUser(arguments, this);
+				userID = arguments;
+			}
 		} else {
 			// Call the function
 			parseMap[function](arguments);
