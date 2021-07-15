@@ -6,8 +6,12 @@
 
 void Echo()
 {
+	// Store string pointer from top of argument buffer
+	std::string* echoString = argumentBuffer.get().var.sval;
 	// Call Send function with string pointer from the argument buffer
-	Send(argumentBuffer.get().var.sval);
+	Send(echoString);
+	// Delete the old string to avoid leak
+	delete echoString;
 	// Debug
 	printf("Function: Echo\n");
 }
