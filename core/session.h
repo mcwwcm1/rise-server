@@ -121,8 +121,8 @@ public:
 		queue_.push_back(ss);
 
 		// Are we already writing?
-		if(queue_.size() > 1)
-			return;
+		//if(queue_.size() > 1)
+			//return;
 
 		// We are not currently writing, so send this immediately
 		ws_.async_write(
