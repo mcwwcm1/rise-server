@@ -111,8 +111,8 @@ public:
 		std::size_t bytes_transferred)
 	{
 		boost::ignore_unused(bytes_transferred);
-		if(ec)
-			return fail(ec, "write");
+		//if(ec)
+		//	return fail(ec, "write");
 		// Clear the buffer
 		buffer_.consume(buffer_.size());
 		// Release the lock
