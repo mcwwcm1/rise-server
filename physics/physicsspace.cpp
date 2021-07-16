@@ -15,16 +15,14 @@ PhysicsSpace::PhysicsSpace(double updateRate)
 void PhysicsSpace::RegisterBody(Rigidbody* rigidbody)
 {
 	bodies.push_back(rigidbody);
-	printf("ADDED BODY\n");
 }
 
 void PhysicsSpace::RunTick()
 {
 	for(Rigidbody* body : bodies)
-	{
-		printf("RUNNING TICK FOR BODY\n");
 		body->RunTick(fixedDT);
-	}
+	
+	CheckCollision();
 }
 
 void PhysicsSpace::CheckCollision()

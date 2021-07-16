@@ -10,40 +10,23 @@
 #include "../physics/physicsspace.h"
 #include "../physics/airship.h"
 
-PhysicsSpace* space = new PhysicsSpace(20);
-std::unordered_map<std::string, Airship*> airships;
-
-void PhysicsTick()
+void RegisterAirship()
 {
 	std::string* userString = argumentBuffer.get().var.sval;
 
-	if(airships.find(*userString) == airships.end())
-	{
-		// No airship associated with this user, create new
-		airships[*userString] = new Airship(space);
-	}
-
-	Airship* airship = airships[*userString];
-	airship->RunTick();
-	airship->rigidbody->RunTick(1.0f/20.0f);
-
-	space->CheckCollision();
-
-	std::string response = "P" + airship->GetPosition().str() + "R" + airship->GetRotation().str();
-
-	// Call Send function with string pointer from the argument buffer
-	Send(userString, &response);
+	// No airship associated with this user, create new
+	airships[*userString] = new Airship(space);
 
 	delete userString; // Delet the string to avoid memory leak
 }
 
-void PhysicsTickParser(std::string& arguments)
+void RegisterAirship(std::string& arguments)
 {
 	// Lock the buffers to safely write to them
 	bufferAccessMutex.lock();
 
 	// Put function pointer
-	functionBuffer.put(PhysicsTick);
+	functionBuffer.put(RegisterAirship);
 
 	// Put arguments
 	argumentBuffer.put(PrimaryArgument(new std::string(arguments)));
@@ -58,8 +41,6 @@ void SetThrottle()
 	std::string* airshipID = argumentBuffer.get().var.sval;
 	airships[*airshipID]->throttle = argumentBuffer.get().var.fval;
 	delete airshipID;
-
-	printf("I'm on the telly\n");
 }
 
 void SetThrottleParser(std::string& arguments)

@@ -37,6 +37,7 @@ void fail(beast::error_code ec, char const* what)
 #include "core/session.h"
 #include "core/listener.h"
 #include "core/send.h"
+#include "core/worldtick.h"
 
 // Include primary functions
 #include "primary/echotest.h"
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
 	parseMap["echo"] = EchoTestParser;
 	parseMap["echotest"] = EchoTestParser;
 	parseMap["echoto"] = EchoToParser;
-	parseMap["tickphysics"] = PhysicsTickParser;
+	parseMap["registerairship"] = RegisterAirship;
 	parseMap["setthrottle"] = SetThrottleParser;
 	parseMap["setpitch"] = SetPitchParser;
 	parseMap["setyaw"] = SetYawParser;
@@ -89,7 +90,7 @@ int main(int argc, char* argv[])
 			ioc.run();
 		});
 
-	std::chrono::milliseconds timespan(50); //defines sleep timespan in ms
+	std::chrono::milliseconds timespan(1000 / 60); //defines sleep timespan in ms
 	while(true)
 	{
 		bufferAccessMutex.lock();
@@ -98,6 +99,9 @@ int main(int argc, char* argv[])
 		{
 			functionBuffer.get()();
 		}
+
+		WorldTick();
+		
 		bufferAccessMutex.unlock();
 		printf("Loop iteration completed\n");
 		std::this_thread::sleep_for(timespan);

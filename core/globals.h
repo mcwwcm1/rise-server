@@ -1,10 +1,13 @@
 // File: globals.h
 // Purpose: Intializes global variables
 
-//Declare the map to be used for command parsing (populated in main)
+#ifndef GLOBALS_H
+#define GLOBALS_H
+
+// Declare the map to be used for command parsing (populated in main)
 std::unordered_map<std::string, parsing_function> parseMap;
 
-//Define struct for containing function arguments
+// Define struct for containing function arguments
 struct PrimaryArgument {
 	enum {is_int, is_float, is_double, is_string} type;
 	union {
@@ -33,17 +36,26 @@ struct PrimaryArgument {
 	}
 };
 
-//Set up global mutex for managing buffer access
+// Set up global mutex for managing buffer access
 std::mutex bufferAccessMutex;
 
-//Scopeless declaration of buffers
+// Scopeless declaration of buffers
 CircularBuffer<primary_function> functionBuffer(1000);
 CircularBuffer<PrimaryArgument> argumentBuffer(2000);
 
-//Forward declaration
+// Forward declaration
 class session;
-//Mutex to protect headlessSession pointer
+// Mutex to protect headlessSession pointer
 std::mutex headlessPointerMutex;
-//Pointer to session object of headless user
+// Pointer to session object of headless user
 session* headlessSession = NULL;
 std::unordered_map<std::string, session*> registeredUsers;
+
+// World state information
+#include "../physics/airship.h"
+#include "../physics/physicsspace.h"
+
+PhysicsSpace* space = new PhysicsSpace(60);
+std::unordered_map<std::string, Airship*> airships;
+
+#endif

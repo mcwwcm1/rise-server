@@ -12,7 +12,7 @@ void Send(std::string* sendString)
 	printf("Sent: %s\n", (*sendString).c_str());
 }
 
-void Send(std::string* userID, std::string* sendString)
+void Send(const std::string* userID, const std::string* sendString)
 {
 	// Key is not present
     if (registeredUsers.find(*userID) == registeredUsers.end()) {
