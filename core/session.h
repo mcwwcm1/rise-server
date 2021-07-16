@@ -96,6 +96,9 @@ public:
 				RegisterUser(arguments, this);
 				userID = arguments;
 			}
+		} else  if(parseMap.find(function)==parseMap.end()) {
+			// Send error message
+			printf(("Function NOT FOUND IDIOT!!@!!!!1!11!: " + function + "\n").c_str());
 		} else {
 			// Call the function
 			parseMap[function](arguments);
