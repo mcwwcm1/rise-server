@@ -10,7 +10,7 @@
 class PhysicsSpace
 {
 	public:
-		std::vector<Rigidbody> bodies = std::vector<Rigidbody>(1);
+		std::vector<Rigidbody*> bodies = std::vector<Rigidbody*>(0);
 
 		double updateRate;
 		double fixedDT;
@@ -18,9 +18,10 @@ class PhysicsSpace
 		PhysicsSpace(double updateRate);
 		PhysicsSpace(); // I know why this has to be here :) It's silly
 
-		void AddBody(Rigidbody body);
+		void RegisterBody(Rigidbody* body);
 
 		void RunTick();
+		void CheckCollision();
 };
 
 #endif

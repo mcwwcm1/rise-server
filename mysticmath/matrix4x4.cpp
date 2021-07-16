@@ -25,7 +25,7 @@ Matrix4x4::Matrix4x4(double v0, double v1, double v2, double v3, double v4, doub
 
 Matrix4x4::Matrix4x4()
 {
-	*this = Matrix4x4(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+	*this = identity;
 }
 
 const Matrix4x4 Matrix4x4::identity = Matrix4x4(1,0,0,0,
@@ -150,7 +150,7 @@ Matrix4x4 getScaleMatrix(Double3 scale)
 
 Matrix4x4 getTRSMatrix(Double3 position, Quaternion rotation, Double3 scale)
 {
-	return getScaleMatrix(scale) * getRotationMatrix(rotation) * getTranslationMatrix(position);
+	return getTranslationMatrix(position) * getRotationMatrix(rotation) * getScaleMatrix(scale);
 }
 
 Matrix4x4 operator * (Matrix4x4 m, double f)
@@ -172,17 +172,22 @@ Double3 operator * (Double3 vec, Matrix4x4 m)
 
 Matrix4x4 operator * (Matrix4x4 m1, Matrix4x4 m2)
 {
-	Matrix4x4 r;
-	for (int x = 0; x < 4; x++)
-	{
-		for (int y = 0; y < 4; y++)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				*r[y*4 + x] += *m1[y*4 + i] * *m2[i*4 + x]; 
-			}
-		}
-	}
-	
-	return r;
+	return Matrix4x4(
+		m1.v0*m2.v0 + m1.v1*m2.v4 + m1.v2*m2.v8 + m1.v3*m2.v12,
+		m1.v0*m2.v1 + m1.v1*m2.v5 + m1.v2*m2.v9 + m1.v3*m2.v13,
+		m1.v0*m2.v2 + m1.v1*m2.v6 + m1.v2*m2.v10 + m1.v3*m2.v14,
+		m1.v0*m2.v3 + m1.v1*m2.v7 + m1.v2*m2.v11 + m1.v3*m2.v15,
+		m1.v4*m2.v0 + m1.v5*m2.v4 + m1.v6*m2.v8 + m1.v7*m2.v12,
+		m1.v4*m2.v1 + m1.v5*m2.v5 + m1.v6*m2.v9 + m1.v7*m2.v13,
+		m1.v4*m2.v2 + m1.v5*m2.v6 + m1.v6*m2.v10 + m1.v7*m2.v14,
+		m1.v4*m2.v3 + m1.v5*m2.v7 + m1.v6*m2.v11 + m1.v7*m2.v15,
+		m1.v8*m2.v0 + m1.v9*m2.v4 + m1.v10*m2.v8 + m1.v11*m2.v12,
+		m1.v8*m2.v1 + m1.v9*m2.v5 + m1.v10*m2.v9 + m1.v11*m2.v13,
+		m1.v8*m2.v2 + m1.v9*m2.v6 + m1.v10*m2.v10 + m1.v11*m2.v14,
+		m1.v8*m2.v3 + m1.v9*m2.v7 + m1.v10*m2.v11 + m1.v11*m2.v15,
+		m1.v12*m2.v0 + m1.v13*m2.v4 + m1.v14*m2.v8 + m1.v15*m2.v12,
+		m1.v12*m2.v1 + m1.v13*m2.v5 + m1.v14*m2.v9 + m1.v15*m2.v13,
+		m1.v12*m2.v2 + m1.v13*m2.v6 + m1.v14*m2.v10 + m1.v15*m2.v14,
+		m1.v12*m2.v3 + m1.v13*m2.v7 + m1.v14*m2.v11 + m1.v15*m2.v15
+		);
 }

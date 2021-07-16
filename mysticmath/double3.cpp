@@ -14,7 +14,9 @@ Double3::Double3(double x, double y, double z)
 
 Double3::Double3()
 {
-	x = y = z = 0;
+	x = 0;
+	y = 0;
+	z = 0;
 }
 
 double Double3::magnitudeSquared() const
@@ -24,13 +26,14 @@ double Double3::magnitudeSquared() const
 
 double Double3::magnitude() const
 {
-	return sqrt(magnitudeSquared());
+	float squared = magnitudeSquared();
+	return squared == 0 ? 0 : sqrt(squared);
 }
 
 Double3 Double3::normalized() const
 {
 	double m = magnitude();
-	return Double3(x / m, y / m, z / m);
+	return m == 0 ? Double3() : Double3(x / m, y / m, z / m);
 }
 
 Double3 Double3::absolute() const
@@ -73,6 +76,11 @@ Double3 cross(const Double3& a, const Double3& b)
 Double3 tripleProduct(const Double3& a, const Double3& b, const Double3& c)
 {
 	return cross(a, cross(b, c));
+}
+
+Double3 reflect(const Double3& vec, const Double3& norm)
+{
+	return vec - (norm* 2 * dot(vec, norm));
 }
 
 Double3 clamp(const Double3& vec, const Double3& min, const Double3& max)

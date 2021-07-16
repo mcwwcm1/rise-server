@@ -6,24 +6,33 @@
 
 #include "../mysticmath/double3.h"
 #include "../mysticmath/quaternion.h"
+#include "../mysticmath/matrix4x4.h"
+#include "shapes/shape.h"
+#include <vector>
 
 class Rigidbody
 {
 	private:
-		Double3 bufferedForce;
-		Double3 bufferedTorque;
+		Double3 bufferedForce = Double3(0, 0, 0);
+		Double3 bufferedTorque = Double3(0, 0, 0);
+		Double3 bufferedImpulseForce = Double3(0, 0, 0);
+		Double3 bufferedImpulseTorque = Double3(0, 0, 0);
 
 	public:
-		Double3 position;
-		Quaternion rotation;
-		Double3 scale;
-		Double3 velocity;
-		Double3 torque;
+		Double3 position = Double3(0, 0, 0);
+		Quaternion rotation = Quaternion::identity;
+		Double3 scale = Double3(1, 1, 1);
+		Double3 velocity = Double3(0, 0, 0);
+		Double3 torque = Double3(0, 0, 0);
 		float drag = 1;
 		float rotationalDrag = 1;
 
+		std::vector<Shape*> colliders;
+
 		// Constructors
 		Rigidbody();
+
+		Matrix4x4 GetTransformMatrix();
 
 		// Apply forces
 		void AddForce(const Double3& force);

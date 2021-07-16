@@ -2,23 +2,24 @@
 // Purpose: Implements sphereShape.h
 
 #include "sphereShape.h"
-#include "matrix4x4.h"
 
 SphereShape::SphereShape(float radius)
 {
-	this->size = Float3(radius, radius, radius);
+	this->size = Double3(radius, radius, radius);
+	this->type = ShapeType::Sphere;
 }
 
-SphereShape::SphereShape(Float3 size)
+SphereShape::SphereShape(Double3 size)
 {
-	this-> size = size;
+	this->size = size;
+	this->type = ShapeType::Sphere;
 }
 
-Float3 SphereShape::getFurthestPointInDirection(Float3 direction)
+Double3 SphereShape::getFurthestPointInDirection(const Double3& direction)
 {
 	if(size.isUniform())
 		return direction * size.x;
 
-	Float3 d = direction * rotation;
+	Double3 d = direction * rotation;
 	return d * getScaleMatrix(size) * rotation.conjugate();
 };

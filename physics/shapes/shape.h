@@ -4,15 +4,20 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include "float3.h"
-#include "quaternion.h"
+#include "../../mysticmath/double3.h"
+#include "../../mysticmath/quaternion.h"
+
+enum ShapeType { Sphere, Box };
 
 class Shape
 {
 	public:
-		Float3 position;
+		ShapeType type;
+		Double3 position;
 		Quaternion rotation;
-		virtual Float3 getFurthestPointInDirection(Float3 direction);		
+		virtual Double3 getFurthestPointInDirection(const Double3& direction);
+
+		Shape();
 };
 
 #endif

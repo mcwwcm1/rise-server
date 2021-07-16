@@ -11,11 +11,12 @@
 class Airship
 {
 	public:
-		PhysicsSpace space;
-		Rigidbody rigidbody;
-		float throttle, pitch, yaw;
+		PhysicsSpace* space;
+		Rigidbody* rigidbody;
+		float throttle, pitch, yaw = 0;
 
-		Airship(const PhysicsSpace& space);
+		Airship();
+		Airship(PhysicsSpace* space);
 
 		Matrix4x4 GetTransformMatrix();
 		Double3 GetPosition();

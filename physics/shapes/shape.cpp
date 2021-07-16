@@ -3,7 +3,12 @@
 
 #include "shape.h"
 
-Float3 Shape::getFurthestPointInDirection(Float3 direction)
+Shape::Shape()
+{
+	printf("WHY THE FUCK AM I HERE\n");
+}
+
+Double3 Shape::getFurthestPointInDirection(const Double3& direction)
 {
 	return direction;
 }

@@ -13,6 +13,7 @@ Quaternion::Quaternion(double x, double y, double z, double w)
 
 Quaternion::Quaternion()
 {
+	x = y = z = 0;
 	w = 1;
 }
 const Quaternion Quaternion::identity = Quaternion(0, 0, 0, 1);
