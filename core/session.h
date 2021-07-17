@@ -89,6 +89,8 @@ public:
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
+		printf(("Function received: " + function + "\n").c_str());
+		printf(("Argument received: " + arguments + "\n").c_str());
 
 		// Check if user is making a registration call
 		if(function=="register") {
@@ -96,9 +98,12 @@ public:
 				RegisterUser(arguments, this);
 				userID = arguments;
 			}
-		} else  if(parseMap.find(function)==parseMap.end()) {
+		} else if(parseMap.find(function)==parseMap.end()) {
 			// Send error message
 			printf(("Function NOT FOUND IDIOT!!@!!!!1!11!: " + function + "\n").c_str());
+		} else if (arguments!="") {
+			// Check for argument
+			printf("NO ARGUMENT STUHPID\n");
 		} else {
 			// Call the function
 			parseMap[function](arguments);
@@ -120,9 +125,13 @@ public:
 		buffer_.consume(buffer_.size());
 		// Release the lock
 		mutex_.unlock();
+		printf("Send mutex unlocked\n");
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{
+		printf("Send mutex locked\n");
+		// Grab a lock
+		mutex_.lock();
 		// We are not currently writing, so send this immediately
 		ws_.async_write(
 			net::buffer(*ss),
@@ -133,9 +142,6 @@ public:
 	}
 	void send(boost::shared_ptr<std::string const> const& ss)
 	{
-		// Grab a lock
-		mutex_.lock();
-
 		// Post our work to the strand, this ensures
     	// that the members of `this` will not be
     	// accessed concurrently.
