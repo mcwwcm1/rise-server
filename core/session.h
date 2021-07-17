@@ -125,9 +125,13 @@ public:
 		buffer_.consume(buffer_.size());
 		// Release the lock
 		mutex_.unlock();
+		printf("Send mutex unlocked\n");
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{
+		printf("Send mutex locked\n");
+		// Grab a lock
+		mutex_.lock();
 		// We are not currently writing, so send this immediately
 		ws_.async_write(
 			net::buffer(*ss),
@@ -138,9 +142,6 @@ public:
 	}
 	void send(boost::shared_ptr<std::string const> const& ss)
 	{
-		// Grab a lock
-		mutex_.lock();
-
 		// Post our work to the strand, this ensures
     	// that the members of `this` will not be
     	// accessed concurrently.
