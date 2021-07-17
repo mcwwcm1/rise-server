@@ -101,7 +101,7 @@ public:
 		} else if(parseMap.find(function)==parseMap.end()) {
 			// Send error message
 			printf(("Function NOT FOUND IDIOT!!@!!!!1!11!: " + function + "\n").c_str());
-		} else if (arguments!="") {
+		} else if (arguments=="") {
 			// Check for argument
 			printf("NO ARGUMENT STUHPID\n");
 		} else {
