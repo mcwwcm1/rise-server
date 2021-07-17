@@ -9,6 +9,7 @@
 
 #include "../physics/physicsspace.h"
 #include "../physics/airship.h"
+#include "../physics/shapes/sphereshape.h"
 
 void RegisterAirship()
 {
@@ -20,7 +21,7 @@ void RegisterAirship()
 	delete userString; // Delet the string to avoid memory leak
 }
 
-void RegisterAirship(std::string& arguments)
+void RegisterAirshipParser(std::string& arguments)
 {
 	// Lock the buffers to safely write to them
 	bufferAccessMutex.lock();
@@ -30,6 +31,37 @@ void RegisterAirship(std::string& arguments)
 
 	// Put arguments
 	argumentBuffer.put(PrimaryArgument(new std::string(arguments)));
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
+
+void RegisterStaticCollider()
+{
+	Shape* colliderShape = new SphereShape(argumentBuffer.get().var.fval);
+	std::string* positionString = argumentBuffer.get().var.sval;
+	colliderShape->position = double3FromString(*positionString);
+	delete positionString;
+	// No airship associated with this user, create new
+	space->RegisterStaticCollider(colliderShape);
+}
+
+void RegisterStaticColliderParser(std::string& arguments)
+{
+	std::string radiusString = arguments.substr(0, arguments.find(' '));
+	std::string positionString = arguments.substr(arguments.find(' '));
+
+	float radius = stof(radiusString);
+
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+
+	// Put function pointer
+	functionBuffer.put(RegisterStaticCollider);
+
+	// Put arguments
+	argumentBuffer.put(PrimaryArgument(stof(arguments)));
+	argumentBuffer.put(PrimaryArgument(new std::string(positionString)));
 
 	// Unlock buffers
 	bufferAccessMutex.unlock();

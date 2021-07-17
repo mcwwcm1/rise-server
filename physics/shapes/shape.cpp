@@ -3,10 +3,7 @@
 
 #include "shape.h"
 
-Shape::Shape()
-{
-	printf("WHY THE FUCK AM I HERE\n");
-}
+Shape::Shape() {}
 
 Double3 Shape::getFurthestPointInDirection(const Double3& direction)
 {

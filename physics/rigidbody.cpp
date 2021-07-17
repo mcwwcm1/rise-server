@@ -4,18 +4,18 @@
 #include "rigidbody.h"
 #include "shapes/sphereshape.h"
 
-Rigidbody::Rigidbody()
+Rigidbody::Rigidbody() 
 {
 	SphereShape* s1 = new SphereShape(2);
-	s1->position = Double3(0, 0, 1.5f);
+	s1->position = Double3(0, 0, -2.5);
 	colliders.push_back(s1);
 
 	SphereShape* s2 = new SphereShape(2);
-	s2->position = Double3(0, 0, -0.5f);
+	s2->position = Double3(0, 0, -0.5);
 	colliders.push_back(s2);
 
 	SphereShape* s3 = new SphereShape(2);
-	s3->position = Double3(0, 0, -2.5f);
+	s3->position = Double3(0, 0, 1.5);
 	colliders.push_back(s3);
 }
 
@@ -38,7 +38,7 @@ void Rigidbody::AddImpulseForce(const Double3& force)
 void Rigidbody::AddTorque(const Double3& torque)
 {
 	// Buffer the torque and apply it later when we know the delta time
-	bufferedImpulseTorque += torque;
+	bufferedTorque += torque;
 }
 
 void Rigidbody::AddTorque(const Quaternion& torque)
@@ -48,8 +48,28 @@ void Rigidbody::AddTorque(const Quaternion& torque)
 
 void Rigidbody::AddImpulseTorque(const Double3& torque)
 {
-	this->torque += torque;
+	bufferedImpulseTorque += torque;
 }
+
+void Rigidbody::AddForceAtPosition(const Double3& force, const Double3& position)
+{
+	Double3 delta = position - this->position;
+	AddTorque(cross(force, delta) * -PI);
+	AddForce(force.normalized() * abs(dot(force, delta.normalized())));
+}
+
+void Rigidbody::AddImpulseForceAtPosition(const Double3& force, const Double3& position)
+{
+	Double3 delta = position - this->position;
+	AddImpulseTorque(cross(force, delta) * -PI);
+	AddImpulseForce(force.normalized() * abs(dot(force, delta.normalized())));
+}
+
+Double3 Rigidbody::GetReflectedForce(const Double3& force, const Double3& normal)
+{
+	return lerp(force, reflect(force, normal), (bounciness + 1) * 0.5f);
+}
+
 
 void Rigidbody::RunTick(float dt)
 {

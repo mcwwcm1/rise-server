@@ -37,11 +37,14 @@ struct Double3
 		Double3& operator /= (const double& b);
 };
 
+Double3 double3FromString(string s);
+
 double dot(const Double3& a, const Double3& b);
 Double3 cross(const Double3& a, const Double3& b);
 Double3 tripleProduct(const Double3& a, const Double3& b, const Double3& c);
 Double3 reflect(const Double3& vec, const Double3& norm);
 Double3 clamp(const Double3& vec, const Double3& min, const Double3& max);
+Double3 lerp(const Double3& a, const Double3& b, double t);
 
 // Operator overloads
 Double3 operator + (const Double3& a, const Double3& b);

@@ -55,7 +55,7 @@ std::unordered_map<std::string, session*> registeredUsers;
 #include "../physics/airship.h"
 #include "../physics/physicsspace.h"
 
-PhysicsSpace* space = new PhysicsSpace(60);
+PhysicsSpace* space = new PhysicsSpace(20);
 std::unordered_map<std::string, Airship*> airships;
 
 #endif

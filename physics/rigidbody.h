@@ -26,11 +26,14 @@ class Rigidbody
 		Double3 torque = Double3(0, 0, 0);
 		float drag = 1;
 		float rotationalDrag = 1;
+		float bounciness = 0.2f;
+		float friction = 0.2f;
 
 		std::vector<Shape*> colliders;
 
 		// Constructors
 		Rigidbody();
+		Rigidbody(string id);
 
 		Matrix4x4 GetTransformMatrix();
 
@@ -41,6 +44,10 @@ class Rigidbody
 		void AddTorque(const Double3& torque);
 		void AddTorque(const Quaternion& torque);
 		void AddImpulseTorque(const Double3& torque);
+
+		void AddForceAtPosition(const Double3& force, const Double3& position);
+		void AddImpulseForceAtPosition(const Double3& force, const Double3& position);
+		Double3 GetReflectedForce(const Double3& force, const Double3& normal);
 
 		void RunTick(float dt);
 };

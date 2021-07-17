@@ -14,7 +14,7 @@ void WorldTick()
 
 	// Send airship data to Neos
 	for(auto& as : airships){
-		std::string response = "P" + as.second->GetPosition().str() + "R" + as.second->GetRotation().str();
-		Send(&as.first, &response);
+			std::string response = "settransform P" + as.second->GetPosition().str() + "R" + as.second->GetRotation().str();
+			Send(&as.first, &response);
 	}
 }

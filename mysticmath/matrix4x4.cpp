@@ -114,30 +114,27 @@ Matrix4x4 getTranslationMatrix(Double3 translation)
 
 Matrix4x4 getRotationMatrix(Quaternion rotation)
 {
-	Double3 radEuler = rotation.toEuler() * DEG2RAD;
+	double x = rotation.x;
+	double y = rotation.y;
+	double z = rotation.z;
+	double w = rotation.w;
 
-	Matrix4x4 x = Matrix4x4(
-		1, 0, 0, 0,
-		0, cosf(radEuler.x), sinf(radEuler.x), 0,
-		0, -sinf(radEuler.x), cosf(radEuler.x), 0,
-		0, 0, 0, 1
-	);
+	double xx = 2*x*x;
+	double yy = 2*y*y;
+	double zz = 2*z*z;
 
-	Matrix4x4 y = Matrix4x4(
-		cosf(radEuler.y), 0, -sinf(radEuler.y), 0,
-		0, 1, 0, 0,
-		sinf(radEuler.y), 0, cosf(radEuler.y), 0,
-		0, 0, 0, 1
-	);
+	double xy = 2*x*y;
+	double wz = 2*w*z;
+	double xz = 2*x*z;
+	double wy = 2*w*y;
+	double yz = 2*y*z;
+	double wx = 2*w*x;
 
-	Matrix4x4 z = Matrix4x4(
-		cosf(radEuler.z), -sinf(radEuler.z), 0, 0,
-		sinf(radEuler.z), cosf(radEuler.z), 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1
-	);
-
-	return x * y * z;
+	return Matrix4x4(
+		(1-yy-zz), (xy-wz), (xz+wy), 0,
+		(xy+wz), (1-xx-zz), (yz-wx), 0,
+		(xz-wy), (yz+wx), (1-xx-yy), 0,
+		0, 0, 0, 1 );
 }
 
 Matrix4x4 getScaleMatrix(Double3 scale)

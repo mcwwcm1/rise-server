@@ -48,17 +48,18 @@ void fail(beast::error_code ec, char const* what)
 int main(int argc, char* argv[])
 {
 	//connection to the db. Just for testing, don't uncomment.
-	pqxx::connection dbConn("dbname=riseserver user=riseserver password=HfUK6+{Cb!LS=~52 host=funnyanimalfacts.com port=5432");
+	//pqxx::connection dbConn("dbname=riseserver user=riseserver password=HfUK6+{Cb!LS=~52 host=funnyanimalfacts.com port=5432");
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
 	parseMap["echo"] = EchoTestParser;
 	parseMap["echotest"] = EchoTestParser;
 	parseMap["echoto"] = EchoToParser;
-	parseMap["registerairship"] = RegisterAirship;
+	parseMap["registerairship"] = RegisterAirshipParser;
 	parseMap["setthrottle"] = SetThrottleParser;
 	parseMap["setpitch"] = SetPitchParser;
 	parseMap["setyaw"] = SetYawParser;
+	parseMap["registerstaticcollider"] = RegisterStaticColliderParser;
 
 	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments
@@ -90,7 +91,7 @@ int main(int argc, char* argv[])
 			ioc.run();
 		});
 
-	std::chrono::milliseconds timespan(1000 / 60); //defines sleep timespan in ms
+	std::chrono::milliseconds timespan(1000 / 20); //defines sleep timespan in ms
 	while(true)
 	{
 		bufferAccessMutex.lock();

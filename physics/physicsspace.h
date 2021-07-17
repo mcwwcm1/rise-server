@@ -11,6 +11,7 @@ class PhysicsSpace
 {
 	public:
 		std::vector<Rigidbody*> bodies = std::vector<Rigidbody*>(0);
+		std::vector<Shape*> staticColliders = std::vector<Shape*>(0);
 
 		double updateRate;
 		double fixedDT;
@@ -19,6 +20,7 @@ class PhysicsSpace
 		PhysicsSpace(); // I know why this has to be here :) It's silly
 
 		void RegisterBody(Rigidbody* body);
+		void RegisterStaticCollider(Shape* collider);
 
 		void RunTick();
 		void CheckCollision();

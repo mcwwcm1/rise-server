@@ -63,6 +63,16 @@ string Double3::str() const
 	return ss.str();
 }
 
+Double3 double3FromString(string s)
+{
+	size_t sep1 = s.find(';');
+	size_t sep2 = s.find(';', sep1 + 1);
+	double x = stof(s.substr(s.find('[') + 1, sep1 - 1));
+	double y = stof(s.substr(sep1 + 1, sep2 - sep1));
+	double z = stof(s.substr(sep2 + 1, s.length() - sep2 - 1));
+	return Double3(x, y, z);
+}
+
 double dot(const Double3& a, const Double3& b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
@@ -86,6 +96,11 @@ Double3 reflect(const Double3& vec, const Double3& norm)
 Double3 clamp(const Double3& vec, const Double3& min, const Double3& max)
 {
 	return Double3(std::min(std::max(vec.x, min.x), max.x), std::min(std::max(vec.y, min.y), max.y), std::min(std::max(vec.z, min.z), max.z));
+}
+
+Double3 lerp(const Double3& a, const Double3& b, double t)
+{
+	return a * (1 - t) + b * t;
 }
 
 // Assignment operator overloads
