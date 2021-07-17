@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
 	std::chrono::milliseconds timespan(1000 / 20); //defines sleep timespan in ms
 	while(true)
 	{
+		printf("Loop iteration started\n");
 		bufferAccessMutex.lock();
 		//Iterate over all elements in function buffer until empty
 		while(!functionBuffer.empty())
