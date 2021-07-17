@@ -89,6 +89,8 @@ public:
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
+		printf(("Function received: " + function + "\n").c_str());
+		printf(("Argument received: " + arguments + "\n").c_str());
 
 		// Check if user is making a registration call
 		if(function=="register") {
