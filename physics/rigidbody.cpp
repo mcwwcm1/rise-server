@@ -27,18 +27,18 @@ Matrix4x4 Rigidbody::GetTransformMatrix()
 void Rigidbody::AddForce(const Double3& force)
 {
 	// Buffer the force and apply it later when we know the delta time
-	bufferedForce += force;
+	bufferedForce += force / mass;
 }
 
 void Rigidbody::AddImpulseForce(const Double3& force)
 {
-	bufferedImpulseForce += force;
+	bufferedImpulseForce += force / mass;
 }
 
 void Rigidbody::AddTorque(const Double3& torque)
 {
 	// Buffer the torque and apply it later when we know the delta time
-	bufferedTorque += torque;
+	bufferedTorque += torque / mass;
 }
 
 void Rigidbody::AddTorque(const Quaternion& torque)
@@ -48,7 +48,7 @@ void Rigidbody::AddTorque(const Quaternion& torque)
 
 void Rigidbody::AddImpulseTorque(const Double3& torque)
 {
-	bufferedImpulseTorque += torque;
+	bufferedImpulseTorque += torque / mass;
 }
 
 void Rigidbody::AddForceAtPosition(const Double3& force, const Double3& position)
@@ -74,8 +74,8 @@ Double3 Rigidbody::GetReflectedForce(const Double3& force, const Double3& normal
 void Rigidbody::RunTick(float dt)
 {
 	// Apply drag
-	AddForce(velocity * drag * -1);
-	AddTorque(torque * rotationalDrag * -1);
+	AddForce(velocity * drag * -1 * mass);
+	AddTorque(torque * rotationalDrag * -1 * mass);
 
 	// Apply buffered forces
 	velocity += bufferedImpulseForce + bufferedForce * dt;

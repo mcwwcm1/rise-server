@@ -33,16 +33,16 @@ void Airship::RunTick()
 	float speed = rigidbody->velocity.magnitude();
 
 	// Apply thrust
-	rigidbody->AddForce(forward * throttle * 3);
+	rigidbody->AddForce(forward * throttle * 30);
 
 	// Apply yaw steering
-	rigidbody->AddTorque(up * yaw * speed * -7);
+	rigidbody->AddTorque(up * yaw * speed * -70);
 
 	// Apply pitch steering
-	rigidbody->AddTorque(right * pitch * speed * 3);
+	rigidbody->AddTorque(right * pitch * speed * 30);
 
 	// Self-righting
-	rigidbody->AddTorque(cross(Double3(0, -1, 0), up) * 50);
+	rigidbody->AddTorque(cross(Double3(0, -1, 0), up) * 500);
 }
 
 Double3 Airship::GetForward()

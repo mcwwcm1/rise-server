@@ -148,4 +148,45 @@ void SetYawParser(std::string& arguments)
 	bufferAccessMutex.unlock();
 }
 
+// addForce <airshipID> <force>
+void AddForce()
+{
+	std::string* airshipID = argumentBuffer.get().var.sval;
+	std::string* force = argumentBuffer.get().var.sval;
+	std::string* position = argumentBuffer.get().var.sval;
+	
+	cout<<"ADDING FORCE "<< *airshipID << " Force: " << *force << " Position: " << *position << "\n";
+
+	airships[*airshipID]->rigidbody->AddForceAtPosition(double3FromString(*force), double3FromString(*position));
+	
+	delete airshipID;
+	delete force;
+	delete position;
+}
+
+void AddForceParser(std::string& arguments)
+{
+	size_t separator1 = arguments.find('|');
+	size_t separator2 = arguments.find('|', separator1 + 1);
+
+	string force = arguments.substr(separator1 + 1, separator2);
+	string position = arguments.substr(separator2 + 1);
+
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+ 
+	// Put function pointer
+	functionBuffer.put(AddForce);
+
+	// Put argument
+	argumentBuffer.put(PrimaryArgument(new std::string(arguments.substr(0, separator1))));
+	argumentBuffer.put(new std::string(force));
+	argumentBuffer.put(new std::string(position));
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
+
+
+
 #endif

@@ -28,6 +28,7 @@ class Rigidbody
 		float rotationalDrag = 1;
 		float bounciness = 0.2f;
 		float friction = 0.2f;
+		float mass = 10.0f;
 
 		std::vector<Shape*> colliders;
 

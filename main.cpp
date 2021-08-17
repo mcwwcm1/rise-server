@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
 	parseMap["setpitch"] = SetPitchParser;
 	parseMap["setyaw"] = SetYawParser;
 	parseMap["registerstaticcollider"] = RegisterStaticColliderParser;
+	parseMap["addForce"] = AddForceParser;
 
 	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments
@@ -102,8 +103,10 @@ int main(int argc, char* argv[])
 			functionBuffer.get()();
 		}
 
+		printf("Started world tick\n");
 		WorldTick();
-		
+		printf("Finished world tick\n");
+
 		bufferAccessMutex.unlock();
 		printf("Loop iteration completed\n");
 		std::this_thread::sleep_for(timespan);
