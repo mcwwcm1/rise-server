@@ -89,8 +89,8 @@ public:
 		std::string message = boost::beast::buffers_to_string(buffer_.data());
 		std::string function = message.substr(0, message.find(" "));
 		std::string arguments = message.substr(message.find(" ") + 1, message.length());
-		printf(("Function received: " + function + "\n").c_str());
-		printf(("Argument received: " + arguments + "\n").c_str());
+		//printf(("Function received: " + function + "\n").c_str());
+		//printf(("Argument received: " + arguments + "\n").c_str());
 
 		// Check if user is making a registration call
 		if(function=="register") {
@@ -125,11 +125,11 @@ public:
 		buffer_.consume(buffer_.size());
 		// Release the lock
 		mutex_.unlock();
-		printf("Send mutex unlocked\n");
+		//printf("Send mutex unlocked\n");
 	}
 	void on_send(boost::shared_ptr<std::string const> const& ss)
 	{
-		printf("Send mutex locked\n");
+		//printf("Send mutex locked\n");
 		// Grab a lock
 		mutex_.lock();
 		// We are not currently writing, so send this immediately
@@ -138,7 +138,7 @@ public:
 			beast::bind_front_handler(
 				&session::on_write,
 				shared_from_this()));
-		printf("on_send ran\n");
+		//printf("on_send ran\n");
 	}
 	void send(boost::shared_ptr<std::string const> const& ss)
 	{
@@ -151,7 +151,7 @@ public:
             	&session::on_send,
             	shared_from_this(),
             	ss));
-		printf("send ran\n");
+		//printf("send ran\n");
 	}
 
 };

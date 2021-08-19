@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 	std::chrono::milliseconds timespan(1000 / 20); //defines sleep timespan in ms
 	while(true)
 	{
-		printf("Loop iteration started\n");
+		//printf("Loop iteration started\n");
 		bufferAccessMutex.lock();
 		//Iterate over all elements in function buffer until empty
 		while(!functionBuffer.empty())
@@ -103,12 +103,12 @@ int main(int argc, char* argv[])
 			functionBuffer.get()();
 		}
 
-		printf("Started world tick\n");
+		//printf("Started world tick\n");
 		WorldTick();
-		printf("Finished world tick\n");
+		//printf("Finished world tick\n");
 
 		bufferAccessMutex.unlock();
-		printf("Loop iteration completed\n");
+		//printf("Loop iteration completed\n");
 		std::this_thread::sleep_for(timespan);
 	}
 	return EXIT_SUCCESS;

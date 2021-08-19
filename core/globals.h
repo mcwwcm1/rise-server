@@ -52,8 +52,8 @@ session* headlessSession = NULL;
 std::unordered_map<std::string, session*> registeredUsers;
 
 // World state information
-#include "../physics/airship.h"
-#include "../physics/physicsspace.h"
+#include "../world/physics/airship.h"
+#include "../world/physics/physicsspace.h"
 
 PhysicsSpace* space = new PhysicsSpace(20);
 std::unordered_map<std::string, Airship*> airships;

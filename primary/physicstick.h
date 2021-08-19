@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <string>
 
-#include "../physics/physicsspace.h"
-#include "../physics/airship.h"
-#include "../physics/shapes/sphereshape.h"
+#include "../world/physics/physicsspace.h"
+#include "../world/physics/airship.h"
+#include "../world/physics/shapes/sphereshape.h"
 
 void RegisterAirship()
 {
@@ -43,7 +43,7 @@ void RegisterStaticCollider()
 	colliderShape->position = double3FromString(*positionString);
 	delete positionString;
 	// No airship associated with this user, create new
-	space->RegisterStaticCollider(colliderShape);
+	//space->RegisterStaticCollider(colliderShape);
 }
 
 void RegisterStaticColliderParser(std::string& arguments)
@@ -154,10 +154,8 @@ void AddForce()
 	std::string* airshipID = argumentBuffer.get().var.sval;
 	std::string* force = argumentBuffer.get().var.sval;
 	std::string* position = argumentBuffer.get().var.sval;
-	
-	cout<<"ADDING FORCE "<< *airshipID << " Force: " << *force << " Position: " << *position << "\n";
 
-	airships[*airshipID]->rigidbody->AddForceAtPosition(double3FromString(*force), double3FromString(*position));
+	airships[*airshipID]->AddForceAtPosition(double3FromString(*force), double3FromString(*position));
 	
 	delete airshipID;
 	delete force;

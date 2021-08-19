@@ -24,6 +24,7 @@ struct Double3
 		Double3 absolute() const;
 		Double3 sign() const;
 		Double3 round() const;
+		Double3 clampMagnitude(double min, double max) const;
 		bool isUniform() const;
 
 		string str() const;

@@ -5,10 +5,6 @@
 
 void WorldTick()
 {
-	// Tick airships
-	for(auto& as : airships)
-		as.second->RunTick();
-
 	// Tick physics
 	space->RunTick();
 
