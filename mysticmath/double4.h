@@ -13,8 +13,8 @@ using namespace std;
 
 struct Double4
 {
-	public:
-		double x, y, z, w;
+public:
+	double x, y, z, w;
 
 	Double4(double x, double y, double z, double w);
 	Double4();
@@ -27,25 +27,25 @@ struct Double4
 	Double4 round() const;
 	bool isUniform() const;
 
-	Double3 xyz();
+	Double3 xyz() const;
 
-	Double4 operator + (const Double4& b);
-	Double4 operator - (const Double4& b);
-	Double4 operator * (const Double4& b);
-	Double4 operator * (const double b);
-	Double4 operator / (const Double4& b);
-	Double4 operator / (const double b);
+	Double4 operator+(const Double4 &b) const;
+	Double4 operator-(const Double4 &b) const;
+	Double4 operator*(const Double4 &b) const;
+	Double4 operator*(const double b) const;
+	Double4 operator/(const Double4 &b) const;
+	Double4 operator/(const double b) const;
 
-	string str();
+	string str() const;
 };
 
 Double4 clamp(Double4 vec, Double4 min, Double4 max);
 
-Double4& operator += (const Double4& a, const Double4& b);
-Double4& operator -= (const Double4& a, const Double4& b);
-Double4& operator *= (const Double4& a, const Double4& b);
-Double4& operator *= (const Double4& a, const double b);
-Double4& operator /= (const Double4& a, const Double4& b);
-Double4& operator /= (const Double4& a, const double b);
+Double4 &operator+=(const Double4 &a, const Double4 &b);
+Double4 &operator-=(const Double4 &a, const Double4 &b);
+Double4 &operator*=(const Double4 &a, const Double4 &b);
+Double4 &operator*=(const Double4 &a, const double b);
+Double4 &operator/=(const Double4 &a, const Double4 &b);
+Double4 &operator/=(const Double4 &a, const double b);
 
 #endif

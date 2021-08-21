@@ -2,3 +2,4 @@
 rise-server
 rise-test
 *.o
+.depend

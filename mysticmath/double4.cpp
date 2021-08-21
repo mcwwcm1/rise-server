@@ -36,7 +36,7 @@ Double4 Double4::normalized() const
 
 Double4 Double4::absolute() const
 {
-	return *this * this->sign();
+	return *this * sign();
 }
 
 Double4 Double4::sign() const
@@ -66,46 +66,46 @@ string Double4::str() const
 	return ss.str();
 }
 
-double dot(const Double4& a, const Double4& b)
+double dot(const Double4 &a, const Double4 &b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
-Double4 clamp(const Double4& vec, const Double4& min, const Double4& max)
+Double4 clamp(const Double4 &vec, const Double4 &min, const Double4 &max)
 {
 	return Double4(
-		std::min(std::max(vec.x, min.x), max.x), 
-		std::min(std::max(vec.y, min.y), max.y), 
-		std::min(std::max(vec.z, min.z), max.z),
-		std::min(std::max(vec.w, min.w), max.w));
+			std::min(std::max(vec.x, min.x), max.x),
+			std::min(std::max(vec.y, min.y), max.y),
+			std::min(std::max(vec.z, min.z), max.z),
+			std::min(std::max(vec.w, min.w), max.w));
 }
 
-Double4 Double4::operator + (const Double4& b)
+Double4 Double4::operator+(const Double4 &b) const
 {
 	return Double4(x + b.x, y + b.y, z + b.z, w + w);
 }
 
-Double4 Double4::operator - (const Double4& b)
+Double4 Double4::operator-(const Double4 &b) const
 {
 	return Double4(x - b.x, y - b.y, z - b.z, w - b.w);
 }
 
-Double4 Double4::operator * (const Double4& b)
+Double4 Double4::operator*(const Double4 &b) const
 {
 	return Double4(x * b.x, y * b.y, z * b.z, w * b.w);
 }
 
-Double4 Double4::operator * (double b)
+Double4 Double4::operator*(double b) const
 {
 	return Double4(x * b, y * b, z * b, w * b);
 }
 
-Double4 Double4::operator / (const Double4& b)
+Double4 Double4::operator/(const Double4 &b) const
 {
 	return Double4(x / b.x, y / b.y, z / b.z, w / b.w);
 }
 
-Double4 Double4::operator / (const double b)
+Double4 Double4::operator/(const double b) const
 {
 	return Double4(x / b, y / b, z / b, w / b);
 }
