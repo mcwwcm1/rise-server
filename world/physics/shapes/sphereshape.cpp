@@ -1,7 +1,7 @@
 // File: sphereShape.cpp
 // Purpose: Implements sphereShape.h
 
-#include "sphereShape.h"
+#include "sphereshape.h"
 
 SphereShape::SphereShape(float radius)
 {
@@ -15,9 +15,9 @@ SphereShape::SphereShape(Double3 size)
 	this->type = ShapeType::Sphere;
 }
 
-Double3 SphereShape::getFurthestPointInDirection(const Double3& direction)
+Double3 SphereShape::getFurthestPointInDirection(const Double3 &direction)
 {
-	if(size.isUniform())
+	if (size.isUniform())
 		return direction * size.x;
 
 	Double3 d = direction * rotation;
