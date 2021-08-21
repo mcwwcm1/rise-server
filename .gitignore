@@ -1,1 +1,4 @@
 .vscode/
+rise-server
+rise-test
+*.o
