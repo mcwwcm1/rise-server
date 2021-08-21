@@ -6,11 +6,25 @@
 #include "../../mysticmath/double3.h"
 #include "../../mysticmath/quaternion.h"
 #include "../../mysticmath/matrix4x4.h"
+#include <unordered_map>
 
 class Entity
 {
-	public:
+		public:
+		Entity();
+		Entity(string id);
 		virtual ~Entity() = default;
+
+		string id;
+		string* owner;
+		unordered_map<string, string> changeTable;
+		bool dirty;
+
+		void SubmitChange(string field, string change);
+
+		void SetLocalPosition(const Double3& newPosition);
+		void SetLocalRotation(const Quaternion& newRotation);
+		void SetLocalScale(const Double3& scale);
 
 		Double3 position = Double3(0, 0, 0);
 		Quaternion rotation = Quaternion::identity;

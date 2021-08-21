@@ -2,6 +2,7 @@
 // Purpose: Implements quaternion.h
 
 #include "quaternion.h"
+#include "../utilities.h"
 
 Quaternion::Quaternion(double x, double y, double z, double w)
 {
@@ -61,7 +62,7 @@ Double3 Quaternion::toEuler() const
 	return euler;
 }
 
-string Quaternion::str()
+string Quaternion::str() const
 {
 	stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";
@@ -87,6 +88,12 @@ Quaternion Quaternion::fromEuler(Double3 euler)
     q.z = cp * cy * sr - sp * sy * cr;
 
     return q;
+}
+
+Quaternion quaternionFromString(string s)
+{
+	auto parts = Split(s.substr(1, s.length() - 1), ';');
+	return Quaternion(stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b)

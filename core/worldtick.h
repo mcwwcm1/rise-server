@@ -2,15 +2,26 @@
 // Purpose: For ticking everything :)
 
 #include "globals.h"
+#include "../world/world.h"
 
 void WorldTick()
 {
 	// Tick physics
-	space->RunTick();
+	World::singleton->space->RunTick();
 
-	// Send airship data to Neos
-	for(auto& as : airships){
-			std::string response = "settransform P" + as.second->GetPosition().str() + "R" + as.second->GetRotation().str();
-			Send(&as.first, &response);
+	for (auto entity : World::singleton->entities)
+	{
+		if(entity.second->dirty)
+		{
+			std::string* changes = new std::string("changeTable ");
+			for (auto change : entity.second->changeTable)
+			{
+				*changes += change.first + "|" + change.second + "|";
+			}
+
+			Send(entity.second->owner, changes);
+			entity.second->changeTable.clear();
+			entity.second->dirty = false;
+		}
 	}
 }

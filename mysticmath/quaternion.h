@@ -30,13 +30,15 @@ struct Quaternion
 
 	static Quaternion fromEuler(Double3 euler);
 	
-	string str();
+	string str() const;
 
 	Quaternion& operator += (const Quaternion& b);
 	Quaternion& operator -= (const Quaternion& b);
 	Quaternion& operator *= (const Quaternion& b);
 	Quaternion& operator *= (double b);
 };
+
+Quaternion quaternionFromString(string s);
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b);
 Quaternion FromToRotation(const Double3& a, const Double3& b);

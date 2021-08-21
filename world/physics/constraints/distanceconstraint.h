@@ -11,8 +11,9 @@
 class DistanceConstraint : public Constraint
 {
 	public:
+		DistanceConstraint(string id);
 		Entity* targetEntity;
-		Double3 point;
+		Double3 targetPoint;
 		float distance;
 		bool isRigid;
 		float tensileForce;

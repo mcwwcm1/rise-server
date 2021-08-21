@@ -1,6 +1,9 @@
 // File: dynamicentity.h
 // Purpose: A PhysicsEntity that has a rigidbody
 
+#ifndef DYNAMICENTITY_H
+#define DYNAMICENTITY_H
+
 #include "entity.h"
 #include "physicsentity.h"
 #include "../physics/shapes/shape.h"
@@ -17,6 +20,7 @@ class DynamicEntity : public PhysicsEntity
 
 	public:
 		DynamicEntity();
+		DynamicEntity(string id);
 		DynamicEntity(PhysicsSpace* space);
 		virtual ~DynamicEntity();
 
@@ -57,3 +61,5 @@ struct Movement
 		Quaternion fromRotation;
 		Quaternion toRotation;
 };
+
+#endif

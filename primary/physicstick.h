@@ -8,17 +8,26 @@
 #include <string>
 
 #include "../world/physics/physicsspace.h"
-#include "../world/physics/airship.h"
+#include "../world/entities/airship.h"
 #include "../world/physics/shapes/sphereshape.h"
+#include "../world/world.h"
+#include "../world/entities/entity.h"
+#include "../utilities.h"
+#include "../world/physics/constraints/distanceconstraint.h"
+#include "../world/entities/dynamicentity.h"
+
+Airship* GetAirship(string* id) { return dynamic_cast<Airship*>(World::singleton->entities[*id]); }
+
+DynamicEntity* GetDynamicEntity(string* id) { return dynamic_cast<DynamicEntity*>(World::singleton->entities[*id]); }
+
 
 void RegisterAirship()
 {
-	std::string* userString = argumentBuffer.get().var.sval;
+	std::string* airshipID = argumentBuffer.get().var.sval;
 
-	// No airship associated with this user, create new
-	airships[*userString] = new Airship(space);
+	World::singleton->RegisterEntity(new Airship(*airshipID));
 
-	delete userString; // Delet the string to avoid memory leak
+	delete airshipID;
 }
 
 void RegisterAirshipParser(std::string& arguments)
@@ -30,7 +39,7 @@ void RegisterAirshipParser(std::string& arguments)
 	functionBuffer.put(RegisterAirship);
 
 	// Put arguments
-	argumentBuffer.put(PrimaryArgument(new std::string(arguments)));
+	argumentBuffer.put(PrimaryArgument(new std::string(arguments))); // airshipID
 
 	// Unlock buffers
 	bufferAccessMutex.unlock();
@@ -42,8 +51,6 @@ void RegisterStaticCollider()
 	std::string* positionString = argumentBuffer.get().var.sval;
 	colliderShape->position = double3FromString(*positionString);
 	delete positionString;
-	// No airship associated with this user, create new
-	//space->RegisterStaticCollider(colliderShape);
 }
 
 void RegisterStaticColliderParser(std::string& arguments)
@@ -71,7 +78,11 @@ void RegisterStaticColliderParser(std::string& arguments)
 void SetThrottle()
 {
 	std::string* airshipID = argumentBuffer.get().var.sval;
-	airships[*airshipID]->throttle = argumentBuffer.get().var.fval;
+ 	Airship* airship = GetAirship(airshipID);
+
+	if(airship != nullptr)
+		airship->throttle = argumentBuffer.get().var.fval;
+	
 	delete airshipID;
 }
 
@@ -98,7 +109,11 @@ void SetThrottleParser(std::string& arguments)
 void SetPitch()
 {
 	std::string* airshipID = argumentBuffer.get().var.sval;
-	airships[*airshipID]->pitch = argumentBuffer.get().var.fval;
+	Airship* airship = GetAirship(airshipID);
+	
+	if(airship != nullptr)
+		airship->pitch = argumentBuffer.get().var.fval;
+
 	delete airshipID;
 }
 
@@ -125,7 +140,11 @@ void SetPitchParser(std::string& arguments)
 void SetYaw()
 {
 	std::string* airshipID = argumentBuffer.get().var.sval;
-	airships[*airshipID]->yaw = argumentBuffer.get().var.fval;
+	Airship* airship = GetAirship(airshipID);
+	
+	if(airship != nullptr)
+		airship->yaw = argumentBuffer.get().var.fval;
+	
 	delete airshipID;
 }
 
@@ -148,14 +167,17 @@ void SetYawParser(std::string& arguments)
 	bufferAccessMutex.unlock();
 }
 
-// addForce <airshipID> <force>
+// addforce <airshipID> <force>
 void AddForce()
 {
 	std::string* airshipID = argumentBuffer.get().var.sval;
 	std::string* force = argumentBuffer.get().var.sval;
 	std::string* position = argumentBuffer.get().var.sval;
 
-	airships[*airshipID]->AddForceAtPosition(double3FromString(*force), double3FromString(*position));
+	Airship* airship = GetAirship(airshipID);
+	
+	if(airship != nullptr)
+		airship->AddForceAtPosition(double3FromString(*force), double3FromString(*position));
 	
 	delete airshipID;
 	delete force;
@@ -185,6 +207,161 @@ void AddForceParser(std::string& arguments)
 	bufferAccessMutex.unlock();
 }
 
+// registerentity <entityID> <position> <rotation> <scale>
+void RegisterEntity()
+{
+	std::string* entityID = argumentBuffer.get().var.sval;
+	std::string* position = argumentBuffer.get().var.sval;
+	std::string* rotation = argumentBuffer.get().var.sval;
+	std::string* scale = argumentBuffer.get().var.sval;
 
+	Entity* entity = new Entity(*entityID);
+	entity->position = double3FromString(*position);
+	entity->rotation = quaternionFromString(*rotation);
+	entity->scale = double3FromString(*scale);
+
+	World::singleton->RegisterEntity(entity);
+	
+	delete entityID;
+	delete position;
+	delete rotation;
+	delete scale;
+}
+
+void RegisterEntityParser(std::string& arguments)
+{
+	auto parts = Split(arguments, '|');	
+
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+ 
+	// Put function pointer
+	functionBuffer.put(RegisterEntity);
+
+	// Put argument
+	argumentBuffer.put(new std::string(parts[0])); // EntityId
+	argumentBuffer.put(new std::string(parts[1])); // Position
+	argumentBuffer.put(new std::string(parts[2])); // Rotation
+	argumentBuffer.put(new std::string(parts[3])); // Scale
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
+
+// unregisterentity <entityID>
+void UnregisterEntity()
+{
+	std::string* entityId = argumentBuffer.get().var.sval;
+
+	World::singleton->UnregisterEntity(*entityId);
+	
+	delete entityId;
+}
+
+void UnregisterEntityParser(std::string& arguments)
+{
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+ 
+	// Put function pointer
+	functionBuffer.put(UnregisterEntity);
+
+	// Put argument
+	argumentBuffer.put(new std::string(arguments)); // EntityId
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
+
+// adddistanceconstraint <constraintID> <entityID> <position> <entityID> <position> <distance>
+void AddDistanceConstraint()
+{
+	std::string* constraintID 	= argumentBuffer.get().var.sval;
+	std::string* entityId1 		= argumentBuffer.get().var.sval;
+	std::string* position1str 	= argumentBuffer.get().var.sval;
+	std::string* entityId2 		= argumentBuffer.get().var.sval;
+	std::string* position2str 	= argumentBuffer.get().var.sval;
+	float distance 				= argumentBuffer.get().var.fval;
+
+	Double3 position1 		= double3FromString(*position1str);
+	Double3 position2 		= double3FromString(*position2str);
+
+	DynamicEntity* entity1 = GetDynamicEntity(entityId1);
+	auto entity2PairThingFUCK = World::singleton->entities.find(*entityId2);
+
+	if(entity1 == nullptr || entity2PairThingFUCK == World::singleton->entities.end() || entity2PairThingFUCK->second == nullptr)
+		return; // One of the entities does not exist
+
+	Entity* entity2 = entity2PairThingFUCK->second;
+
+	// Do the thing
+	DistanceConstraint* constraint = new DistanceConstraint(*constraintID);
+	constraint->attachmentPoint = position1;
+	constraint->targetPoint = position2;
+	constraint->targetEntity = entity2;
+	constraint->distance = distance;
+	constraint->isRigid = true;
+	entity1->constraints.push_back(constraint);
+	
+	delete constraintID;
+	delete entityId1;
+	delete position1str;
+	delete entityId1;
+	delete position2str;
+}
+
+void AddDistanceConstraintParser(std::string& arguments)
+{
+	auto parts = Split(arguments, '|');
+	float distance = stof(parts[7]);
+
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+ 
+	// Put function pointer
+	functionBuffer.put(AddDistanceConstraint);
+	
+	// The first 7 arguments are strings :D
+	for (size_t i = 0; i < 5; i++)
+	{
+		// Put argument
+		argumentBuffer.put(new std::string(parts[i]));
+	}
+
+	argumentBuffer.put(distance);
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
+
+// setowner <entityID> <ownerID>
+void SetOwner()
+{
+	std::string* entity = argumentBuffer.get().var.sval;
+	std::string* owner = argumentBuffer.get().var.sval;
+
+	World::singleton->entities[*entity]->owner = owner;
+
+	delete entity;
+	// IMPORTANT: We are not deleting the owner here because it is used as a pointer by the entity!
+	// If this ever changes we should definitely add a delete here to avoid memory leak
+}
+
+void SetOwnerParser(std::string& arguments)
+{
+	auto parts = Split(arguments, '|');
+
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+ 
+	// Put function pointer
+	functionBuffer.put(SetOwner);
+
+	argumentBuffer.put(new std::string(parts[0])); // EntityID
+	argumentBuffer.put(new std::string(parts[1])); // OwnerID
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
 
 #endif

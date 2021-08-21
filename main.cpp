@@ -60,7 +60,10 @@ int main(int argc, char* argv[])
 	parseMap["setpitch"] = SetPitchParser;
 	parseMap["setyaw"] = SetYawParser;
 	parseMap["registerstaticcollider"] = RegisterStaticColliderParser;
-	parseMap["addForce"] = AddForceParser;
+	parseMap["addforce"] = AddForceParser;
+	parseMap["registerentity"] = RegisterEntityParser;
+	parseMap["unregisterentity"] = UnregisterEntityParser;
+	parseMap["setowner"] = SetOwnerParser;
 
 	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments

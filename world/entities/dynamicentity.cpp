@@ -6,6 +6,8 @@
 
 DynamicEntity::DynamicEntity() { }
 
+DynamicEntity::DynamicEntity(string id) : PhysicsEntity(id) { }
+
 DynamicEntity::DynamicEntity(PhysicsSpace* space) : PhysicsEntity(space)
 {
 	space->RegisterEntity(this);
@@ -95,8 +97,8 @@ void DynamicEntity::RunTick(float dt)
 	HandleConstraints(movement);
 
 	// Apply position / rotation change 
-	position = movement.toPosition;
-	rotation = movement.toRotation;
+	SetLocalPosition(movement.toPosition);
+	SetLocalRotation(movement.toRotation);
 
 	CheckCollision();
 }

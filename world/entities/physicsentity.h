@@ -14,6 +14,7 @@ class PhysicsEntity : public Entity
 {
 	public:
 		PhysicsEntity();
+		PhysicsEntity(string id);
 		PhysicsEntity(PhysicsSpace* space);
 		virtual ~PhysicsEntity();
 

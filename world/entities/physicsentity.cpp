@@ -5,6 +5,8 @@
 
 PhysicsEntity::PhysicsEntity() { }
 
+PhysicsEntity::PhysicsEntity(string id) : Entity(id) { }
+
 PhysicsEntity::PhysicsEntity(PhysicsSpace* space)
 {
 	this->space = space;

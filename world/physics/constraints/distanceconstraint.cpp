@@ -4,12 +4,14 @@
 #include "distanceconstraint.h"
 #include "../../entities/dynamicentity.h"
 
+DistanceConstraint::DistanceConstraint(string id) : Constraint(id) {}
+
 void DistanceConstraint::ApplyConstraint(DynamicEntity* entity, Movement* movement)
 {
 	Double3 globalAttachmentPointFrom = attachmentPoint * movement->fromRotation + movement->fromPosition;
 	Double3 globalAttachmentPointTo = attachmentPoint * movement->toRotation + movement->toPosition;
 
-	Double3 globalAttachmentPointTarget = targetEntity ? targetEntity->LocalPointToGlobal(point) : point;
+	Double3 globalAttachmentPointTarget = targetEntity ? targetEntity->LocalPointToGlobal(targetPoint) : targetPoint;
 
 	Double3 delta = globalAttachmentPointTo - globalAttachmentPointTarget;
 
