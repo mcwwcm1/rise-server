@@ -7,5 +7,5 @@ Shape::Shape() {}
 
 Double3 Shape::getFurthestPointInDirection(const Double3& direction)
 {
-	return direction;
+  return direction;
 }

@@ -2,14 +2,13 @@
 // Purpose: Implements physicsentity.h
 
 #include "physicsentity.h"
+
 #include "../world.h"
 
-PhysicsEntity::PhysicsEntity() { }
+PhysicsEntity::PhysicsEntity() {}
 
-PhysicsEntity::PhysicsEntity(string id) : Entity(id) { }
+PhysicsEntity::PhysicsEntity(string id) : Entity(id) {}
 
-PhysicsEntity::~PhysicsEntity()
-{
-}
+PhysicsEntity::~PhysicsEntity() {}
 
-void PhysicsEntity::RunTick(float delta) { }
+void PhysicsEntity::RunTick(float delta) {}

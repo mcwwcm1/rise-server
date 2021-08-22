@@ -3,12 +3,6 @@
 
 #include "mysticmath.h"
 
-float degreesToRadians(float degrees)
-{
-	return degrees * DEG2RAD;
-}
+float degreesToRadians(float degrees) { return degrees * DEG2RAD; }
 
-float radiansToDegrees(float radians)
-{
-	return radians * RAD2DEG;
-}
+float radiansToDegrees(float radians) { return radians * RAD2DEG; }

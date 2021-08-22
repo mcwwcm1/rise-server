@@ -5,24 +5,25 @@
 #define PHYSICSSPACE_H
 
 #include <vector>
+
 #include "../entities/physicsentity.h"
 
 class PhysicsSpace
 {
-	public:
-		std::vector<PhysicsEntity*> entities = std::vector<PhysicsEntity*>(0);
+ public:
+  std::vector<PhysicsEntity*> entities = std::vector<PhysicsEntity*>(0);
 
-		double updateRate;
-		double fixedDT;
+  double updateRate;
+  double fixedDT;
 
-		PhysicsSpace(double updateRate);
-		PhysicsSpace(); // I know why this has to be here :) It's silly
+  PhysicsSpace(double updateRate);
+  PhysicsSpace();  // I know why this has to be here :) It's silly
 
-		void RegisterEntity(PhysicsEntity* boentitydy);
-		void UnregisterEntity(PhysicsEntity* entity);
+  void RegisterEntity(PhysicsEntity* boentitydy);
+  void UnregisterEntity(PhysicsEntity* entity);
 
-		void RunTick();
-		void CheckCollision();
+  void RunTick();
+  void CheckCollision();
 };
 
 #endif

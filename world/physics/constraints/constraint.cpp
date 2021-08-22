@@ -3,9 +3,6 @@
 
 #include "constraint.h"
 
-Constraint::Constraint() { }
+Constraint::Constraint() {}
 
-Constraint::Constraint(string id) 
-{
-	this->id = id;
-}
+Constraint::Constraint(string id) { this->id = id; }

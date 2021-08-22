@@ -4,19 +4,21 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include <vector>
-#include <string>
 #include <sstream>
+#include <string>
+#include <vector>
 
 // Eearslya fix this :)
 static std::vector<std::string> Split(const std::string& str, char delimiter)
 {
-    std::vector<std::string> result;
-    std::istringstream iss(str);
+  std::vector<std::string> result;
+  std::istringstream iss(str);
 
-    for (std::string token; std::getline(iss, token, delimiter);) { result.push_back(std::move(token)); }
+  for (std::string token; std::getline(iss, token, delimiter);) {
+    result.push_back(std::move(token));
+  }
 
-    return result;
+  return result;
 }
 
 #endif

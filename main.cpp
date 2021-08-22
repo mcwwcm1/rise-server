@@ -14,20 +14,20 @@
 #include <chrono>
 #include <pqxx/pqxx>
 
-namespace beast = boost::beast;
-namespace http = beast::http;
+namespace beast     = boost::beast;
+namespace http      = beast::http;
 namespace websocket = beast::websocket;
-namespace net = boost::asio;
-using tcp = boost::asio::ip::tcp;
+namespace net       = boost::asio;
+using tcp           = boost::asio::ip::tcp;
 
 //Declare a test type for function pointer
-typedef void (*primary_function) ();
-typedef void (*parsing_function) (std::string&);
+typedef void (*primary_function)();
+typedef void (*parsing_function)(std::string&);
 
 //Failure Reporting
 void fail(beast::error_code ec, char const* what)
 {
-	std::cerr << what << ": " << ec.message() << "\n";
+  std::cerr << what << ": " << ec.message() << "\n";
 }
 
 // Include core headers
@@ -47,73 +47,62 @@ void fail(beast::error_code ec, char const* what)
 
 int main(int argc, char* argv[])
 {
-	//connection to the db. Just for testing, don't uncomment.
-	//pqxx::connection dbConn("dbname=riseserver user=riseserver password=HfUK6+{Cb!LS=~52 host=funnyanimalfacts.com port=5432");
+  //connection to the db. Just for testing, don't uncomment.
+  //pqxx::connection dbConn("dbname=riseserver user=riseserver password=HfUK6+{Cb!LS=~52 host=funnyanimalfacts.com port=5432");
 
-	//-------------------------Intialize function parsing map, array and buffers---------------------------
-	//Populate parseMap
-	parseMap["echo"] = EchoTestParser;
-	parseMap["echotest"] = EchoTestParser;
-	parseMap["echoto"] = EchoToParser;
-	parseMap["setthrottle"] = SetThrottleParser;
-	parseMap["setpitch"] = SetPitchParser;
-	parseMap["setyaw"] = SetYawParser;
-	parseMap["registerstaticcollider"] = RegisterStaticColliderParser;
-	parseMap["addforce"] = AddForceParser;
-	parseMap["registerentity"] = RegisterEntityParser;
-	parseMap["unregisterentity"] = UnregisterEntityParser;
-	parseMap["setowner"] = SetOwnerParser;
-	parseMap["adddistanceconstraint"] = AddDistanceConstraintParser;
-	parseMap["requestairship"] = RequestAirshipParser;
+  //-------------------------Intialize function parsing map, array and buffers---------------------------
+  //Populate parseMap
+  parseMap["echo"]                   = EchoTestParser;
+  parseMap["echotest"]               = EchoTestParser;
+  parseMap["echoto"]                 = EchoToParser;
+  parseMap["setthrottle"]            = SetThrottleParser;
+  parseMap["setpitch"]               = SetPitchParser;
+  parseMap["setyaw"]                 = SetYawParser;
+  parseMap["registerstaticcollider"] = RegisterStaticColliderParser;
+  parseMap["addforce"]               = AddForceParser;
+  parseMap["registerentity"]         = RegisterEntityParser;
+  parseMap["unregisterentity"]       = UnregisterEntityParser;
+  parseMap["setowner"]               = SetOwnerParser;
+  parseMap["adddistanceconstraint"]  = AddDistanceConstraintParser;
+  parseMap["requestairship"]         = RequestAirshipParser;
 
-	//-----------------------End of function initialization step------------------------------------------
-	// Check command line arguments
-	if (argc != 4)
-	{
-		std::cerr <<
-			"Usage: <address> <port> <threads>\n" <<
-            "Example:\n" <<
-            "    executablename 0.0.0.0 8080 1\n";
-		return EXIT_FAILURE;
-	}
-	auto const address = net::ip::make_address(argv[1]);
-	auto const port = static_cast<unsigned short>(std::atoi(argv[2]));
-	auto const threads = std::max<int>(1, std::atoi(argv[3]));
+  //-----------------------End of function initialization step------------------------------------------
+  // Check command line arguments
+  if (argc != 4) {
+    std::cerr << "Usage: <address> <port> <threads>\n"
+	      << "Example:\n"
+	      << "    executablename 0.0.0.0 8080 1\n";
+    return EXIT_FAILURE;
+  }
+  auto const address = net::ip::make_address(argv[1]);
+  auto const port    = static_cast<unsigned short>(std::atoi(argv[2]));
+  auto const threads = std::max<int>(1, std::atoi(argv[3]));
 
-	// The io_context is required for all I/O
-	net::io_context ioc{threads};
+  // The io_context is required for all I/O
+  net::io_context ioc{threads};
 
-	// Create and launch the listening port
-	std::make_shared<listener>(ioc, tcp::endpoint{address, port})->run();
+  // Create and launch the listening port
+  std::make_shared<listener>(ioc, tcp::endpoint{address, port})->run();
 
-	// Run the I/O service on the requested number of threads
-	std::vector<std::thread> v;
-	v.reserve(threads - 1);
-	for(auto i = threads - 1; i > 0; --i)
-		v.emplace_back(
-		[&ioc]
-		{
-			ioc.run();
-		});
+  // Run the I/O service on the requested number of threads
+  std::vector<std::thread> v;
+  v.reserve(threads - 1);
+  for (auto i = threads - 1; i > 0; --i) v.emplace_back([&ioc] { ioc.run(); });
 
-	std::chrono::milliseconds timespan(1000 / 20); //defines sleep timespan in ms
-	while(true)
-	{
-		//printf("Loop iteration started\n");
-		bufferAccessMutex.lock();
-		//Iterate over all elements in function buffer until empty
-		while(!functionBuffer.empty())
-		{
-			functionBuffer.get()();
-		}
+  std::chrono::milliseconds timespan(1000 / 20);  //defines sleep timespan in ms
+  while (true) {
+    //printf("Loop iteration started\n");
+    bufferAccessMutex.lock();
+    //Iterate over all elements in function buffer until empty
+    while (!functionBuffer.empty()) { functionBuffer.get()(); }
 
-		//printf("Started world tick\n");
-		WorldTick();
-		//printf("Finished world tick\n");
+    //printf("Started world tick\n");
+    WorldTick();
+    //printf("Finished world tick\n");
 
-		bufferAccessMutex.unlock();
-		//printf("Loop iteration completed\n");
-		std::this_thread::sleep_for(timespan);
-	}
-	return EXIT_SUCCESS;
+    bufferAccessMutex.unlock();
+    //printf("Loop iteration completed\n");
+    std::this_thread::sleep_for(timespan);
+  }
+  return EXIT_SUCCESS;
 }
