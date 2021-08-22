@@ -12,8 +12,6 @@ class CircularBuffer
 
 	void Put(T item)
 	{
-		//std::lock_guard<std::mutex> lock(mutex_);
-
 		_buf[_head] = item;
 
 		if (_full) { _tail = (_tail + 1) % _maxSize; }
@@ -25,8 +23,6 @@ class CircularBuffer
 
 	T Get()
 	{
-		//std::lock_guard<std::mutex> lock(mutex_);
-
 		if (Empty()) { return T(); }
 
 		//Read data and advance the tail (we now have a free space)
@@ -39,7 +35,6 @@ class CircularBuffer
 
 	void Reset()
 	{
-		//std::lock_guard<std::mutex> lock(mutex_);
 		_head = _tail;
 		_full = false;
 	}
@@ -74,7 +69,6 @@ class CircularBuffer
 	}
 
  private:
-	std::mutex _mutex;
 	std::unique_ptr<T[]> _buf;
 	size_t _head = 0;
 	size_t _tail = 0;
