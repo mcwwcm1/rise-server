@@ -77,6 +77,9 @@ void Session::DoRead()
 
 void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 {
+	// Grab a lock
+	_mutex.lock();
+
 	boost::ignore_unused(bytes_transferred);
 	// This indicates that the session was closed
 	if (ec == boost::beast::websocket::error::closed) return;
@@ -113,6 +116,9 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 	// Clear the buffer
 	_buffer.consume(_buffer.size());
 
+	// Release the lock
+	_mutex.unlock();
+	
 	//Do another read
 	DoRead();
 }

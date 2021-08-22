@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
+	Commands::Register("echo", EchoParser);
 	Commands::Register("echoto", EchoToParser);
 	Commands::Register("setthrottle", SetThrottleParser);
 	Commands::Register("setpitch", SetPitchParser);
