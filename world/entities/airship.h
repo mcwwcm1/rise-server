@@ -17,7 +17,7 @@ class Airship : public DynamicEntity
 	float Throttle, Pitch, Yaw = 0;
 
 	Airship();
-	Airship(string id);
+	Airship(std::string id);
 
 	Matrix4x4 GetTransformMatrix();
 	Double3 GetPosition();
@@ -30,7 +30,7 @@ class Airship : public DynamicEntity
 	Double3 GetRight();
 	Double3 GetUp();
 
-	static string GetNextID();  // Provides the next airship id
+	static std::string GetNextID();  // Provides the next airship id
 };
 
 #endif

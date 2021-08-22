@@ -12,8 +12,6 @@
 #include "double3.h"
 #include "mysticmath.h"
 
-using namespace std;
-
 struct Quaternion {
  public:
 	double x, y, z, w;
@@ -30,7 +28,7 @@ struct Quaternion {
 
 	static Quaternion FromEuler(Double3 euler);
 
-	string ToString() const;
+	std::string ToString() const;
 
 	Quaternion& operator+=(const Quaternion& b);
 	Quaternion& operator-=(const Quaternion& b);
@@ -38,8 +36,8 @@ struct Quaternion {
 	Quaternion& operator*=(double b);
 };
 
-Quaternion QuaternionFromString(string s);
-bool TryQuaternionFromString(string s, Quaternion& result);
+Quaternion QuaternionFromString(std::string s);
+bool TryQuaternionFromString(std::string s, Quaternion& result);
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b);
 Quaternion FromToRotation(const Double3& a, const Double3& b);

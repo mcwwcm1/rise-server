@@ -8,7 +8,7 @@
 
 size_t Airship::_currentAirshipIndex = 0;  // Dumb.
 
-Airship::Airship(string id) : DynamicEntity(id)
+Airship::Airship(std::string id) : DynamicEntity(id)
 {
 	// HARDCODED COLLIDER SHAPE = BAD
 	SphereShape* s1 = new SphereShape(2);
@@ -69,7 +69,7 @@ Double3 Airship::GetRight() { return Double3(1, 0, 0) * Rotation; }
 
 Double3 Airship::GetUp() { return Double3(0, 1, 0) * Rotation; }
 
-string Airship::GetNextID()
+std::string Airship::GetNextID()
 {
 	_currentAirshipIndex++;
 	return "airship_" + std::to_string(_currentAirshipIndex);

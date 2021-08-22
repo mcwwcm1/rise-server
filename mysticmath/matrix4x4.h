@@ -36,7 +36,7 @@ struct Matrix4x4 {
 	Matrix4x4 Rotate(Quaternion rotation);
 	Matrix4x4 Scale(Double3 v);
 
-	string ToString();
+	std::string ToString();
 };
 
 Matrix4x4 GetTranslationMatrix(Double3 translation);

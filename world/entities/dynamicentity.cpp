@@ -7,7 +7,7 @@
 
 DynamicEntity::DynamicEntity() {}
 
-DynamicEntity::DynamicEntity(string id) : PhysicsEntity(id) {}
+DynamicEntity::DynamicEntity(std::string id) : PhysicsEntity(id) {}
 
 DynamicEntity::~DynamicEntity()
 {

@@ -5,9 +5,9 @@
 
 Entity::Entity() {}
 
-Entity::Entity(string id) { this->ID = id; }
+Entity::Entity(std::string id) { this->ID = id; }
 
-void Entity::SubmitChange(string field, string change)
+void Entity::SubmitChange(std::string field, std::string change)
 {
 	Dirty              = true;
 	ChangeTable[field] = change;

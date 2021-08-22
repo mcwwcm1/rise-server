@@ -11,7 +11,7 @@
 class DistanceConstraint : public Constraint
 {
  public:
-	DistanceConstraint(string id);
+	DistanceConstraint(std::string id);
 	Entity* TargetEntity;
 	Double3 TargetPoint;
 	float Distance;

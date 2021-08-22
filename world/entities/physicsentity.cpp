@@ -7,7 +7,7 @@
 
 PhysicsEntity::PhysicsEntity() {}
 
-PhysicsEntity::PhysicsEntity(string id) : Entity(id) {}
+PhysicsEntity::PhysicsEntity(std::string id) : Entity(id) {}
 
 PhysicsEntity::~PhysicsEntity() {}
 

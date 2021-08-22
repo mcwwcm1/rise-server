@@ -11,8 +11,6 @@
 
 #include "double3.h"
 
-using namespace std;
-
 struct Double4 {
  public:
 	double x, y, z, w;
@@ -37,7 +35,7 @@ struct Double4 {
 	Double4 operator/(const Double4& b) const;
 	Double4 operator/(const double b) const;
 
-	string ToString() const;
+	std::string ToString() const;
 };
 
 Double4 Clamp(Double4 vec, Double4 min, Double4 max);

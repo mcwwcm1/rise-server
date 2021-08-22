@@ -9,8 +9,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 struct Double3 {
  public:
 	double x, y, z;
@@ -27,7 +25,7 @@ struct Double3 {
 	Double3 ClampMagnitude(double min, double max) const;
 	bool IsUniform() const;
 
-	string ToString() const;
+	std::string ToString() const;
 
 	// Assignment operator overloads
 	Double3& operator+=(const Double3& b);
@@ -38,8 +36,8 @@ struct Double3 {
 	Double3& operator/=(const double& b);
 };
 
-Double3 Double3FromString(string s);
-bool TryDouble3FromString(string s, Double3& result);
+Double3 Double3FromString(std::string s);
+bool TryDouble3FromString(std::string s, Double3& result);
 
 double Dot(const Double3& a, const Double3& b);
 Double3 Cross(const Double3& a, const Double3& b);

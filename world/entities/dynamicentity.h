@@ -20,7 +20,7 @@ class DynamicEntity : public PhysicsEntity
 
  public:
 	DynamicEntity();
-	DynamicEntity(string id);
+	DynamicEntity(std::string id);
 	virtual ~DynamicEntity();
 
 	Double3 Velocity     = Double3(0, 0, 0);

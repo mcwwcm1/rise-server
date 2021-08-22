@@ -26,7 +26,7 @@ bool World::RegisterEntity(Entity* entity)
 	return true;
 }
 
-bool World::UnregisterEntity(string entityId)
+bool World::UnregisterEntity(std::string entityId)
 {
 	auto e = Entities.find(entityId);
 	if (e == Entities.end()) return false;

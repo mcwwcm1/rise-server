@@ -4,6 +4,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 
 #include "../../mysticmath/double3.h"
 #include "../../mysticmath/matrix4x4.h"
@@ -13,15 +14,15 @@ class Entity
 {
  public:
 	Entity();
-	Entity(string id);
+	Entity(std::string id);
 	virtual ~Entity() = default;
 
-	string ID;
-	string* Owner;
-	unordered_map<string, string> ChangeTable;
+	std::string ID;
+	std::string* Owner;
+	std::unordered_map<std::string, std::string> ChangeTable;
 	bool Dirty;
 
-	void SubmitChange(string field, string change);
+	void SubmitChange(std::string field, std::string change);
 
 	void SetLocalPosition(const Double3& newPosition);
 	void SetLocalRotation(const Quaternion& newRotation);

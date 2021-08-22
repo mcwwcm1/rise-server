@@ -15,7 +15,7 @@ class PhysicsEntity : public Entity
 {
  public:
 	PhysicsEntity();
-	PhysicsEntity(string id);
+	PhysicsEntity(std::string id);
 	virtual ~PhysicsEntity();
 
 	PhysicsSpace* Space;

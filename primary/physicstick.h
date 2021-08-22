@@ -17,12 +17,12 @@
 #include "../world/physics/shapes/sphereshape.h"
 #include "../world/world.h"
 
-Airship* GetAirship(string* id)
+Airship* GetAirship(std::string* id)
 {
 	return dynamic_cast<Airship*>(World::Singleton->Entities[*id]);
 }
 
-DynamicEntity* GetDynamicEntity(string* id)
+DynamicEntity* GetDynamicEntity(std::string* id)
 {
 	return dynamic_cast<DynamicEntity*>(World::Singleton->Entities[*id]);
 }
@@ -183,8 +183,8 @@ void AddForceParser(std::string& arguments)
 	size_t separator1 = arguments.find('|');
 	size_t separator2 = arguments.find('|', separator1 + 1);
 
-	string force    = arguments.substr(separator1 + 1, separator2);
-	string position = arguments.substr(separator2 + 1);
+	std::string force    = arguments.substr(separator1 + 1, separator2);
+	std::string position = arguments.substr(separator2 + 1);
 
 	// Lock the buffers to safely write to them
 	bufferAccessMutex.lock();
@@ -420,8 +420,9 @@ void RequestAirship()
 		Airship* airship = new Airship(Airship::GetNextID());
 		World::Singleton->RegisterEntity(airship);
 
-		string* instruction = new string("SpawnAirship " + airship->ID + "|" +
-		                                 *positionStr + "|" + *rotationStr + "|");
+		std::string* instruction =
+				new std::string("SpawnAirship " + airship->ID + "|" + *positionStr +
+		                    "|" + *rotationStr + "|");
 
 		Send(instruction);
 

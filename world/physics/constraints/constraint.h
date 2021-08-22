@@ -4,7 +4,10 @@
 #ifndef CONSTRAINT_H
 #define CONSTRAINT_H
 
+#include <string>
+
 #include "../../../mysticmath/quaternion.h"
+
 class DynamicEntity;
 class Movement;
 
@@ -12,8 +15,9 @@ class Constraint
 {
  public:
 	Constraint();
-	Constraint(string id);
-	string ID;
+	Constraint(std::string id);
+
+	std::string ID;
 	Double3 AttachmentPoint;
 	Quaternion AttachmentRotation;
 	virtual void ApplyConstraint(DynamicEntity* entity, Movement* movement) = 0;

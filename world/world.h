@@ -17,10 +17,10 @@ class World
 
 	PhysicsSpace* Space = new PhysicsSpace(20);
 
-	unordered_map<string, Entity*> Entities;
+	std::unordered_map<std::string, Entity*> Entities;
 
 	bool RegisterEntity(Entity* entity);
-	bool UnregisterEntity(string entityId);
+	bool UnregisterEntity(std::string entityId);
 	bool UnregisterEntity(Entity* entity);
 };
 
