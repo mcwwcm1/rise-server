@@ -29,9 +29,6 @@ void RequestAirship()
 				locationID.c_str());
 	}
 
-	Double3 position;
-	Quaternion rotation;
-
 	position = location->second->LocalPointToGlobal(position);
 	rotation = location->second->LocalRotationToGlobal(rotation);
 

@@ -2,8 +2,8 @@
 CXX = g++
 DBFLAGS = -g -Wall -pthread -std=c++20
 BDFLAGS = -Wall -o2 -pthread -std=c++20
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-INCLUDES = -I$(ROOT_DIR)
+ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
+INCLUDES = -I"$(ROOT_DIR)"
 LPQFLAGS = -lpqxx -lpq
 SRCS := $(shell find . -name "*.cpp")
 OBJS = $(SRCS:.cpp=.o)

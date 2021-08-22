@@ -30,8 +30,10 @@ using tcp           = boost::asio::ip::tcp;
 
 // Include primary functions
 #include "primary/echo.h"
-#include "primary/physicstick.h"
+#include "primary/physicsinstructions.h"
+#include "primary/airshipcontrol.h"
 #include "primary/echoto.h"
+#include "primary/entityinstructions.h"
 
 int main(int argc, char* argv[])
 {
