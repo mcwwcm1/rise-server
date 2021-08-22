@@ -1,38 +1,48 @@
 // File: quaternion.h
 // Purpose: For working with quaternions
 
-#ifndef QUATERNION_H
-#define QUATERNION_H
+#pragma once
 
-#include <string>
-#include <sstream>
 #include <math.h>
-#include "float3.h"
+
+#include <sstream>
+#include <string>
+
+#include "double3.h"
 #include "mysticmath.h"
 
-using namespace std;
+struct Quaternion {
+ public:
+	double x, y, z, w;
+	static const Quaternion identity;  // Unsure on this
 
-struct Quaternion
-{
-	public:
-		float x, y, z, w;
-		static const Quaternion identity; // Unsure on this
-
-
-	Quaternion(float x, float y, float z, float w);
+	Quaternion(double x, double y, double z, double w);
 	Quaternion();
-	
-	Quaternion conjugate();
-	Float3 toEuler();
 
-	static Quaternion fromEuler(Float3 euler);
-	
-	string str();
+	double Magnitude() const;
+	double MagnitudeSquared() const;
+	Quaternion Conjugate() const;
+	Quaternion Normalized() const;
+	Double3 ToEuler() const;
+
+	static Quaternion FromEuler(Double3 euler);
+
+	std::string ToString() const;
+
+	Quaternion& operator+=(const Quaternion& b);
+	Quaternion& operator-=(const Quaternion& b);
+	Quaternion& operator*=(const Quaternion& b);
+	Quaternion& operator*=(double b);
 };
 
-Quaternion operator + (const Quaternion a, const Quaternion b);
-Quaternion operator - (const Quaternion a, const Quaternion b);
-Quaternion operator * (const Quaternion a, const Quaternion b);
-Float3 operator * (const Float3 a, const Quaternion b);
+Quaternion QuaternionFromString(const std::string& s);
+bool TryQuaternionFromString(const std::string& s, Quaternion& result);
 
-#endif
+Quaternion FromToRotation(const Quaternion& a, const Quaternion& b);
+Quaternion FromToRotation(const Double3& a, const Double3& b);
+
+Quaternion operator+(const Quaternion& a, const Quaternion& b);
+Quaternion operator-(const Quaternion& a, const Quaternion& b);
+Quaternion operator*(const Quaternion& a, const Quaternion& b);
+Double3 operator*(const Double3& a, const Quaternion& b);
+Quaternion operator*(const Quaternion& a, double b);

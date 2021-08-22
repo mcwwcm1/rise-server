@@ -1,29 +1,26 @@
 // File: send.h
 // Purpose: Implements sending data to the headless
 
-#ifndef SEND_H
-#define SEND_H
+#pragma once
 
-void Send(std::string* sendString)
-{
-	// Invoke the send function of the headless' websocket session
-	headlessSession->send(boost::make_shared<std::string const>(std::move(*sendString)));
-	// Debug
-	printf(("Sent: " + *sendString + "\n").c_str());
-}
+#include <string>
 
-void Send(std::string* userID, std::string* sendString)
+#include "core/session.h"
+
+void Send(const std::string& sendString)
 {
-	// Key is not present
-    if (registeredUsers.find(*userID) == registeredUsers.end()) {
-		printf(("Requested userID (" + *userID + ") not found\n").c_str());
-	} else {
+	Session* session = Session::GetHeadless();
+	if (session != nullptr) {
 		// Invoke the send function of the headless' websocket session
-		registeredUsers[*userID]->send(boost::make_shared<std::string const>(std::move(*sendString)));
-		// Debug
-		printf(("Sent: " + *sendString + " To: " + *userID + "\n").c_str());
+		session->Send(sendString);
 	}
-
 }
 
-#endif
+void Send(const std::string& userID, const std::string& sendString)
+{
+	Session* session = Session::GetUserSession(userID);
+	if (session != nullptr) {
+		// Invoke the send function of the headless' websocket session
+		session->Send(sendString);
+	}
+}
