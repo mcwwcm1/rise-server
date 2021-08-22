@@ -9,6 +9,8 @@
 #include <vector>
 
 #include "core/circularbuffer.h"
+#include "mysticmath/double3.h"
+#include "mysticmath/quaternion.h"
 
 // Declare a test type for function pointer
 typedef void (*PrimaryFunction)();
@@ -33,7 +35,7 @@ class PrimaryArgument
 	}
 
  private:
-	std::variant<int, float, double, std::string> mValue;
+	std::variant<int, float, double, std::string, Double3, Quaternion> mValue;
 };
 
 namespace Commands
