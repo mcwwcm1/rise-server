@@ -35,8 +35,8 @@ struct Double3 {
 	Double3& operator/=(const double& b);
 };
 
-Double3 Double3FromString(std::string s);
-bool TryDouble3FromString(std::string s, Double3& result);
+Double3 Double3FromString(const std::string& s);
+bool TryDouble3FromString(const std::string& s, Double3& result);
 
 double Dot(const Double3& a, const Double3& b);
 Double3 Cross(const Double3& a, const Double3& b);

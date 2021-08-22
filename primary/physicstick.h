@@ -253,15 +253,16 @@ void AddDistanceConstraint()
 
 void AddDistanceConstraintParser(const std::string& arguments)
 {
-	auto parts     = Split(arguments, '|');
-	float distance = stof(parts[7]);
+	auto parts = Split(arguments, '|');
+	Commands::ValidateArgumentCount(parts, 6);
+	float distance = stof(parts[6]);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
 	Commands::functionBuffer.Put(AddDistanceConstraint);
 
-	// The first 7 arguments are strings :D
+	// The first 5 arguments are strings :D
 	for (size_t i = 0; i < 5; i++) {
 		// Put argument
 		Commands::argumentBuffer.Put(parts[i]);
@@ -291,14 +292,7 @@ void SetOwner()
 void SetOwnerParser(const std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
-
-	if (parts.size() != 2) {
-		printf(
-				"Incorrect number of arguments for \"setowner\". Recieved %li but expected 2: %s",
-				parts.size(),
-				arguments.c_str());
-		return;
-	}
+	Commands::ValidateArgumentCount(parts, 2);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
@@ -360,14 +354,7 @@ void RequestAirship()
 void RequestAirshipParser(const std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
-
-	if (parts.size() != 4) {
-		printf(
-				"Incorrect number of arguments for \"requestairship\". Recieved %li but expected 4: %s\n",
-				parts.size(),
-				arguments.c_str());
-		return;
-	}
+	Commands::ValidateArgumentCount(parts, 4);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 

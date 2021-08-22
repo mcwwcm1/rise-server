@@ -101,9 +101,9 @@ Matrix4x4 Matrix4x4::Scale(Double3 v)
 	return *this;
 }
 
-string Matrix4x4::ToString()
+std::string Matrix4x4::ToString()
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "[";
 	ss << v0 << ";" << v1 << ";" << v2 << ";" << v3 << ";";
 	ss << v4 << ";" << v5 << ";" << v6 << ";" << v7 << ";";

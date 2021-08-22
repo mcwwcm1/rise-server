@@ -3,14 +3,14 @@
 
 #pragma once
 
-#include "../../../mysticmath/double3.h"
-#include "../../entities/entity.h"
 #include "constraint.h"
+#include "mysticmath/double3.h"
+#include "world/entities/entity.h"
 
 class DistanceConstraint : public Constraint
 {
  public:
-	DistanceConstraint(std::string id);
+	DistanceConstraint(const std::string& id);
 	Entity* TargetEntity;
 	Double3 TargetPoint;
 	float Distance;

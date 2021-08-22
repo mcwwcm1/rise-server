@@ -83,12 +83,11 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 	if (ec) { BoostFail(ec, "read"); }
 
 	//Separate function call and arguments
-	std::string message  = boost::beast::buffers_to_string(_buffer.data());
-	std::string function = message.substr(0, message.find(" "));
-	std::string arguments =
-			message.substr(message.find(" ") + 1, message.length());
+	std::string message   = boost::beast::buffers_to_string(_buffer.data());
+	std::string function  = message.substr(0, message.find(" "));
+	std::string arguments = message.substr(message.find(" ") + 1, message.length());
 
-	auto cmdFn = Commands::Get(function);
+	auto parsingFn = Commands::Get(function);
 
 	// Check if user is making a registration call
 	if (function == "register") {
@@ -97,20 +96,18 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 			_registeredUsers[_userID] = this;
 			printf("Registered session for user \"%s\".\n", _userID.c_str());
 		}
-	} else if (cmdFn == nullptr) {
+	} else if (parsingFn == nullptr) {
 		// Send error message
-		printf(
-				("Function NOT FOUND IDIOT!!@!!!!1!11!: " + function + "\n").c_str());
+		printf("Function NOT FOUND IDIOT!!@!!!!1!11!: %s\n", function.c_str());
 	} else if (arguments == "") {
 		// Check for argument
 		printf("NO ARGUMENT STUHPID\n");
 	} else {
 		// Call the function
 		try {
-			cmdFn(arguments);
+			parsingFn(arguments);
 		} catch (const std::invalid_argument& e) {
-			printf(
-					"Failed to parse command \"%s\": %s\n", function.c_str(), e.what());
+			printf("Failed to parse command \"%s\": %s\n", function.c_str(), e.what());
 		}
 	}
 	// Clear the buffer

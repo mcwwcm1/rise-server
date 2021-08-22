@@ -44,9 +44,9 @@ bool Double4::IsUniform() const { return x == y && y == z && z == w; }
 
 Double3 Double4::xyz() const { return Double3(x, y, z); }
 
-string Double4::ToString() const
+std::string Double4::ToString() const
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";
 	return ss.str();
 }

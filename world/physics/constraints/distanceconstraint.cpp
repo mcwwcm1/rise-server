@@ -5,7 +5,7 @@
 
 #include "../../entities/dynamicentity.h"
 
-DistanceConstraint::DistanceConstraint(string id) : Constraint(id) {}
+DistanceConstraint::DistanceConstraint(const std::string& id) : Constraint(id) {}
 
 void DistanceConstraint::ApplyConstraint(DynamicEntity* entity,
                                          Movement* movement)

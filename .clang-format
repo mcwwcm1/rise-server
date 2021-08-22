@@ -18,6 +18,7 @@ BinPackParameters: false
 BreakBeforeBraces: Linux
 BreakBeforeTernaryOperators: true
 BreakStringLiterals: false
+ColumnLimit: 0
 DeriveLineEnding: false
 DerivePointerAlignment: false
 IndentCaseLabels: true

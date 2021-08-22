@@ -49,29 +49,29 @@ Double3 Double3::Round() const
 
 bool Double3::IsUniform() const { return x == y && y == z; }
 
-string Double3::ToString() const
+std::string Double3::ToString() const
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << "]";
 	return ss.str();
 }
 
-Double3 Double3FromString(string s)
+Double3 Double3FromString(const std::string& s)
 {
 	size_t sep1 = s.find(';');
 	size_t sep2 = s.find(';', sep1 + 1);
-	double x    = stof(s.substr(s.find('[') + 1, sep1 - 1));
-	double y    = stof(s.substr(sep1 + 1, sep2 - sep1));
-	double z    = stof(s.substr(sep2 + 1, s.length() - sep2 - 1));
+	double x    = std::stof(s.substr(s.find('[') + 1, sep1 - 1));
+	double y    = std::stof(s.substr(sep1 + 1, sep2 - sep1));
+	double z    = std::stof(s.substr(sep2 + 1, s.length() - sep2 - 1));
 	return Double3(x, y, z);
 }
 
-bool TryDouble3FromString(string s, Double3& result)
+bool TryDouble3FromString(const std::string& s, Double3& result)
 {
 	try {
 		result = Double3FromString(s);
 		return true;
-	} catch (exception e) {
+	} catch (const std::exception& e) {
 		return false;
 	}
 }

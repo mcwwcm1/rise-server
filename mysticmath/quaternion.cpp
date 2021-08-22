@@ -57,9 +57,9 @@ Double3 Quaternion::ToEuler() const
 	return euler;
 }
 
-string Quaternion::ToString() const
+std::string Quaternion::ToString() const
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";
 	return ss.str();
 }
@@ -85,19 +85,19 @@ Quaternion Quaternion::FromEuler(Double3 euler)
 	return q;
 }
 
-Quaternion QuaternionFromString(string s)
+Quaternion QuaternionFromString(const std::string& s)
 {
 	auto parts = Split(s.substr(1, s.length() - 1), ';');
 	return Quaternion(
 			stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
 
-bool TryQuaternionFromString(string s, Quaternion& result)
+bool TryQuaternionFromString(const std::string& s, Quaternion& result)
 {
 	try {
 		result = QuaternionFromString(s);
 		return true;
-	} catch (exception e) {
+	} catch (const std::exception& e) {
 		return false;
 	}
 }

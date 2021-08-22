@@ -5,4 +5,4 @@
 
 Constraint::Constraint() {}
 
-Constraint::Constraint(string id) { this->ID = id; }
+Constraint::Constraint(const std::string& id) { this->ID = id; }

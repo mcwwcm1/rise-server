@@ -35,8 +35,8 @@ struct Quaternion {
 	Quaternion& operator*=(double b);
 };
 
-Quaternion QuaternionFromString(std::string s);
-bool TryQuaternionFromString(std::string s, Quaternion& result);
+Quaternion QuaternionFromString(const std::string& s);
+bool TryQuaternionFromString(const std::string& s, Quaternion& result);
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b);
 Quaternion FromToRotation(const Double3& a, const Double3& b);

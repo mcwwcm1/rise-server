@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "../../../mysticmath/quaternion.h"
+#include "mysticmath/quaternion.h"
 
 class DynamicEntity;
 class Movement;
@@ -14,7 +14,8 @@ class Constraint
 {
  public:
 	Constraint();
-	Constraint(std::string id);
+	Constraint(const std::string& id);
+	virtual ~Constraint() = default;
 
 	std::string ID;
 	Double3 AttachmentPoint;
