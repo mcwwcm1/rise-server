@@ -19,29 +19,29 @@
 
 Airship* GetAirship(string* id)
 {
-	return dynamic_cast<Airship*>(World::singleton->entities[*id]);
+	return dynamic_cast<Airship*>(World::Singleton->Entities[*id]);
 }
 
 DynamicEntity* GetDynamicEntity(string* id)
 {
-	return dynamic_cast<DynamicEntity*>(World::singleton->entities[*id]);
+	return dynamic_cast<DynamicEntity*>(World::Singleton->Entities[*id]);
 }
 
 void RegisterStaticCollider()
 {
 	Shape* colliderShape        = new SphereShape(argumentBuffer.Get().var.fval);
 	std::string* positionString = argumentBuffer.Get().var.sval;
-	colliderShape->position     = double3FromString(*positionString);
+	colliderShape->Position     = Double3FromString(*positionString);
 
-	auto staticColliders = World::singleton->entities.find("staticColliders");
+	auto staticColliders = World::Singleton->Entities.find("staticColliders");
 
-	if (staticColliders == World::singleton->entities.end()) {
-		World::singleton->RegisterEntity(new PhysicsEntity("staticColliders"));
-		staticColliders = World::singleton->entities.find("staticColliders");
+	if (staticColliders == World::Singleton->Entities.end()) {
+		World::Singleton->RegisterEntity(new PhysicsEntity("staticColliders"));
+		staticColliders = World::Singleton->Entities.find("staticColliders");
 	}
 
 	PhysicsEntity* e = dynamic_cast<PhysicsEntity*>(staticColliders->second);
-	e->colliders.push_back(colliderShape);
+	e->Colliders.push_back(colliderShape);
 
 	delete positionString;
 }
@@ -73,7 +73,7 @@ void SetThrottle()
 	std::string* airshipID = argumentBuffer.Get().var.sval;
 	Airship* airship       = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->throttle = argumentBuffer.Get().var.fval;
+	if (airship != nullptr) airship->Throttle = argumentBuffer.Get().var.fval;
 
 	delete airshipID;
 }
@@ -104,7 +104,7 @@ void SetPitch()
 	std::string* airshipID = argumentBuffer.Get().var.sval;
 	Airship* airship       = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->pitch = argumentBuffer.Get().var.fval;
+	if (airship != nullptr) airship->Pitch = argumentBuffer.Get().var.fval;
 
 	delete airshipID;
 }
@@ -135,7 +135,7 @@ void SetYaw()
 	std::string* airshipID = argumentBuffer.Get().var.sval;
 	Airship* airship       = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->yaw = argumentBuffer.Get().var.fval;
+	if (airship != nullptr) airship->Yaw = argumentBuffer.Get().var.fval;
 
 	delete airshipID;
 }
@@ -170,8 +170,8 @@ void AddForce()
 	Airship* airship = GetAirship(airshipID);
 
 	if (airship != nullptr)
-		airship->AddForceAtPosition(double3FromString(*force),
-		                            double3FromString(*position));
+		airship->AddForceAtPosition(Double3FromString(*force),
+		                            Double3FromString(*position));
 
 	delete airshipID;
 	delete force;
@@ -211,11 +211,11 @@ void RegisterEntity()
 	std::string* scale    = argumentBuffer.Get().var.sval;
 
 	Entity* entity   = new Entity(*entityID);
-	entity->position = double3FromString(*position);
-	entity->rotation = quaternionFromString(*rotation);
-	entity->scale    = double3FromString(*scale);
+	entity->Position = Double3FromString(*position);
+	entity->Rotation = QuaternionFromString(*rotation);
+	entity->Scale    = Double3FromString(*scale);
 
-	World::singleton->RegisterEntity(entity);
+	World::Singleton->RegisterEntity(entity);
 
 	delete entityID;
 	delete position;
@@ -248,7 +248,7 @@ void UnregisterEntity()
 {
 	std::string* entityId = argumentBuffer.Get().var.sval;
 
-	World::singleton->UnregisterEntity(*entityId);
+	World::Singleton->UnregisterEntity(*entityId);
 
 	delete entityId;
 }
@@ -278,14 +278,14 @@ void AddDistanceConstraint()
 	std::string* position2str = argumentBuffer.Get().var.sval;
 	float distance            = argumentBuffer.Get().var.fval;
 
-	Double3 position1 = double3FromString(*position1str);
-	Double3 position2 = double3FromString(*position2str);
+	Double3 position1 = Double3FromString(*position1str);
+	Double3 position2 = Double3FromString(*position2str);
 
 	DynamicEntity* entity1    = GetDynamicEntity(entityId1);
-	auto entity2PairThingFUCK = World::singleton->entities.find(*entityId2);
+	auto entity2PairThingFUCK = World::Singleton->Entities.find(*entityId2);
 
 	if (entity1 == nullptr ||
-	    entity2PairThingFUCK == World::singleton->entities.end() ||
+	    entity2PairThingFUCK == World::Singleton->Entities.end() ||
 	    entity2PairThingFUCK->second == nullptr)
 		return;  // One of the entities does not exist
 
@@ -293,12 +293,12 @@ void AddDistanceConstraint()
 
 	// Do the thing
 	DistanceConstraint* constraint = new DistanceConstraint(*constraintID);
-	constraint->attachmentPoint    = position1;
-	constraint->targetPoint        = position2;
-	constraint->targetEntity       = entity2;
-	constraint->distance           = distance;
-	constraint->isRigid            = true;
-	entity1->constraints.push_back(constraint);
+	constraint->AttachmentPoint    = position1;
+	constraint->TargetPoint        = position2;
+	constraint->TargetEntity       = entity2;
+	constraint->Distance           = distance;
+	constraint->IsRigid            = true;
+	entity1->Constraints.push_back(constraint);
 
 	delete constraintID;
 	delete entityId1;
@@ -336,8 +336,8 @@ void SetOwner()
 	std::string* entity = argumentBuffer.Get().var.sval;
 	std::string* owner  = argumentBuffer.Get().var.sval;
 
-	if (World::singleton->entities.find(*entity) ==
-	    World::singleton->entities.end()) {
+	if (World::Singleton->Entities.find(*entity) ==
+	    World::Singleton->Entities.end()) {
 		// Entity is not present in world D:
 		printf("Attempted to set owner of non-existent entity (%s) to %s\n",
 		       entity->c_str(),
@@ -347,7 +347,7 @@ void SetOwner()
 		return;
 	}
 
-	World::singleton->entities[*entity]->owner = owner;
+	World::Singleton->Entities[*entity]->Owner = owner;
 
 	delete entity;
 	// IMPORTANT: We are not deleting the owner here because it is used as a pointer by the entity!
@@ -389,9 +389,9 @@ void RequestAirship()
 
 	bool succeeded = true;
 
-	auto location = World::singleton->entities.find(*locationID);
+	auto location = World::Singleton->Entities.find(*locationID);
 
-	if (location == World::singleton->entities.end()) {
+	if (location == World::Singleton->Entities.end()) {
 		printf(
 				"Attempted to request airship atocation with entity id \"%s\" but the location entity does not exist.\n",
 				locationID->c_str());
@@ -401,13 +401,13 @@ void RequestAirship()
 	Double3 position;
 	Quaternion rotation;
 
-	if (!tryDouble3FromString(*positionStr, position)) {
+	if (!TryDouble3FromString(*positionStr, position)) {
 		printf("Unable to parse position string during \"requestairship\": %s\n",
 		       positionStr->c_str());
 		succeeded = false;
 	}
 
-	if (!tryQuaternionFromString(*rotationStr, rotation)) {
+	if (!TryQuaternionFromString(*rotationStr, rotation)) {
 		printf("Unable to parse rotation string during \"requestairship\": %s\n",
 		       rotationStr->c_str());
 		succeeded = false;
@@ -418,9 +418,9 @@ void RequestAirship()
 		rotation = location->second->LocalRotationToGlobal(rotation);
 
 		Airship* airship = new Airship(Airship::GetNextID());
-		World::singleton->RegisterEntity(airship);
+		World::Singleton->RegisterEntity(airship);
 
-		string* instruction = new string("SpawnAirship " + airship->id + "|" +
+		string* instruction = new string("SpawnAirship " + airship->ID + "|" +
 		                                 *positionStr + "|" + *rotationStr + "|");
 
 		Send(instruction);

@@ -6,19 +6,19 @@
 SphereShape::SphereShape(float radius)
 {
 	this->size = Double3(radius, radius, radius);
-	this->type = ShapeType::Sphere;
+	this->Type = ShapeType::Sphere;
 }
 
 SphereShape::SphereShape(Double3 size)
 {
 	this->size = size;
-	this->type = ShapeType::Sphere;
+	this->Type = ShapeType::Sphere;
 }
 
-Double3 SphereShape::getFurthestPointInDirection(const Double3& direction)
+Double3 SphereShape::GetFurthestPointInDirection(const Double3& direction)
 {
-	if (size.isUniform()) return direction * size.x;
+	if (size.IsUniform()) return direction * size.x;
 
-	Double3 d = direction * rotation;
-	return d * getScaleMatrix(size) * rotation.conjugate();
+	Double3 d = direction * Rotation;
+	return d * GetScaleMatrix(size) * Rotation.Conjugate();
 };

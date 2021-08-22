@@ -13,7 +13,7 @@ void EchoTest()
 	auto const ss =
 			boost::make_shared<std::string const>(std::move(*argumentString));
 	//headlessSession->mutex_.lock();
-	headlessSession->send(ss);
+	headlessSession->Send(ss);
 	//headlessSession->mutex_.unlock();
 	if (*argumentString == "test") { printf("Test received!\n"); }
 	delete argumentString;

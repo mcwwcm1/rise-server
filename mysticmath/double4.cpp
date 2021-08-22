@@ -17,34 +17,34 @@ Double4::Double4(double x, double y, double z, double w)
 
 Double4::Double4() { x = y = z = w = 0; }
 
-double Double4::magnitudeSquared() const { return x * x + y * y + z * z; }
+double Double4::MagnitudeSquared() const { return x * x + y * y + z * z; }
 
-double Double4::magnitude() const { return sqrt(magnitudeSquared()); }
+double Double4::Magnitude() const { return sqrt(MagnitudeSquared()); }
 
-Double4 Double4::normalized() const
+Double4 Double4::Normalized() const
 {
-	double m = magnitude();
+	double m = Magnitude();
 	return Double4(x / m, y / m, z / m, w / m);
 }
 
-Double4 Double4::absolute() const { return *this * sign(); }
+Double4 Double4::Absolute() const { return *this * Sign(); }
 
-Double4 Double4::sign() const
+Double4 Double4::Sign() const
 {
 	return Double4(x > 0, y > 0, z > 0, w > 0) -
 	       Double4(x < 0, y < 0, z < 0, w < 0);
 }
 
-Double4 Double4::round() const
+Double4 Double4::Round() const
 {
 	return Double4(roundf(x), roundf(y), roundf(z), roundf(w));
 }
 
-bool Double4::isUniform() const { return x == y && y == z && z == w; }
+bool Double4::IsUniform() const { return x == y && y == z && z == w; }
 
 Double3 Double4::xyz() const { return Double3(x, y, z); }
 
-string Double4::str() const
+string Double4::ToString() const
 {
 	stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";

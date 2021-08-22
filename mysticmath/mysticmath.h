@@ -5,6 +5,5 @@
 #define DEG2RAD 0.01745
 #define RAD2DEG 57.296
 
-float degreesToRadians(float degrees);
-
-float radiansToDegrees(float radians);
+float DegreesToRadians(float degrees);
+float RadiansToDegrees(float radians);

@@ -13,9 +13,9 @@ class Constraint
  public:
 	Constraint();
 	Constraint(string id);
-	string id;
-	Double3 attachmentPoint;
-	Quaternion attachmentRotation;
+	string ID;
+	Double3 AttachmentPoint;
+	Quaternion AttachmentRotation;
 	virtual void ApplyConstraint(DynamicEntity* entity, Movement* movement) = 0;
 };
 

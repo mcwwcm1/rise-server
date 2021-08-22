@@ -21,42 +21,42 @@ Double3::Double3()
 	z = 0;
 }
 
-double Double3::magnitudeSquared() const { return x * x + y * y + z * z; }
+double Double3::MagnitudeSquared() const { return x * x + y * y + z * z; }
 
-double Double3::magnitude() const
+double Double3::Magnitude() const
 {
-	float squared = magnitudeSquared();
+	float squared = MagnitudeSquared();
 	return squared == 0 ? 0 : sqrt(squared);
 }
 
-Double3 Double3::normalized() const
+Double3 Double3::Normalized() const
 {
-	double m = magnitude();
+	double m = Magnitude();
 	return m == 0 ? Double3() : Double3(x / m, y / m, z / m);
 }
 
-Double3 Double3::absolute() const { return *this * this->sign(); }
+Double3 Double3::Absolute() const { return *this * this->Sign(); }
 
-Double3 Double3::sign() const
+Double3 Double3::Sign() const
 {
 	return Double3(x > 0, y > 0, z > 0) - Double3(x < 0, y < 0, z < 0);
 }
 
-Double3 Double3::round() const
+Double3 Double3::Round() const
 {
 	return Double3(std::round(x), std::round(y), std::round(z));
 }
 
-bool Double3::isUniform() const { return x == y && y == z; }
+bool Double3::IsUniform() const { return x == y && y == z; }
 
-string Double3::str() const
+string Double3::ToString() const
 {
 	stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << "]";
 	return ss.str();
 }
 
-Double3 double3FromString(string s)
+Double3 Double3FromString(string s)
 {
 	size_t sep1 = s.find(';');
 	size_t sep2 = s.find(';', sep1 + 1);
@@ -66,45 +66,45 @@ Double3 double3FromString(string s)
 	return Double3(x, y, z);
 }
 
-bool tryDouble3FromString(string s, Double3& result)
+bool TryDouble3FromString(string s, Double3& result)
 {
 	try {
-		result = double3FromString(s);
+		result = Double3FromString(s);
 		return true;
 	} catch (exception e) {
 		return false;
 	}
 }
 
-double dot(const Double3& a, const Double3& b)
+double Dot(const Double3& a, const Double3& b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-Double3 cross(const Double3& a, const Double3& b)
+Double3 Cross(const Double3& a, const Double3& b)
 {
 	return Double3(
 			a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
 }
 
-Double3 tripleProduct(const Double3& a, const Double3& b, const Double3& c)
+Double3 TripleProduct(const Double3& a, const Double3& b, const Double3& c)
 {
-	return cross(a, cross(b, c));
+	return Cross(a, Cross(b, c));
 }
 
-Double3 reflect(const Double3& vec, const Double3& norm)
+Double3 Reflect(const Double3& vec, const Double3& norm)
 {
-	return vec - (norm * 2 * dot(vec, norm));
+	return vec - (norm * 2 * Dot(vec, norm));
 }
 
-Double3 clamp(const Double3& vec, const Double3& min, const Double3& max)
+Double3 Clamp(const Double3& vec, const Double3& min, const Double3& max)
 {
 	return Double3(std::min(std::max(vec.x, min.x), max.x),
 	               std::min(std::max(vec.y, min.y), max.y),
 	               std::min(std::max(vec.z, min.z), max.z));
 }
 
-Double3 lerp(const Double3& a, const Double3& b, double t)
+Double3 Lerp(const Double3& a, const Double3& b, double t)
 {
 	return a * (1 - t) + b * t;
 }

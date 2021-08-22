@@ -13,8 +13,8 @@ class PhysicsSpace
  public:
 	std::vector<PhysicsEntity*> entities = std::vector<PhysicsEntity*>(0);
 
-	double updateRate;
-	double fixedDT;
+	double UpdateRate;
+	double FixedDT;
 
 	PhysicsSpace(double updateRate);
 	PhysicsSpace();  // I know why this has to be here :) It's silly

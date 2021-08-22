@@ -20,21 +20,21 @@ Quaternion::Quaternion()
 }
 const Quaternion Quaternion::identity = Quaternion(0, 0, 0, 1);
 
-double Quaternion::magnitudeSquared() const
+double Quaternion::MagnitudeSquared() const
 {
 	return x * x + y * y + z * z + w * w;
 }
 
-double Quaternion::magnitude() const { return sqrt(magnitudeSquared()); }
+double Quaternion::Magnitude() const { return sqrt(MagnitudeSquared()); }
 
-Quaternion Quaternion::conjugate() const
+Quaternion Quaternion::Conjugate() const
 {
 	return Quaternion(x * -1, y * -1, z * -1, w);
 }
 
-Quaternion Quaternion::normalized() const { return *this * magnitude(); }
+Quaternion Quaternion::Normalized() const { return *this * Magnitude(); }
 
-Double3 Quaternion::toEuler() const
+Double3 Quaternion::ToEuler() const
 {
 	Double3 euler;
 
@@ -57,14 +57,14 @@ Double3 Quaternion::toEuler() const
 	return euler;
 }
 
-string Quaternion::str() const
+string Quaternion::ToString() const
 {
 	stringstream ss;
 	ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";
 	return ss.str();
 }
 
-Quaternion Quaternion::fromEuler(Double3 euler)
+Quaternion Quaternion::FromEuler(Double3 euler)
 {
 	euler = euler * DEG2RAD;
 
@@ -85,17 +85,17 @@ Quaternion Quaternion::fromEuler(Double3 euler)
 	return q;
 }
 
-Quaternion quaternionFromString(string s)
+Quaternion QuaternionFromString(string s)
 {
 	auto parts = Split(s.substr(1, s.length() - 1), ';');
 	return Quaternion(
 			stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
 
-bool tryQuaternionFromString(string s, Quaternion& result)
+bool TryQuaternionFromString(string s, Quaternion& result)
 {
 	try {
-		result = quaternionFromString(s);
+		result = QuaternionFromString(s);
 		return true;
 	} catch (exception e) {
 		return false;
@@ -104,18 +104,18 @@ bool tryQuaternionFromString(string s, Quaternion& result)
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b)
 {
-	return a.conjugate() * b;
+	return a.Conjugate() * b;
 }
 
 Quaternion FromToRotation(const Double3& a, const Double3& b)
 {
-	Double3 c = cross(a, b);
+	Double3 c = Cross(a, b);
 	return Quaternion(
 						 c.x,
 						 c.y,
 						 c.z,
-						 sqrt(a.magnitudeSquared() * b.magnitudeSquared()) + dot(a, b))
-	    .normalized();
+						 sqrt(a.MagnitudeSquared() * b.MagnitudeSquared()) + Dot(a, b))
+	    .Normalized();
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& b)
@@ -163,7 +163,7 @@ Quaternion operator*(const Quaternion& a, const Quaternion& b)
 Double3 operator*(const Double3& a, const Quaternion& b)
 {
 	Quaternion c = Quaternion(a.x, a.y, a.z, 0);
-	Quaternion r = b * c * b.conjugate();
+	Quaternion r = b * c * b.Conjugate();
 	return Double3(r.x, r.y, r.z);
 }
 

@@ -10,5 +10,5 @@ struct SphereShape : Shape {
 	SphereShape(float radius);
 	SphereShape(Double3 size);
 	Double3 size;
-	virtual Double3 getFurthestPointInDirection(const Double3& direction);
+	virtual Double3 GetFurthestPointInDirection(const Double3& direction);
 };

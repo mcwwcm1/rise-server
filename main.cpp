@@ -21,8 +21,8 @@ namespace net       = boost::asio;
 using tcp           = boost::asio::ip::tcp;
 
 //Declare a test type for function pointer
-typedef void (*primary_function)();
-typedef void (*parsing_function)(std::string&);
+typedef void (*PrimaryFunction)();
+typedef void (*ParsingFunction)(std::string&);
 
 //Failure Reporting
 void fail(beast::error_code ec, char const* what)

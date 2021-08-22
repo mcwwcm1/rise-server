@@ -18,8 +18,8 @@ class PhysicsEntity : public Entity
 	PhysicsEntity(string id);
 	virtual ~PhysicsEntity();
 
-	PhysicsSpace* space;
-	std::vector<Shape*> colliders;
+	PhysicsSpace* Space;
+	std::vector<Shape*> Colliders;
 
 	virtual void RunTick(float dt);
 };

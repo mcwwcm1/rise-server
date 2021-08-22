@@ -5,7 +5,7 @@
 #define GLOBALS_H
 
 // Declare the map to be used for command parsing (populated in main)
-std::unordered_map<std::string, parsing_function> parseMap;
+std::unordered_map<std::string, ParsingFunction> parseMap;
 
 // Define struct for containing function arguments
 struct PrimaryArgument {
@@ -44,16 +44,16 @@ struct PrimaryArgument {
 std::mutex bufferAccessMutex;
 
 // Scopeless declaration of buffers
-CircularBuffer<primary_function> functionBuffer(1000);
+CircularBuffer<PrimaryFunction> functionBuffer(1000);
 CircularBuffer<PrimaryArgument> argumentBuffer(2000);
 
 // Forward declaration
-class session;
+class Session;
 // Mutex to protect headlessSession pointer
 std::mutex headlessPointerMutex;
 // Pointer to session object of headless user
-session* headlessSession = NULL;
-std::unordered_map<std::string, session*> registeredUsers;
+Session* headlessSession = NULL;
+std::unordered_map<std::string, Session*> registeredUsers;
 
 // World state information
 #include "../world/entities/airship.h"

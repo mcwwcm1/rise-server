@@ -12,11 +12,11 @@ class DistanceConstraint : public Constraint
 {
  public:
 	DistanceConstraint(string id);
-	Entity* targetEntity;
-	Double3 targetPoint;
-	float distance;
-	bool isRigid;
-	float tensileForce;
+	Entity* TargetEntity;
+	Double3 TargetPoint;
+	float Distance;
+	bool IsRigid;
+	float TensileForce;
 
 	void ApplyConstraint(DynamicEntity* entity, Movement* movement);
 };

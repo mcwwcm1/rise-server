@@ -11,14 +11,14 @@ PhysicsSpace::PhysicsSpace() { PhysicsSpace(0); }
 
 PhysicsSpace::PhysicsSpace(double updateRate)
 {
-	this->updateRate = updateRate;
-	this->fixedDT    = 1 / updateRate;
+	this->UpdateRate = updateRate;
+	this->FixedDT    = 1 / updateRate;
 }
 
 void PhysicsSpace::RegisterEntity(PhysicsEntity* entity)
 {
 	entities.push_back(entity);
-	entity->space = this;
+	entity->Space = this;
 }
 
 void PhysicsSpace::UnregisterEntity(PhysicsEntity* entity)
@@ -30,10 +30,10 @@ void PhysicsSpace::UnregisterEntity(PhysicsEntity* entity)
 		}
 	}
 
-	entity->space = nullptr;
+	entity->Space = nullptr;
 }
 
 void PhysicsSpace::RunTick()
 {
-	for (PhysicsEntity* entity : entities) { entity->RunTick(fixedDT); }
+	for (PhysicsEntity* entity : entities) { entity->RunTick(FixedDT); }
 }

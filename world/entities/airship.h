@@ -11,10 +11,10 @@
 class Airship : public DynamicEntity
 {
  private:
-	static size_t currentAirshipIndex;
+	static size_t _currentAirshipIndex;
 
  public:
-	float throttle, pitch, yaw = 0;
+	float Throttle, Pitch, Yaw = 0;
 
 	Airship();
 	Airship(string id);

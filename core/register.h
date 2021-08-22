@@ -4,7 +4,7 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
-void RegisterUser(std::string& userID, session* sessionPointer)
+void RegisterUser(std::string& userID, Session* sessionPointer)
 {
 	std::lock_guard<std::mutex> lck(headlessPointerMutex);
 	registeredUsers[userID] = sessionPointer;

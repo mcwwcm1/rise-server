@@ -11,58 +11,58 @@ void DistanceConstraint::ApplyConstraint(DynamicEntity* entity,
                                          Movement* movement)
 {
 	Double3 globalAttachmentPointFrom =
-			attachmentPoint * movement->fromRotation + movement->fromPosition;
+			AttachmentPoint * movement->FromRotation + movement->FromPosition;
 	Double3 globalAttachmentPointTo =
-			attachmentPoint * movement->toRotation + movement->toPosition;
+			AttachmentPoint * movement->ToRotation + movement->ToPosition;
 
 	Double3 globalAttachmentPointTarget =
-			targetEntity ? targetEntity->LocalPointToGlobal(targetPoint)
-									 : targetPoint;
+			TargetEntity ? TargetEntity->LocalPointToGlobal(TargetPoint)
+									 : TargetPoint;
 
 	Double3 delta = globalAttachmentPointTo - globalAttachmentPointTarget;
 
-	if (delta.magnitudeSquared() > distance * distance) {
+	if (delta.MagnitudeSquared() > Distance * Distance) {
 		// Extending
-		if (isRigid) {
+		if (IsRigid) {
 			Double3 displacement =
-					(delta.normalized() * (distance - delta.magnitude()));
+					(delta.Normalized() * (Distance - delta.Magnitude()));
 
 			DynamicEntity* dynamicEntity2 =
-					dynamic_cast<DynamicEntity*>(targetEntity);
+					dynamic_cast<DynamicEntity*>(TargetEntity);
 			if (dynamicEntity2 != nullptr) {
 				// Cast succeeded, we have a dynamic entity
 
-				float massRatio = entity->mass / dynamicEntity2->mass;
+				float massRatio = entity->Mass / dynamicEntity2->Mass;
 
 				float displacementRatio = 1 / (massRatio + 1);  // :D
 
-				movement->toPosition += displacement * displacementRatio;
-				dynamicEntity2->position -= displacement * (1 - displacementRatio);
+				movement->ToPosition += displacement * displacementRatio;
+				dynamicEntity2->Position -= displacement * (1 - displacementRatio);
 
-				Double3 relativeVelocity = entity->velocity - dynamicEntity2->velocity;
+				Double3 relativeVelocity = entity->Velocity - dynamicEntity2->Velocity;
 
-				Double3 tugDirection = delta.normalized();
+				Double3 tugDirection = delta.Normalized();
 
 				entity->AddImpulseForceAtPosition(
 						relativeVelocity *
-								dot(relativeVelocity.normalized(), tugDirection * -1) /
+								Dot(relativeVelocity.Normalized(), tugDirection * -1) /
 								massRatio,
 						globalAttachmentPointFrom);
 				dynamicEntity2->AddImpulseForceAtPosition(
 						relativeVelocity *
-								dot(relativeVelocity.normalized(), tugDirection) * massRatio,
+								Dot(relativeVelocity.Normalized(), tugDirection) * massRatio,
 						globalAttachmentPointTarget);
 			} else {
-				movement->toPosition += displacement;
+				movement->ToPosition += displacement;
 				entity->AddImpulseForceAtPosition(
-						entity->velocity *
-								dot(entity->velocity.normalized(), displacement.normalized()),
+						entity->Velocity *
+								Dot(entity->Velocity.Normalized(), displacement.Normalized()),
 						globalAttachmentPointFrom);
 			}
 		} else {
 			// Apply tensile force
 			entity->AddForceAtPosition(
-					delta * (distance - delta.magnitude()) * tensileForce,
+					delta * (Distance - delta.Magnitude()) * TensileForce,
 					globalAttachmentPointFrom);
 		}
 	}

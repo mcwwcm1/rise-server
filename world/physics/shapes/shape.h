@@ -12,10 +12,10 @@ enum ShapeType { Sphere, Box };
 class Shape
 {
  public:
-	ShapeType type;
-	Double3 position;
-	Quaternion rotation;
-	virtual Double3 getFurthestPointInDirection(const Double3& direction);
+	ShapeType Type;
+	Double3 Position;
+	Quaternion Rotation;
+	virtual Double3 GetFurthestPointInDirection(const Double3& direction);
 
 	Shape();
 };

@@ -3,54 +3,54 @@
 
 #include "world.h"
 
-World* World::singleton = new World();
+World* World::Singleton = new World();
 
 bool World::RegisterEntity(Entity* entity)
 {
-	auto e = entities.find(entity->id);
-	if (e != entities.end()) {
+	auto e = Entities.find(entity->ID);
+	if (e != Entities.end()) {
 		// Entity is already registered :(
 		printf("Attempted to register entity that is already registered: %s\n",
-		       entity->id.c_str());
+		       entity->ID.c_str());
 		return false;
 	}
 
-	entities.insert({entity->id, entity});
+	Entities.insert({entity->ID, entity});
 
 	PhysicsEntity* pe = dynamic_cast<PhysicsEntity*>(entity);
 
-	if (pe != nullptr) { space->RegisterEntity(pe); }
+	if (pe != nullptr) { Space->RegisterEntity(pe); }
 
-	printf("Registered entity: %s\n", entity->id.c_str());
+	printf("Registered entity: %s\n", entity->ID.c_str());
 
 	return true;
 }
 
 bool World::UnregisterEntity(string entityId)
 {
-	auto e = entities.find(entityId);
-	if (e == entities.end()) return false;
+	auto e = Entities.find(entityId);
+	if (e == Entities.end()) return false;
 
 	return UnregisterEntity(e->second);
 }
 
 bool World::UnregisterEntity(Entity* entity)
 {
-	auto e = entities.find(entity->id);
-	if (e == entities.end()) {
+	auto e = Entities.find(entity->ID);
+	if (e == Entities.end()) {
 		// Entity is not registered :(
 		printf("Attempted to unregister entity that is not registered: %s\n",
-		       entity->id.c_str());
+		       entity->ID.c_str());
 		return false;
 	}
 
-	entities.erase(e);
+	Entities.erase(e);
 
 	PhysicsEntity* pe = dynamic_cast<PhysicsEntity*>(entity);
 
-	if (pe != nullptr) { space->UnregisterEntity(pe); }
+	if (pe != nullptr) { Space->UnregisterEntity(pe); }
 
-	printf("Unregistered entity: %s\n", entity->id.c_str());
+	printf("Unregistered entity: %s\n", entity->ID.c_str());
 
 	return true;
 }

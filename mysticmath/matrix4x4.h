@@ -32,18 +32,18 @@ struct Matrix4x4 {
 
 	double* operator[](int index);
 
-	Matrix4x4 translate(Double3 delta);
-	Matrix4x4 rotate(Quaternion rotation);
-	Matrix4x4 scale(Double3 v);
+	Matrix4x4 Translate(Double3 delta);
+	Matrix4x4 Rotate(Quaternion rotation);
+	Matrix4x4 Scale(Double3 v);
 
-	string str();
+	string ToString();
 };
 
-Matrix4x4 getTranslationMatrix(Double3 translation);
-Matrix4x4 getRotationMatrix(Quaternion rotation);
-Matrix4x4 getScaleMatrix(Double3 scale);
+Matrix4x4 GetTranslationMatrix(Double3 translation);
+Matrix4x4 GetRotationMatrix(Quaternion rotation);
+Matrix4x4 GetScaleMatrix(Double3 scale);
 
-Matrix4x4 getTRSMatrix(Double3 position, Quaternion rotation, Double3 scale);
+Matrix4x4 GetTRSMatrix(Double3 position, Quaternion rotation, Double3 scale);
 
 Matrix4x4 operator*(Matrix4x4 m, double f);
 Double3 operator*(Double3 v, Matrix4x4 m);

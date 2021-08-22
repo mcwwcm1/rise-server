@@ -16,10 +16,10 @@ class Entity
 	Entity(string id);
 	virtual ~Entity() = default;
 
-	string id;
-	string* owner;
-	unordered_map<string, string> changeTable;
-	bool dirty;
+	string ID;
+	string* Owner;
+	unordered_map<string, string> ChangeTable;
+	bool Dirty;
 
 	void SubmitChange(string field, string change);
 
@@ -27,9 +27,9 @@ class Entity
 	void SetLocalRotation(const Quaternion& newRotation);
 	void SetLocalScale(const Double3& scale);
 
-	Double3 position    = Double3(0, 0, 0);
-	Quaternion rotation = Quaternion::identity;
-	Double3 scale       = Double3(1, 1, 1);
+	Double3 Position    = Double3(0, 0, 0);
+	Quaternion Rotation = Quaternion::identity;
+	Double3 Scale       = Double3(1, 1, 1);
 
 	Matrix4x4 GetTransformMatrix();
 	Double3 LocalPointToGlobal(Double3 point);

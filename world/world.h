@@ -13,11 +13,11 @@
 class World
 {
  public:
-	static World* singleton;
+	static World* Singleton;
 
-	PhysicsSpace* space = new PhysicsSpace(20);
+	PhysicsSpace* Space = new PhysicsSpace(20);
 
-	unordered_map<string, Entity*> entities;
+	unordered_map<string, Entity*> Entities;
 
 	bool RegisterEntity(Entity* entity);
 	bool UnregisterEntity(string entityId);

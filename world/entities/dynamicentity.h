@@ -13,25 +13,25 @@
 class DynamicEntity : public PhysicsEntity
 {
  private:
-	Double3 bufferedForce         = Double3(0, 0, 0);
-	Double3 bufferedTorque        = Double3(0, 0, 0);
-	Double3 bufferedImpulseForce  = Double3(0, 0, 0);
-	Double3 bufferedImpulseTorque = Double3(0, 0, 0);
+	Double3 _bufferedForce         = Double3(0, 0, 0);
+	Double3 _bufferedTorque        = Double3(0, 0, 0);
+	Double3 _bufferedImpulseForce  = Double3(0, 0, 0);
+	Double3 _bufferedImpulseTorque = Double3(0, 0, 0);
 
  public:
 	DynamicEntity();
 	DynamicEntity(string id);
 	virtual ~DynamicEntity();
 
-	Double3 velocity     = Double3(0, 0, 0);
-	Double3 torque       = Double3(0, 0, 0);
-	float drag           = 1;
-	float rotationalDrag = 1;
-	float bounciness     = 0.2f;
-	float friction       = 0.2f;
-	float mass           = 10.0f;
+	Double3 Velocity     = Double3(0, 0, 0);
+	Double3 Torque       = Double3(0, 0, 0);
+	float Drag           = 1;
+	float RotationalDrag = 1;
+	float Bounciness     = 0.2f;
+	float Friction       = 0.2f;
+	float Mass           = 10.0f;
 
-	std::vector<Constraint*> constraints;
+	std::vector<Constraint*> Constraints;
 
 	// Apply forces
 	void AddForce(const Double3& force);
@@ -57,10 +57,10 @@ struct Movement {
 	         Quaternion fromRotation,
 	         Quaternion toRotation);
 
-	Double3 fromPosition;
-	Double3 toPosition;
-	Quaternion fromRotation;
-	Quaternion toRotation;
+	Double3 FromPosition;
+	Double3 ToPosition;
+	Quaternion FromRotation;
+	Quaternion ToRotation;
 };
 
 #endif
