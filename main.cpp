@@ -36,7 +36,8 @@ using tcp           = boost::asio::ip::tcp;
 int main(int argc, char* argv[])
 {
 	//connection to the db. Just for testing, don't uncomment.
-	//pqxx::connection dbConn("dbname=riseserver user=riseserver password=HfUK6+{Cb!LS=~52 host=funnyanimalfacts.com port=5432");
+	pqxx::connection dbConn("dbname=riseserver user=riseserver password=BgQ^Rvd2EcmK4=NZnG%y@?Q%*Zhc#GU^ host=funnyanimalfacts.com port=5432");
+	printf("DB Connection Successful\n");
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
