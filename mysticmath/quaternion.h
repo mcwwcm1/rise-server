@@ -39,6 +39,7 @@ struct Quaternion
 };
 
 Quaternion quaternionFromString(string s);
+bool tryQuaternionFromString(string s, Quaternion& result);
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b);
 Quaternion FromToRotation(const Double3& a, const Double3& b);

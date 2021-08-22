@@ -13,10 +13,21 @@ void WorldTick()
 	{
 		if(entity.second->dirty)
 		{
-			std::string* changes = new std::string("changeTable ");
+			std::string* changes = new std::string("ChangeTable " + entity.second->id + " ");
 			for (auto change : entity.second->changeTable)
 			{
 				*changes += change.first + "|" + change.second + "|";
+			}
+
+			if(entity.second->owner == nullptr)
+			{
+				printf("Unable to send changetable due to the owner of the entity (%s) not being assigned\n", entity.second->id.c_str());
+				continue;
+			}
+			if(registeredUsers.find(*entity.second->owner) == registeredUsers.end())
+			{
+				printf("Unable to send changetable due to the owner of the entity (%s) not being a registered user (%s)\n", entity.second->id.c_str(), entity.second->owner->c_str());
+				continue;
 			}
 
 			Send(entity.second->owner, changes);

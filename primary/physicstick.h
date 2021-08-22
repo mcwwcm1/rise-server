@@ -20,36 +20,23 @@ Airship* GetAirship(string* id) { return dynamic_cast<Airship*>(World::singleton
 
 DynamicEntity* GetDynamicEntity(string* id) { return dynamic_cast<DynamicEntity*>(World::singleton->entities[*id]); }
 
-
-void RegisterAirship()
-{
-	std::string* airshipID = argumentBuffer.get().var.sval;
-
-	World::singleton->RegisterEntity(new Airship(*airshipID));
-
-	delete airshipID;
-}
-
-void RegisterAirshipParser(std::string& arguments)
-{
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
-
-	// Put function pointer
-	functionBuffer.put(RegisterAirship);
-
-	// Put arguments
-	argumentBuffer.put(PrimaryArgument(new std::string(arguments))); // airshipID
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
-}
-
 void RegisterStaticCollider()
 {
 	Shape* colliderShape = new SphereShape(argumentBuffer.get().var.fval);
 	std::string* positionString = argumentBuffer.get().var.sval;
 	colliderShape->position = double3FromString(*positionString);
+
+	auto staticColliders = World::singleton->entities.find("staticColliders");
+
+	if(staticColliders == World::singleton->entities.end())
+	{
+		World::singleton->RegisterEntity(new PhysicsEntity("staticColliders"));
+		staticColliders = World::singleton->entities.find("staticColliders");
+	}
+
+	PhysicsEntity* e = dynamic_cast<PhysicsEntity*>(staticColliders->second);
+	e->colliders.push_back(colliderShape);
+
 	delete positionString;
 }
 
@@ -67,7 +54,7 @@ void RegisterStaticColliderParser(std::string& arguments)
 	functionBuffer.put(RegisterStaticCollider);
 
 	// Put arguments
-	argumentBuffer.put(PrimaryArgument(stof(arguments)));
+	argumentBuffer.put(PrimaryArgument(radius));
 	argumentBuffer.put(PrimaryArgument(new std::string(positionString)));
 
 	// Unlock buffers
@@ -340,6 +327,15 @@ void SetOwner()
 	std::string* entity = argumentBuffer.get().var.sval;
 	std::string* owner = argumentBuffer.get().var.sval;
 
+	if(World::singleton->entities.find(*entity) == World::singleton->entities.end())
+	{
+		// Entity is not present in world D:
+		printf("Attempted to set owner of non-existent entity (%s) to %s\n", entity->c_str(), owner->c_str());
+		delete entity;
+		delete owner;
+		return;
+	}
+
 	World::singleton->entities[*entity]->owner = owner;
 
 	delete entity;
@@ -351,6 +347,12 @@ void SetOwnerParser(std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
 
+	if(parts.size() != 2)
+	{
+		printf("Incorrect number of arguments for \"setowner\". Recieved %li but expected 2: %s", parts.size(), arguments.c_str());
+		return;
+	}
+
 	// Lock the buffers to safely write to them
 	bufferAccessMutex.lock();
  
@@ -359,6 +361,85 @@ void SetOwnerParser(std::string& arguments)
 
 	argumentBuffer.put(new std::string(parts[0])); // EntityID
 	argumentBuffer.put(new std::string(parts[1])); // OwnerID
+
+	// Unlock buffers
+	bufferAccessMutex.unlock();
+}
+
+// requestairship <locationID> <position> <rotation> <userID>
+void RequestAirship()
+{
+	std::string* locationID = argumentBuffer.get().var.sval;
+	std::string* positionStr = argumentBuffer.get().var.sval;
+	std::string* rotationStr = argumentBuffer.get().var.sval;
+	std::string* userID = argumentBuffer.get().var.sval;
+
+	bool succeeded = true;
+
+	auto location = World::singleton->entities.find(*locationID);
+
+	if(location == World::singleton->entities.end())
+	{
+		printf("Attempted to request airship atocation with entity id \"%s\" but the location entity does not exist.\n", locationID->c_str());
+		succeeded = false;
+	}
+
+	Double3 position;
+	Quaternion rotation;
+
+	if(!tryDouble3FromString(*positionStr, position))
+	{
+		printf("Unable to parse position string during \"requestairship\": %s\n", positionStr->c_str());
+		succeeded = false;
+	}
+
+	if(!tryQuaternionFromString(*rotationStr, rotation))
+	{
+		printf("Unable to parse rotation string during \"requestairship\": %s\n", rotationStr->c_str());
+		succeeded = false;
+	}
+
+	if(succeeded)
+	{
+		position = location->second->LocalPointToGlobal(position);
+		rotation = location->second->LocalRotationToGlobal(rotation);
+
+		Airship* airship = new Airship(Airship::GetNextID());
+		World::singleton->RegisterEntity(airship);
+
+		string* instruction = new string("SpawnAirship " + airship->id + "|" + *positionStr + "|" + *rotationStr + "|");
+
+		Send(instruction);
+
+		delete instruction;
+	}
+
+	delete locationID;
+	delete positionStr;
+	delete rotationStr;
+	delete userID;
+}
+
+void RequestAirshipParser(std::string& arguments)
+{
+	auto parts = Split(arguments, '|');
+
+	if(parts.size() != 4)
+	{
+		printf("Incorrect number of arguments for \"requestairship\". Recieved %li but expected 4: %s\n", parts.size(), arguments.c_str());
+		return;
+	}
+
+	// Lock the buffers to safely write to them
+	bufferAccessMutex.lock();
+ 
+	// Put function pointer
+	functionBuffer.put(RequestAirship);
+
+	argumentBuffer.put(new std::string(parts[0])); // LocationID
+	argumentBuffer.put(new std::string(parts[1])); // Position
+	argumentBuffer.put(new std::string(parts[2])); // Rotation
+	argumentBuffer.put(new std::string(parts[3])); // UserID
 
 	// Unlock buffers
 	bufferAccessMutex.unlock();

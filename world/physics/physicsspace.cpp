@@ -17,6 +17,7 @@ PhysicsSpace::PhysicsSpace(double updateRate)
 void PhysicsSpace::RegisterEntity(PhysicsEntity* entity)
 {
 	entities.push_back(entity);
+	entity->space = this;
 }
 
 void PhysicsSpace::UnregisterEntity(PhysicsEntity* entity)
@@ -27,10 +28,13 @@ void PhysicsSpace::UnregisterEntity(PhysicsEntity* entity)
             break;
         }
     }
+
+	entity->space = nullptr;
 }
 
 void PhysicsSpace::RunTick()
 {
-	for(PhysicsEntity* entity : entities)
+	for(PhysicsEntity* entity : entities){
 		entity->RunTick(fixedDT);
+	}
 }

@@ -39,6 +39,7 @@ struct Double3
 };
 
 Double3 double3FromString(string s);
+bool tryDouble3FromString(string s, Double3& result);
 
 double dot(const Double3& a, const Double3& b);
 Double3 cross(const Double3& a, const Double3& b);

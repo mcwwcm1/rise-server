@@ -10,12 +10,14 @@
 
 class Airship : public DynamicEntity
 {
+	private:
+		static size_t currentAirshipIndex;
+
 	public:
 		float throttle, pitch, yaw = 0;
 
 		Airship();
 		Airship(string id);
-		Airship(PhysicsSpace* space);
 
 		Matrix4x4 GetTransformMatrix();
 		Double3 GetPosition();
@@ -27,6 +29,8 @@ class Airship : public DynamicEntity
 		Double3 GetForward();
 		Double3 GetRight();
 		Double3 GetUp();
+
+		static string GetNextID(); // Provides the next airship id
 };
 
 #endif

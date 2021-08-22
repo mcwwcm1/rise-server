@@ -8,11 +8,6 @@ DynamicEntity::DynamicEntity() { }
 
 DynamicEntity::DynamicEntity(string id) : PhysicsEntity(id) { }
 
-DynamicEntity::DynamicEntity(PhysicsSpace* space) : PhysicsEntity(space)
-{
-	space->RegisterEntity(this);
-}
-
 DynamicEntity::~DynamicEntity()
 {
 	space->UnregisterEntity(this);
@@ -168,8 +163,8 @@ void DynamicEntity::CheckCollision()
 						else
 						{
 							// Colliding with static object so assume infinite mass :)
-							this->position += displacement;
-							this->AddImpulseForceAtPosition(velocity * dot(velocity.normalized(), pushDirection), contactPoint);
+							this->position -= displacement;
+							this->AddImpulseForceAtPosition(velocity * dot(velocity.normalized(), pushDirection * -1), contactPoint);
 						}
 					}
 				}

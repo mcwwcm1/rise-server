@@ -55,7 +55,6 @@ int main(int argc, char* argv[])
 	parseMap["echo"] = EchoTestParser;
 	parseMap["echotest"] = EchoTestParser;
 	parseMap["echoto"] = EchoToParser;
-	parseMap["registerairship"] = RegisterAirshipParser;
 	parseMap["setthrottle"] = SetThrottleParser;
 	parseMap["setpitch"] = SetPitchParser;
 	parseMap["setyaw"] = SetYawParser;
@@ -64,6 +63,8 @@ int main(int argc, char* argv[])
 	parseMap["registerentity"] = RegisterEntityParser;
 	parseMap["unregisterentity"] = UnregisterEntityParser;
 	parseMap["setowner"] = SetOwnerParser;
+	parseMap["adddistanceconstraint"] = AddDistanceConstraintParser;
+	parseMap["requestairship"] = RequestAirshipParser;
 
 	//-----------------------End of function initialization step------------------------------------------
 	// Check command line arguments

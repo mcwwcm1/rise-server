@@ -5,9 +5,9 @@
 #include "../physics/shapes/sphereshape.h"
 #include "../physics/constraints/distanceconstraint.h"
 
-Airship::Airship(string id) : DynamicEntity(id) { } // :(
+size_t Airship::currentAirshipIndex = 0; // Dumb.
 
-Airship::Airship(PhysicsSpace* space) : DynamicEntity(space)
+Airship::Airship(string id) : DynamicEntity(id) 
 {
 	// HARDCODED COLLIDER SHAPE = BAD
 	SphereShape* s1 = new SphereShape(2);
@@ -72,4 +72,10 @@ Double3 Airship::GetRight()
 Double3 Airship::GetUp()
 {
 	return Double3(0, 1, 0) * rotation;
+}
+
+string Airship::GetNextID()
+{
+	currentAirshipIndex++;
+	return "airship_" + std::to_string(currentAirshipIndex);
 }

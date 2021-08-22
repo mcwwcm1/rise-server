@@ -11,10 +11,18 @@ bool World::RegisterEntity(Entity* entity)
 	if(e != entities.end())
 	{	
 		// Entity is already registered :(
+		printf("Attempted to register entity that is already registered: %s\n", entity->id.c_str());
 		return false;
 	}
 
 	entities.insert({entity->id, entity});
+
+	PhysicsEntity* pe = dynamic_cast<PhysicsEntity*>(entity);
+
+	if(pe != nullptr)
+	{
+		space->RegisterEntity(pe);
+	}
 	
 	printf("Registered entity: %s\n", entity->id.c_str());
 	
@@ -36,10 +44,18 @@ bool World::UnregisterEntity(Entity* entity)
 	if(e == entities.end())
 	{	
 		// Entity is not registered :(
+		printf("Attempted to unregister entity that is not registered: %s\n", entity->id.c_str());
 		return false;
 	}
 
 	entities.erase(e);
+
+	PhysicsEntity* pe = dynamic_cast<PhysicsEntity*>(entity);
+
+	if(pe != nullptr)
+	{
+		space->UnregisterEntity(pe);
+	}
 
 	printf("Unregistered entity: %s\n", entity->id.c_str());
 

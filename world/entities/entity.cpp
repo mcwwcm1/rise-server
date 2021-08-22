@@ -44,3 +44,13 @@ Double3 Entity::LocalPointToGlobal(Double3 point)
 {
 	return point * GetTransformMatrix();
 }
+
+Quaternion Entity::LocalRotationToGlobal(Quaternion rotation)
+{
+	return rotation * this->rotation;
+}
+
+Double3 Entity::LocalVectorToGlobal(Double3 vector)
+{
+	return (vector * rotation) * scale;
+}

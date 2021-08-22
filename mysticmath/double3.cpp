@@ -73,6 +73,19 @@ Double3 double3FromString(string s)
 	return Double3(x, y, z);
 }
 
+bool tryDouble3FromString(string s, Double3& result)
+{
+	try
+	{
+		result = double3FromString(s);
+		return true;
+	}
+	catch(exception e)
+	{
+		return false;
+	}
+}
+
 double dot(const Double3& a, const Double3& b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;

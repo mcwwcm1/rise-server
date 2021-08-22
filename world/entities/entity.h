@@ -32,4 +32,6 @@ class Entity
 
 		Matrix4x4 GetTransformMatrix();
 		Double3 LocalPointToGlobal(Double3 point);
+		Quaternion LocalRotationToGlobal(Quaternion rotation);
+		Double3 LocalVectorToGlobal(Double3 vector);
 };

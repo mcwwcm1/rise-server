@@ -21,7 +21,6 @@ class DynamicEntity : public PhysicsEntity
 	public:
 		DynamicEntity();
 		DynamicEntity(string id);
-		DynamicEntity(PhysicsSpace* space);
 		virtual ~DynamicEntity();
 
 		Double3 velocity = Double3(0, 0, 0);

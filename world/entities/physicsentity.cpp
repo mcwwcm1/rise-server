@@ -2,15 +2,11 @@
 // Purpose: Implements physicsentity.h
 
 #include "physicsentity.h"
+#include "../world.h"
 
 PhysicsEntity::PhysicsEntity() { }
 
 PhysicsEntity::PhysicsEntity(string id) : Entity(id) { }
-
-PhysicsEntity::PhysicsEntity(PhysicsSpace* space)
-{
-	this->space = space;
-}
 
 PhysicsEntity::~PhysicsEntity()
 {

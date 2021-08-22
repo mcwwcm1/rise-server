@@ -96,6 +96,19 @@ Quaternion quaternionFromString(string s)
 	return Quaternion(stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
 
+bool tryQuaternionFromString(string s, Quaternion& result)
+{
+	try
+	{
+		result = quaternionFromString(s);
+		return true;	
+	}	
+	catch(exception e)
+	{
+		return false;
+	}
+}
+
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b)
 {
 	return a.conjugate() * b;
