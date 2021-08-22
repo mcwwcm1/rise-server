@@ -19,3 +19,4 @@ This document was looking a bit lonely so I added a pic:
 
 * https://github.com/boostorg/beast
 * Link to cppcon18 talk describing beast usage: https://youtu.be/7FQwAjELMek
+* http://www.pqxx.org/development/libpqxx/
