@@ -1,8 +1,7 @@
 // File: dynamicentity.h
 // Purpose: A PhysicsEntity that has a rigidbody
 
-#ifndef DYNAMICENTITY_H
-#define DYNAMICENTITY_H
+#pragma once
 
 #include "../physics/constraints/constraint.h"
 #include "../physics/physicsspace.h"
@@ -62,5 +61,3 @@ struct Movement {
 	Quaternion FromRotation;
 	Quaternion ToRotation;
 };
-
-#endif

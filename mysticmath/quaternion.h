@@ -1,8 +1,7 @@
 // File: quaternion.h
 // Purpose: For working with quaternions
 
-#ifndef QUATERNION_H
-#define QUATERNION_H
+#pragma once
 
 #include <math.h>
 
@@ -47,5 +46,3 @@ Quaternion operator-(const Quaternion& a, const Quaternion& b);
 Quaternion operator*(const Quaternion& a, const Quaternion& b);
 Double3 operator*(const Double3& a, const Quaternion& b);
 Quaternion operator*(const Quaternion& a, double b);
-
-#endif

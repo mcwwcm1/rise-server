@@ -1,8 +1,7 @@
 // File: constraint.h
 // Purpose: Defines a physical constraint for things like joints
 
-#ifndef CONSTRAINT_H
-#define CONSTRAINT_H
+#pragma once
 
 #include <string>
 
@@ -22,5 +21,3 @@ class Constraint
 	Quaternion AttachmentRotation;
 	virtual void ApplyConstraint(DynamicEntity* entity, Movement* movement) = 0;
 };
-
-#endif

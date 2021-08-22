@@ -1,8 +1,7 @@
 // File: airship.h
 // Purpose: An instance of an airship who's data will be synced to Neos
 
-#ifndef AIRSHIP_H
-#define AIRSHIP_H
+#pragma once
 
 #include "../../mysticmath/matrix4x4.h"
 #include "../entities/dynamicentity.h"
@@ -32,5 +31,3 @@ class Airship : public DynamicEntity
 
 	static std::string GetNextID();  // Provides the next airship id
 };
-
-#endif

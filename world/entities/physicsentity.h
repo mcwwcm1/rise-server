@@ -1,8 +1,7 @@
 // File: physicsentity.h
 // Purpose: An entity that has a rigidbody
 
-#ifndef PHYSICSENTITY_H
-#define PHYSICSENTITY_H
+#pragma once
 
 #include <vector>
 
@@ -23,5 +22,3 @@ class PhysicsEntity : public Entity
 
 	virtual void RunTick(float dt);
 };
-
-#endif

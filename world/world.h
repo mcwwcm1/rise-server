@@ -1,8 +1,7 @@
 // File: world.h
 // Purpose: Contains entities and properties of the world
 
-#ifndef WORLD_H
-#define WORLD_H
+#pragma once
 
 #include <unordered_map>
 #include <vector>
@@ -23,5 +22,3 @@ class World
 	bool UnregisterEntity(std::string entityId);
 	bool UnregisterEntity(Entity* entity);
 };
-
-#endif

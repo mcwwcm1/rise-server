@@ -1,8 +1,7 @@
 // File: session.h
 // Purpose: Implements a single websocket session
 
-#ifndef SESSION_H
-#define SESSION_H
+#pragma once
 
 // Echoes back all received WebSocket messages
 class Session : public std::enable_shared_from_this<Session>
@@ -127,5 +126,3 @@ class Session : public std::enable_shared_from_this<Session>
 		//printf("send ran\n");
 	}
 };
-
-#endif

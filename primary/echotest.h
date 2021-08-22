@@ -1,8 +1,7 @@
-// File: indexes.h
-// Purpose: Initializes the prearranged function array and parsing map
+// File: echotest.h
+// Purpose: Echo test command
 
-#ifndef INDEXES_H
-#define INDEXES_H
+#pragma once
 
 // Just to test if this all is even possible
 void EchoTest()
@@ -44,5 +43,3 @@ void EchoTestParser(std::string& arguments)
 	        arguments + "\n")
 	           .c_str());
 }
-
-#endif

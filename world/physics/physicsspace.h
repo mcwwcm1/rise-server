@@ -1,8 +1,7 @@
 // File: physicsspace.h
 // Purpose: Contains physics bodies and runs the main physics tick
 
-#ifndef PHYSICSSPACE_H
-#define PHYSICSSPACE_H
+#pragma once
 
 #include <vector>
 
@@ -25,5 +24,3 @@ class PhysicsSpace
 	void RunTick();
 	void CheckCollision();
 };
-
-#endif

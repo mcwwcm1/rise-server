@@ -1,8 +1,7 @@
 // File: double4.h
 // Purpose: Used for vector math
 
-#ifndef FLOAT4_H
-#define FLOAT4_H
+#pragma once
 
 #include <math.h>
 
@@ -46,5 +45,3 @@ Double4& operator*=(const Double4& a, const Double4& b);
 Double4& operator*=(const Double4& a, const double b);
 Double4& operator/=(const Double4& a, const Double4& b);
 Double4& operator/=(const Double4& a, const double b);
-
-#endif

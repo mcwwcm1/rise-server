@@ -1,8 +1,7 @@
 // File: shape.h
 // Purpose: An abstract file for defining collission shapes
 
-#ifndef SHAPE_H
-#define SHAPE_H
+#pragma once
 
 #include "../../../mysticmath/double3.h"
 #include "../../../mysticmath/quaternion.h"
@@ -19,5 +18,3 @@ class Shape
 
 	Shape();
 };
-
-#endif

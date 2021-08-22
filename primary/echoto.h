@@ -1,8 +1,7 @@
 // File: echo.h
 // Purpose: Defines an echo function that sends to a specific user and its accompanying parser
 
-#ifndef ECHOTO_H
-#define ECHOTO_H
+#pragma once
 
 void EchoTo()
 {
@@ -36,5 +35,3 @@ void EchoToParser(std::string& arguments)
 	// Debug
 	printf("Parser: EchoTo\n");
 }
-
-#endif

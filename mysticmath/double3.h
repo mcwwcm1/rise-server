@@ -1,8 +1,7 @@
 // File: double3.h
 // Purpose: Used for vector math
 
-#ifndef DOUBLE3_H
-#define DOUBLE3_H
+#pragma once
 
 #include <math.h>
 
@@ -53,5 +52,3 @@ Double3 operator*(const Double3& a, const Double3& b);
 Double3 operator*(const Double3& a, const double& b);
 Double3 operator/(const Double3& a, const Double3& b);
 Double3 operator/(const Double3& a, const double& b);
-
-#endif

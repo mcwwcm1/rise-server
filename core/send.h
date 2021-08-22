@@ -1,8 +1,7 @@
 // File: send.h
 // Purpose: Implements sending data to the headless
 
-#ifndef SEND_H
-#define SEND_H
+#pragma once
 
 void Send(std::string* sendString)
 {
@@ -26,5 +25,3 @@ void Send(const std::string* userID, const std::string* sendString)
 		//printf(("Sent: " + *sendString + " To: " + *userID + "\n").c_str());
 	}
 }
-
-#endif

@@ -1,6 +1,8 @@
 // File: sphereShape.h
 // Purpose: Defines a sphere shape for collision
 
+#pragma once
+
 #include "../../../mysticmath/double3.h"
 #include "../../../mysticmath/matrix4x4.h"
 #include "shape.h"

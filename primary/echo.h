@@ -1,8 +1,7 @@
 // File: echo.h
 // Purpose: Defines an echo function and its accompanying parser
 
-#ifndef ECHO_H
-#define ECHO_H
+#pragma once
 
 void Echo()
 {
@@ -31,5 +30,3 @@ void EchoParser(std::string& arguments)
 	// Debug
 	printf("Parser: Echo\n");
 }
-
-#endif

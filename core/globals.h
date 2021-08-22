@@ -1,8 +1,7 @@
 // File: globals.h
 // Purpose: Intializes global variables
 
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#pragma once
 
 // Declare the map to be used for command parsing (populated in main)
 std::unordered_map<std::string, ParsingFunction> parseMap;
@@ -58,5 +57,3 @@ std::unordered_map<std::string, Session*> registeredUsers;
 // World state information
 #include "../world/entities/airship.h"
 #include "../world/physics/physicsspace.h"
-
-#endif

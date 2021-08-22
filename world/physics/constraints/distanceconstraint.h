@@ -1,8 +1,7 @@
 // File: distanceconstraint.h
 // Purpose: Defines a constraint that limits the distance to a specified point
 
-#ifndef DISTANCECONSTRAINT_H
-#define DISTANCECONSTRAINT_H
+#pragma once
 
 #include "../../../mysticmath/double3.h"
 #include "../../entities/entity.h"
@@ -20,5 +19,3 @@ class DistanceConstraint : public Constraint
 
 	void ApplyConstraint(DynamicEntity* entity, Movement* movement);
 };
-
-#endif

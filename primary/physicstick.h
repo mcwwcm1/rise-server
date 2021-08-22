@@ -1,8 +1,7 @@
 // File: physicstick.h
 // Purpose: Sets physics parameters that are sent from Neos
 
-#ifndef PHYSICSTICK_H
-#define PHYSICSTICK_H
+#pragma once
 
 #include <stdio.h>
 
@@ -461,5 +460,3 @@ void RequestAirshipParser(std::string& arguments)
 	// Unlock buffers
 	bufferAccessMutex.unlock();
 }
-
-#endif

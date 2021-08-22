@@ -1,8 +1,7 @@
 // File: listener.h
 // Purpose: Implements the listener class
 
-#ifndef LISTENER_H
-#define LISTENER_H
+#pragma once
 
 // Accepts incoming connections and launches the sessions
 class Listener : public std::enable_shared_from_this<Listener>
@@ -91,5 +90,3 @@ class Listener : public std::enable_shared_from_this<Listener>
 		DoAccept();
 	}
 };
-
-#endif

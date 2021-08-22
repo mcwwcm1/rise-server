@@ -1,8 +1,7 @@
 // File: matrix4x4.h
 // Purpose: For defining and working with 4x4 matrices
 
-#ifndef MATRIX_H
-#define MATRIX_H
+#pragma once
 
 #include "double3.h"
 #include "quaternion.h"
@@ -48,5 +47,3 @@ Matrix4x4 GetTRSMatrix(Double3 position, Quaternion rotation, Double3 scale);
 Matrix4x4 operator*(Matrix4x4 m, double f);
 Double3 operator*(Double3 v, Matrix4x4 m);
 Matrix4x4 operator*(Matrix4x4 m1, Matrix4x4 m2);
-
-#endif

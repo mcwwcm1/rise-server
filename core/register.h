@@ -1,8 +1,7 @@
 // File: register.h
 // Purpose: Registers the current user as the headless session
 
-#ifndef REGISTER_H
-#define REGISTER_H
+#pragma once
 
 void RegisterUser(std::string& userID, Session* sessionPointer)
 {
@@ -17,5 +16,3 @@ void UnRegisterUser(std::string& userID)
 	registeredUsers.erase(userID);
 	printf(("UnRegistered: " + userID + "\n").c_str());
 }
-
-#endif
