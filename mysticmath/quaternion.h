@@ -16,26 +16,26 @@ using namespace std;
 
 struct Quaternion {
  public:
-  double x, y, z, w;
-  static const Quaternion identity;  // Unsure on this
+	double x, y, z, w;
+	static const Quaternion identity;  // Unsure on this
 
-  Quaternion(double x, double y, double z, double w);
-  Quaternion();
+	Quaternion(double x, double y, double z, double w);
+	Quaternion();
 
-  double magnitude() const;
-  double magnitudeSquared() const;
-  Quaternion conjugate() const;
-  Quaternion normalized() const;
-  Double3 toEuler() const;
+	double magnitude() const;
+	double magnitudeSquared() const;
+	Quaternion conjugate() const;
+	Quaternion normalized() const;
+	Double3 toEuler() const;
 
-  static Quaternion fromEuler(Double3 euler);
+	static Quaternion fromEuler(Double3 euler);
 
-  string str() const;
+	string str() const;
 
-  Quaternion& operator+=(const Quaternion& b);
-  Quaternion& operator-=(const Quaternion& b);
-  Quaternion& operator*=(const Quaternion& b);
-  Quaternion& operator*=(double b);
+	Quaternion& operator+=(const Quaternion& b);
+	Quaternion& operator-=(const Quaternion& b);
+	Quaternion& operator*=(const Quaternion& b);
+	Quaternion& operator*=(double b);
 };
 
 Quaternion quaternionFromString(string s);

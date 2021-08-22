@@ -13,29 +13,29 @@ using namespace std;
 
 struct Double3 {
  public:
-  double x, y, z;
+	double x, y, z;
 
-  Double3(double x, double y, double z);
-  Double3();
+	Double3(double x, double y, double z);
+	Double3();
 
-  double magnitude() const;
-  double magnitudeSquared() const;
-  Double3 normalized() const;
-  Double3 absolute() const;
-  Double3 sign() const;
-  Double3 round() const;
-  Double3 clampMagnitude(double min, double max) const;
-  bool isUniform() const;
+	double magnitude() const;
+	double magnitudeSquared() const;
+	Double3 normalized() const;
+	Double3 absolute() const;
+	Double3 sign() const;
+	Double3 round() const;
+	Double3 clampMagnitude(double min, double max) const;
+	bool isUniform() const;
 
-  string str() const;
+	string str() const;
 
-  // Assignment operator overloads
-  Double3& operator+=(const Double3& b);
-  Double3& operator-=(const Double3& b);
-  Double3& operator*=(const Double3& b);
-  Double3& operator*=(const double& b);
-  Double3& operator/=(const Double3& b);
-  Double3& operator/=(const double& b);
+	// Assignment operator overloads
+	Double3& operator+=(const Double3& b);
+	Double3& operator-=(const Double3& b);
+	Double3& operator*=(const Double3& b);
+	Double3& operator*=(const double& b);
+	Double3& operator/=(const Double3& b);
+	Double3& operator/=(const double& b);
 };
 
 Double3 double3FromString(string s);

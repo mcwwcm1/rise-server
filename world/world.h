@@ -13,15 +13,15 @@
 class World
 {
  public:
-  static World* singleton;
+	static World* singleton;
 
-  PhysicsSpace* space = new PhysicsSpace(20);
+	PhysicsSpace* space = new PhysicsSpace(20);
 
-  unordered_map<string, Entity*> entities;
+	unordered_map<string, Entity*> entities;
 
-  bool RegisterEntity(Entity* entity);
-  bool UnregisterEntity(string entityId);
-  bool UnregisterEntity(Entity* entity);
+	bool RegisterEntity(Entity* entity);
+	bool UnregisterEntity(string entityId);
+	bool UnregisterEntity(Entity* entity);
 };
 
 #endif

@@ -40,5 +40,6 @@ SpacesInConditionalStatement: false
 SpacesInContainerLiterals: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
+TabWidth: 2
 UseCRLF: false
 UseTab: AlignWithSpaces

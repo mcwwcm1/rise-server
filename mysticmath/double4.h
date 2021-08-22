@@ -15,29 +15,29 @@ using namespace std;
 
 struct Double4 {
  public:
-  double x, y, z, w;
+	double x, y, z, w;
 
-  Double4(double x, double y, double z, double w);
-  Double4();
+	Double4(double x, double y, double z, double w);
+	Double4();
 
-  double magnitude() const;
-  double magnitudeSquared() const;
-  Double4 normalized() const;
-  Double4 absolute() const;
-  Double4 sign() const;
-  Double4 round() const;
-  bool isUniform() const;
+	double magnitude() const;
+	double magnitudeSquared() const;
+	Double4 normalized() const;
+	Double4 absolute() const;
+	Double4 sign() const;
+	Double4 round() const;
+	bool isUniform() const;
 
-  Double3 xyz() const;
+	Double3 xyz() const;
 
-  Double4 operator+(const Double4& b) const;
-  Double4 operator-(const Double4& b) const;
-  Double4 operator*(const Double4& b) const;
-  Double4 operator*(const double b) const;
-  Double4 operator/(const Double4& b) const;
-  Double4 operator/(const double b) const;
+	Double4 operator+(const Double4& b) const;
+	Double4 operator-(const Double4& b) const;
+	Double4 operator*(const Double4& b) const;
+	Double4 operator*(const double b) const;
+	Double4 operator/(const Double4& b) const;
+	Double4 operator/(const double b) const;
 
-  string str() const;
+	string str() const;
 };
 
 Double4 clamp(Double4 vec, Double4 min, Double4 max);

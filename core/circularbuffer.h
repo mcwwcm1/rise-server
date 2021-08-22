@@ -5,89 +5,79 @@ template <class T>
 class CircularBuffer
 {
  public:
-  explicit CircularBuffer(size_t size)
-      : buf_(std::unique_ptr<T[]>(new T[size])), max_size_(size)
-  {
-  }
-
-  void put(T item)
-  {
-    //std::lock_guard<std::mutex> lock(mutex_);
-
-    buf_[head_] = item;
-
-    if (full_) { tail_ = (tail_ + 1) % max_size_; }
-
-    head_ = (head_ + 1) % max_size_;
-
-    full_ = head_ == tail_;
-  }
-
-  T get()
-  {
-    //std::lock_guard<std::mutex> lock(mutex_);
-
-    if (empty()) { return T(); }
-
-    //Read data and advance the tail (we now have a free space)
-    auto val = buf_[tail_];
-    full_    = false;
-    tail_    = (tail_ + 1) % max_size_;
-
-    return val;
-  }
-
-  void reset()
-  {
-    //std::lock_guard<std::mutex> lock(mutex_);
-    head_ = tail_;
-    full_ = false;
-  }
-
-  bool empty() const
-  {
-    //if head and tail are equal, we are empty
-    return (!full_ && (head_ == tail_));
-  }
-
-  bool full() const
-  {
-    //If tail is ahead the head by 1, we are full
-    return full_;
-  }
-
-  size_t capacity() const { return max_size_; }
-
-  size_t size() const
-  {
-    size_t size = max_size_;
-
-    if (!full_) {
-      if (head_ >= tail_) {
-	size = head_ - tail_;
-      } else {
-	size = max_size_ + head_ - tail_;
-      }
-    }
-
-    return size;
-  }
-  /*
-	void unconditionalLock()
+	explicit CircularBuffer(size_t size)
+			: _buf(std::unique_ptr<T[]>(new T[size])), _maxSize(size)
 	{
-		mutex_.lock();
 	}
-	void unconditionalUnlock()
+
+	void Put(T item)
 	{
-		mutex_.unlock();
+		//std::lock_guard<std::mutex> lock(mutex_);
+
+		_buf[_head] = item;
+
+		if (_full) { _tail = (_tail + 1) % _maxSize; }
+
+		_head = (_head + 1) % _maxSize;
+
+		_full = _head == _tail;
 	}
-	*/
+
+	T Get()
+	{
+		//std::lock_guard<std::mutex> lock(mutex_);
+
+		if (Empty()) { return T(); }
+
+		//Read data and advance the tail (we now have a free space)
+		auto val = _buf[_tail];
+		_full    = false;
+		_tail    = (_tail + 1) % _maxSize;
+
+		return val;
+	}
+
+	void Reset()
+	{
+		//std::lock_guard<std::mutex> lock(mutex_);
+		_head = _tail;
+		_full = false;
+	}
+
+	bool Empty() const
+	{
+		//if head and tail are equal, we are empty
+		return (!_full && (_head == _tail));
+	}
+
+	bool Full() const
+	{
+		//If tail is ahead the head by 1, we are full
+		return _full;
+	}
+
+	size_t Capacity() const { return _maxSize; }
+
+	size_t Size() const
+	{
+		size_t size = _maxSize;
+
+		if (!_full) {
+			if (_head >= _tail) {
+				size = _head - _tail;
+			} else {
+				size = _maxSize + _head - _tail;
+			}
+		}
+
+		return size;
+	}
 
  private:
-  std::mutex mutex_;
-  std::unique_ptr<T[]> buf_;
-  size_t head_ = 0;
-  size_t tail_ = 0;
-  const size_t max_size_;
-  bool full_ = 0;
+	std::mutex _mutex;
+	std::unique_ptr<T[]> _buf;
+	size_t _head = 0;
+	size_t _tail = 0;
+	const size_t _maxSize;
+	bool _full = 0;
 };

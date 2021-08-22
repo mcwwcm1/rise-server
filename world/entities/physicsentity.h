@@ -14,14 +14,14 @@ class PhysicsSpace;
 class PhysicsEntity : public Entity
 {
  public:
-  PhysicsEntity();
-  PhysicsEntity(string id);
-  virtual ~PhysicsEntity();
+	PhysicsEntity();
+	PhysicsEntity(string id);
+	virtual ~PhysicsEntity();
 
-  PhysicsSpace* space;
-  std::vector<Shape*> colliders;
+	PhysicsSpace* space;
+	std::vector<Shape*> colliders;
 
-  virtual void RunTick(float dt);
+	virtual void RunTick(float dt);
 };
 
 #endif

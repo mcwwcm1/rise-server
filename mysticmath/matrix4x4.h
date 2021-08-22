@@ -8,35 +8,35 @@
 #include "quaternion.h"
 
 struct Matrix4x4 {
-  Matrix4x4(double v0,
-            double v1,
-            double v2,
-            double v3,
-            double v4,
-            double v5,
-            double v6,
-            double v7,
-            double v8,
-            double v9,
-            double v10,
-            double v11,
-            double v12,
-            double v13,
-            double v14,
-            double v15);
-  Matrix4x4();
+	Matrix4x4(double v0,
+	          double v1,
+	          double v2,
+	          double v3,
+	          double v4,
+	          double v5,
+	          double v6,
+	          double v7,
+	          double v8,
+	          double v9,
+	          double v10,
+	          double v11,
+	          double v12,
+	          double v13,
+	          double v14,
+	          double v15);
+	Matrix4x4();
 
  public:
-  double v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15;
-  static const Matrix4x4 identity;
+	double v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15;
+	static const Matrix4x4 identity;
 
-  double* operator[](int index);
+	double* operator[](int index);
 
-  Matrix4x4 translate(Double3 delta);
-  Matrix4x4 rotate(Quaternion rotation);
-  Matrix4x4 scale(Double3 v);
+	Matrix4x4 translate(Double3 delta);
+	Matrix4x4 rotate(Quaternion rotation);
+	Matrix4x4 scale(Double3 v);
 
-  string str();
+	string str();
 };
 
 Matrix4x4 getTranslationMatrix(Double3 translation);

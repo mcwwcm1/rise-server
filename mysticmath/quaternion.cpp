@@ -7,167 +7,167 @@
 
 Quaternion::Quaternion(double x, double y, double z, double w)
 {
-  this->x = x;
-  this->y = y;
-  this->z = z;
-  this->w = w;
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->w = w;
 }
 
 Quaternion::Quaternion()
 {
-  x = y = z = 0;
-  w         = 1;
+	x = y = z = 0;
+	w         = 1;
 }
 const Quaternion Quaternion::identity = Quaternion(0, 0, 0, 1);
 
 double Quaternion::magnitudeSquared() const
 {
-  return x * x + y * y + z * z + w * w;
+	return x * x + y * y + z * z + w * w;
 }
 
 double Quaternion::magnitude() const { return sqrt(magnitudeSquared()); }
 
 Quaternion Quaternion::conjugate() const
 {
-  return Quaternion(x * -1, y * -1, z * -1, w);
+	return Quaternion(x * -1, y * -1, z * -1, w);
 }
 
 Quaternion Quaternion::normalized() const { return *this * magnitude(); }
 
 Double3 Quaternion::toEuler() const
 {
-  Double3 euler;
+	Double3 euler;
 
-  double sinr_cosp = 2 * (w * x + y * z);
-  double cosr_cosp = 1 - 2 * (x * x + y * y);
-  euler.x          = std::atan2(sinr_cosp, cosr_cosp);
+	double sinr_cosp = 2 * (w * x + y * z);
+	double cosr_cosp = 1 - 2 * (x * x + y * y);
+	euler.x          = std::atan2(sinr_cosp, cosr_cosp);
 
-  double sinp = 2 * (w * y - z * x);
-  if (std::abs(sinp) >= 1)
-    euler.y = std::copysignf(PI / 2, sinp);
-  else
-    euler.y = std::asin(sinp);
+	double sinp = 2 * (w * y - z * x);
+	if (std::abs(sinp) >= 1)
+		euler.y = std::copysignf(PI / 2, sinp);
+	else
+		euler.y = std::asin(sinp);
 
-  double siny_cosp = 2 * (w * z + x * y);
-  double cosy_cosp = 1 - 2 * (y * y + z * z);
-  euler.z          = std::atan2(siny_cosp, cosy_cosp);
+	double siny_cosp = 2 * (w * z + x * y);
+	double cosy_cosp = 1 - 2 * (y * y + z * z);
+	euler.z          = std::atan2(siny_cosp, cosy_cosp);
 
-  euler = euler * RAD2DEG;
+	euler = euler * RAD2DEG;
 
-  return euler;
+	return euler;
 }
 
 string Quaternion::str() const
 {
-  stringstream ss;
-  ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";
-  return ss.str();
+	stringstream ss;
+	ss << "[" << x << ";" << y << ";" << z << ";" << w << "]";
+	return ss.str();
 }
 
 Quaternion Quaternion::fromEuler(Double3 euler)
 {
-  euler = euler * DEG2RAD;
+	euler = euler * DEG2RAD;
 
-  // Abbreviations for the various angular functions
-  double cp = cosf(euler.x * 0.5);
-  double sp = sinf(euler.x * 0.5);
-  double cy = cosf(euler.y * 0.5);
-  double sy = sinf(euler.y * 0.5);
-  double cr = cosf(euler.z * 0.5);
-  double sr = sinf(euler.z * 0.5);
+	// Abbreviations for the various angular functions
+	double cp = cosf(euler.x * 0.5);
+	double sp = sinf(euler.x * 0.5);
+	double cy = cosf(euler.y * 0.5);
+	double sy = sinf(euler.y * 0.5);
+	double cr = cosf(euler.z * 0.5);
+	double sr = sinf(euler.z * 0.5);
 
-  Quaternion q;
-  q.w = cp * cy * cr + sp * sy * sr;
-  q.x = sp * cy * cr - cp * sy * sr;
-  q.y = cp * sy * cr + sp * cy * sr;
-  q.z = cp * cy * sr - sp * sy * cr;
+	Quaternion q;
+	q.w = cp * cy * cr + sp * sy * sr;
+	q.x = sp * cy * cr - cp * sy * sr;
+	q.y = cp * sy * cr + sp * cy * sr;
+	q.z = cp * cy * sr - sp * sy * cr;
 
-  return q;
+	return q;
 }
 
 Quaternion quaternionFromString(string s)
 {
-  auto parts = Split(s.substr(1, s.length() - 1), ';');
-  return Quaternion(
-      stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
+	auto parts = Split(s.substr(1, s.length() - 1), ';');
+	return Quaternion(
+			stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
 
 bool tryQuaternionFromString(string s, Quaternion& result)
 {
-  try {
-    result = quaternionFromString(s);
-    return true;
-  } catch (exception e) {
-    return false;
-  }
+	try {
+		result = quaternionFromString(s);
+		return true;
+	} catch (exception e) {
+		return false;
+	}
 }
 
 Quaternion FromToRotation(const Quaternion& a, const Quaternion& b)
 {
-  return a.conjugate() * b;
+	return a.conjugate() * b;
 }
 
 Quaternion FromToRotation(const Double3& a, const Double3& b)
 {
-  Double3 c = cross(a, b);
-  return Quaternion(
-	     c.x,
-	     c.y,
-	     c.z,
-	     sqrt(a.magnitudeSquared() * b.magnitudeSquared()) + dot(a, b))
-      .normalized();
+	Double3 c = cross(a, b);
+	return Quaternion(
+						 c.x,
+						 c.y,
+						 c.z,
+						 sqrt(a.magnitudeSquared() * b.magnitudeSquared()) + dot(a, b))
+	    .normalized();
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& b)
 {
-  *this = *this + b;
-  return *this;
+	*this = *this + b;
+	return *this;
 }
 
 Quaternion& Quaternion::operator-=(const Quaternion& b)
 {
-  *this = *this - b;
-  return *this;
+	*this = *this - b;
+	return *this;
 }
 
 Quaternion& Quaternion::operator*=(const Quaternion& b)
 {
-  *this = *this * b;
-  return *this;
+	*this = *this * b;
+	return *this;
 }
 
 Quaternion& Quaternion::operator*=(double b)
 {
-  *this = *this * b;
-  return *this;
+	*this = *this * b;
+	return *this;
 }
 
 Quaternion operator+(const Quaternion& a, const Quaternion& b)
 {
-  return Quaternion(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+	return Quaternion(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 }
 
 Quaternion operator-(const Quaternion& a, const Quaternion& b)
 {
-  return Quaternion(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+	return Quaternion(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
 
 Quaternion operator*(const Quaternion& a, const Quaternion& b)
 {
-  return Quaternion((a.x * b.w + b.x * a.w + a.y * b.z) - (a.z * b.y),
-                    (a.y * b.w + b.y * a.w + a.z * b.x) - (a.x * b.z),
-                    (a.z * b.w + b.z * a.w + a.x * b.y) - (a.y * b.x),
-                    (a.w * b.w) - (a.x * b.x + a.y * b.y + a.z * b.z));
+	return Quaternion((a.x * b.w + b.x * a.w + a.y * b.z) - (a.z * b.y),
+	                  (a.y * b.w + b.y * a.w + a.z * b.x) - (a.x * b.z),
+	                  (a.z * b.w + b.z * a.w + a.x * b.y) - (a.y * b.x),
+	                  (a.w * b.w) - (a.x * b.x + a.y * b.y + a.z * b.z));
 }
 
 Double3 operator*(const Double3& a, const Quaternion& b)
 {
-  Quaternion c = Quaternion(a.x, a.y, a.z, 0);
-  Quaternion r = b * c * b.conjugate();
-  return Double3(r.x, r.y, r.z);
+	Quaternion c = Quaternion(a.x, a.y, a.z, 0);
+	Quaternion r = b * c * b.conjugate();
+	return Double3(r.x, r.y, r.z);
 }
 
 Quaternion operator*(const Quaternion& a, double b)
 {
-  return Quaternion(a.x * b, a.y * b, a.z * b, a.w * b);
+	return Quaternion(a.x * b, a.y * b, a.z * b, a.w * b);
 }

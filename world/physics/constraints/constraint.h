@@ -11,12 +11,12 @@ class Movement;
 class Constraint
 {
  public:
-  Constraint();
-  Constraint(string id);
-  string id;
-  Double3 attachmentPoint;
-  Quaternion attachmentRotation;
-  virtual void ApplyConstraint(DynamicEntity* entity, Movement* movement) = 0;
+	Constraint();
+	Constraint(string id);
+	string id;
+	Double3 attachmentPoint;
+	Quaternion attachmentRotation;
+	virtual void ApplyConstraint(DynamicEntity* entity, Movement* movement) = 0;
 };
 
 #endif

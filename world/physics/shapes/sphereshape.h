@@ -7,8 +7,8 @@
 
 struct SphereShape : Shape {
  public:
-  SphereShape(float radius);
-  SphereShape(Double3 size);
-  Double3 size;
-  virtual Double3 getFurthestPointInDirection(const Double3& direction);
+	SphereShape(float radius);
+	SphereShape(Double3 size);
+	Double3 size;
+	virtual Double3 getFurthestPointInDirection(const Double3& direction);
 };
