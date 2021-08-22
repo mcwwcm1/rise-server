@@ -2,7 +2,7 @@
 
 ## The Rise Project Server Repository
 
-A game server written primarily in C++ using Beast and SQLite.
+A game server written primarily in C++ using Beast and Postgres.
 
 This document was looking a bit lonely so I added a pic:
 
