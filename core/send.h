@@ -3,25 +3,24 @@
 
 #pragma once
 
-void Send(std::string* sendString)
+#include <string>
+
+#include "core/session.h"
+
+void Send(const std::string& sendString)
 {
-	// Invoke the send function of the headless' websocket session
-	headlessSession->Send(
-			boost::make_shared<std::string const>(std::move(*sendString)));
-	// Debug
-	//printf("Sent: %s\n", (*sendString).c_str());
+	Session* session = Session::GetHeadless();
+	if (session != nullptr) {
+		// Invoke the send function of the headless' websocket session
+		session->Send(sendString);
+	}
 }
 
-void Send(const std::string* userID, const std::string* sendString)
+void Send(const std::string& userID, const std::string& sendString)
 {
-	// Key is not present
-	if (registeredUsers.find(*userID) == registeredUsers.end()) {
-		printf(("Requested userID (" + *userID + ") not found\n").c_str());
-	} else {
+	Session* session = Session::GetUserSession(userID);
+	if (session != nullptr) {
 		// Invoke the send function of the headless' websocket session
-		registeredUsers[*userID]->Send(
-				boost::make_shared<std::string const>(std::move(*sendString)));
-		// Debug
-		//printf(("Sent: " + *sendString + " To: " + *userID + "\n").c_str());
+		session->Send(sendString);
 	}
 }

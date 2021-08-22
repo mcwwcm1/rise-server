@@ -2,6 +2,8 @@
 CXX = g++
 DBFLAGS = -g -Wall -pthread -std=c++20
 BDFLAGS = -Wall -o2 -pthread -std=c++20
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+INCLUDES = -I$(ROOT_DIR)
 LPQFLAGS = -lpqxx -lpq
 SRCS := $(shell find . -name "*.cpp")
 OBJS = $(SRCS:.cpp=.o)
@@ -14,17 +16,17 @@ depend: .depend
 
 .depend: $(SRCS)
 	rm -f "$@"
-	$(CC) $(CFLAGS) -MM $^ > "$@"
+	$(CC) $(CFLAGS) $(INCLUDES) -MM $^ > "$@"
 
 include .depend
 
 rise-test: $(OBJS)
-	$(CXX) $(DBFLAGS) -o $@ $^ $(LPQFLAGS)
+	$(CXX) $(DBFLAGS) $(INCLUDES) -o $@ $^ $(LPQFLAGS)
 rise-server: $(OBJS)
-	$(CXX) $(BDFLAGS) -o $@ $^ $(LPQFLAGS)
+	$(CXX) $(BDFLAGS) $(INCLUDES) -o $@ $^ $(LPQFLAGS)
 
 .cpp.o:
-	$(CXX) $(DBFLAGS) -c $< -o $@
+	$(CXX) $(DBFLAGS) $(INCLUDES) -c $< -o $@
 
 # utility
 clean:

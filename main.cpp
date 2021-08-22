@@ -20,27 +20,15 @@ namespace websocket = beast::websocket;
 namespace net       = boost::asio;
 using tcp           = boost::asio::ip::tcp;
 
-//Declare a test type for function pointer
-typedef void (*PrimaryFunction)();
-typedef void (*ParsingFunction)(std::string&);
-
-//Failure Reporting
-void fail(beast::error_code ec, char const* what)
-{
-	std::cerr << what << ": " << ec.message() << "\n";
-}
-
 // Include core headers
+#include "core/commands.h"
 #include "core/circularbuffer.h"
-#include "core/globals.h"
-#include "core/register.h"
 #include "core/session.h"
 #include "core/listener.h"
 #include "core/send.h"
 #include "core/worldtick.h"
 
 // Include primary functions
-#include "primary/echotest.h"
 #include "primary/echo.h"
 #include "primary/physicstick.h"
 #include "primary/echoto.h"
@@ -52,21 +40,19 @@ int main(int argc, char* argv[])
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
-	parseMap["echo"]                   = EchoTestParser;
-	parseMap["echotest"]               = EchoTestParser;
-	parseMap["echoto"]                 = EchoToParser;
-	parseMap["setthrottle"]            = SetThrottleParser;
-	parseMap["setpitch"]               = SetPitchParser;
-	parseMap["setyaw"]                 = SetYawParser;
-	parseMap["registerstaticcollider"] = RegisterStaticColliderParser;
-	parseMap["addforce"]               = AddForceParser;
-	parseMap["registerentity"]         = RegisterEntityParser;
-	parseMap["unregisterentity"]       = UnregisterEntityParser;
-	parseMap["setowner"]               = SetOwnerParser;
-	parseMap["adddistanceconstraint"]  = AddDistanceConstraintParser;
-	parseMap["requestairship"]         = RequestAirshipParser;
-
+	Commands::Register("echoto", EchoToParser);
+	Commands::Register("setthrottle", SetThrottleParser);
+	Commands::Register("setpitch", SetPitchParser);
+	Commands::Register("setyaw", SetYawParser);
+	Commands::Register("registerstaticcollider", RegisterStaticColliderParser);
+	Commands::Register("addforce", AddForceParser);
+	Commands::Register("registerentity", RegisterEntityParser);
+	Commands::Register("unregisterentity", UnregisterEntityParser);
+	Commands::Register("setowner", SetOwnerParser);
+	Commands::Register("adddistanceconstraint", AddDistanceConstraintParser);
+	Commands::Register("requestairship", RequestAirshipParser);
 	//-----------------------End of function initialization step------------------------------------------
+
 	// Check command line arguments
 	if (argc != 4) {
 		std::cerr << "Usage: <address> <port> <threads>\n"
@@ -91,17 +77,17 @@ int main(int argc, char* argv[])
 
 	std::chrono::milliseconds timespan(1000 / 20);  //defines sleep timespan in ms
 	while (true) {
-		//printf("Loop iteration started\n");
-		bufferAccessMutex.lock();
-		//Iterate over all elements in function buffer until empty
-		while (!functionBuffer.Empty()) { functionBuffer.Get()(); }
+		{
+			std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
-		//printf("Started world tick\n");
-		WorldTick();
-		//printf("Finished world tick\n");
+			//Iterate over all elements in function buffer until empty
+			while (!Commands::functionBuffer.Empty()) {
+				Commands::functionBuffer.Get()();
+			}
 
-		bufferAccessMutex.unlock();
-		//printf("Loop iteration completed\n");
+			WorldTick();
+		}
+
 		std::this_thread::sleep_for(timespan);
 	}
 	return EXIT_SUCCESS;

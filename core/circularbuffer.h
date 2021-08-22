@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <mutex>
 
 template <class T>
 class CircularBuffer
@@ -15,11 +14,8 @@ class CircularBuffer
 	void Put(T item)
 	{
 		_buf[_head] = item;
-
 		if (_full) { _tail = (_tail + 1) % _maxSize; }
-
 		_head = (_head + 1) % _maxSize;
-
 		_full = _head == _tail;
 	}
 

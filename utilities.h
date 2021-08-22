@@ -1,24 +1,12 @@
 // File: utilities.h
 // Purpose: Explode :)
 
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#pragma once
 
+#include <boost/beast.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
 
-// Eearslya fix this :)
-static std::vector<std::string> Split(const std::string& str, char delimiter)
-{
-	std::vector<std::string> result;
-	std::istringstream iss(str);
-
-	for (std::string token; std::getline(iss, token, delimiter);) {
-		result.push_back(std::move(token));
-	}
-
-	return result;
-}
-
-#endif
+std::vector<std::string> Split(const std::string& str, char delimiter);
+void BoostFail(boost::beast::error_code ec, char const* what);

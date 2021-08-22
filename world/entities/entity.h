@@ -4,6 +4,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <optional>
 #include <string>
 
 #include "../../mysticmath/double3.h"
@@ -18,7 +19,7 @@ class Entity
 	virtual ~Entity() = default;
 
 	std::string ID;
-	std::string* Owner;
+	std::optional<std::string> Owner;
 	std::unordered_map<std::string, std::string> ChangeTable;
 	bool Dirty;
 

@@ -7,6 +7,7 @@
 
 #include <string>
 
+#include "core/commands.h"
 #include "../utilities.h"
 #include "../world/entities/airship.h"
 #include "../world/entities/dynamicentity.h"
@@ -16,21 +17,21 @@
 #include "../world/physics/shapes/sphereshape.h"
 #include "../world/world.h"
 
-Airship* GetAirship(std::string* id)
+Airship* GetAirship(const std::string& id)
 {
-	return dynamic_cast<Airship*>(World::Singleton->Entities[*id]);
+	return dynamic_cast<Airship*>(World::Singleton->Entities[id]);
 }
 
-DynamicEntity* GetDynamicEntity(std::string* id)
+DynamicEntity* GetDynamicEntity(const std::string& id)
 {
-	return dynamic_cast<DynamicEntity*>(World::Singleton->Entities[*id]);
+	return dynamic_cast<DynamicEntity*>(World::Singleton->Entities[id]);
 }
 
 void RegisterStaticCollider()
 {
-	Shape* colliderShape        = new SphereShape(argumentBuffer.Get().var.fval);
-	std::string* positionString = argumentBuffer.Get().var.sval;
-	colliderShape->Position     = Double3FromString(*positionString);
+	Shape* colliderShape       = new SphereShape(Commands::GetArgument<float>());
+	std::string positionString = Commands::GetArgument<std::string>();
+	colliderShape->Position    = Double3FromString(positionString);
 
 	auto staticColliders = World::Singleton->Entities.find("staticColliders");
 
@@ -41,143 +42,112 @@ void RegisterStaticCollider()
 
 	PhysicsEntity* e = dynamic_cast<PhysicsEntity*>(staticColliders->second);
 	e->Colliders.push_back(colliderShape);
-
-	delete positionString;
 }
 
-void RegisterStaticColliderParser(std::string& arguments)
+void RegisterStaticColliderParser(const std::string& arguments)
 {
 	std::string radiusString   = arguments.substr(0, arguments.find(' '));
 	std::string positionString = arguments.substr(arguments.find(' '));
 
 	float radius = stof(radiusString);
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(RegisterStaticCollider);
+	Commands::functionBuffer.Put(RegisterStaticCollider);
 
 	// Put arguments
-	argumentBuffer.Put(PrimaryArgument(radius));
-	argumentBuffer.Put(PrimaryArgument(new std::string(positionString)));
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(radius);
+	Commands::argumentBuffer.Put(positionString);
 }
 
 // setthrottle <airshipID> <throttle value between 0 and 1>
 void SetThrottle()
 {
-	std::string* airshipID = argumentBuffer.Get().var.sval;
-	Airship* airship       = GetAirship(airshipID);
+	std::string airshipID = Commands::GetArgument<std::string>();
+	Airship* airship      = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->Throttle = argumentBuffer.Get().var.fval;
-
-	delete airshipID;
+	if (airship != nullptr) airship->Throttle = Commands::GetArgument<float>();
 }
 
-void SetThrottleParser(std::string& arguments)
+void SetThrottleParser(const std::string& arguments)
 {
 	size_t spaceIndex = arguments.find(' ');
 	float throttle    = stof(arguments.substr(spaceIndex + 1));
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(SetThrottle);
+	Commands::functionBuffer.Put(SetThrottle);
 
 	// Put argument
-	argumentBuffer.Put(
-			PrimaryArgument(new std::string(arguments.substr(0, spaceIndex))));
-	argumentBuffer.Put(PrimaryArgument(throttle));
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(arguments.substr(0, spaceIndex));
+	Commands::argumentBuffer.Put(throttle);
 }
 
 // setpitch <airshipID> <pitch value between 0 and 1>
 void SetPitch()
 {
-	std::string* airshipID = argumentBuffer.Get().var.sval;
-	Airship* airship       = GetAirship(airshipID);
+	std::string airshipID = Commands::GetArgument<std::string>();
+	Airship* airship      = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->Pitch = argumentBuffer.Get().var.fval;
-
-	delete airshipID;
+	if (airship != nullptr) { airship->Pitch = Commands::GetArgument<float>(); }
 }
 
-void SetPitchParser(std::string& arguments)
+void SetPitchParser(const std::string& arguments)
 {
 	size_t spaceIndex = arguments.find(' ');
 	float pitch       = stof(arguments.substr(spaceIndex + 1)) * 2 - 1;
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(SetPitch);
+	Commands::functionBuffer.Put(SetPitch);
 
 	// Put argument
-	argumentBuffer.Put(
-			PrimaryArgument(new std::string(arguments.substr(0, spaceIndex))));
-	argumentBuffer.Put(PrimaryArgument(pitch));
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(arguments.substr(0, spaceIndex));
+	Commands::argumentBuffer.Put(pitch);
 }
 
 // setyaw <airshipID> <yaw value between 0 and 1>
 void SetYaw()
 {
-	std::string* airshipID = argumentBuffer.Get().var.sval;
-	Airship* airship       = GetAirship(airshipID);
+	std::string airshipID = Commands::GetArgument<std::string>();
+	Airship* airship      = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->Yaw = argumentBuffer.Get().var.fval;
-
-	delete airshipID;
+	if (airship != nullptr) { airship->Yaw = Commands::GetArgument<float>(); }
 }
 
-void SetYawParser(std::string& arguments)
+void SetYawParser(const std::string& arguments)
 {
 	size_t spaceIndex = arguments.find(' ');
 	float yaw         = stof(arguments.substr(spaceIndex + 1)) * 2 - 1;
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(SetYaw);
+	Commands::functionBuffer.Put(SetYaw);
 
 	// Put argument
-	argumentBuffer.Put(
-			PrimaryArgument(new std::string(arguments.substr(0, spaceIndex))));
-	argumentBuffer.Put(PrimaryArgument(yaw));
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(arguments.substr(0, spaceIndex));
+	Commands::argumentBuffer.Put(yaw);
 }
 
 // addforce <airshipID> <force>
 void AddForce()
 {
-	std::string* airshipID = argumentBuffer.Get().var.sval;
-	std::string* force     = argumentBuffer.Get().var.sval;
-	std::string* position  = argumentBuffer.Get().var.sval;
+	std::string airshipID = Commands::GetArgument<std::string>();
+	std::string force     = Commands::GetArgument<std::string>();
+	std::string position  = Commands::GetArgument<std::string>();
 
 	Airship* airship = GetAirship(airshipID);
 
 	if (airship != nullptr)
-		airship->AddForceAtPosition(Double3FromString(*force),
-		                            Double3FromString(*position));
-
-	delete airshipID;
-	delete force;
-	delete position;
+		airship->AddForceAtPosition(Double3FromString(force),
+		                            Double3FromString(position));
 }
 
-void AddForceParser(std::string& arguments)
+void AddForceParser(const std::string& arguments)
 {
 	size_t separator1 = arguments.find('|');
 	size_t separator2 = arguments.find('|', separator1 + 1);
@@ -185,103 +155,84 @@ void AddForceParser(std::string& arguments)
 	std::string force    = arguments.substr(separator1 + 1, separator2);
 	std::string position = arguments.substr(separator2 + 1);
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(AddForce);
+	Commands::functionBuffer.Put(AddForce);
 
 	// Put argument
-	argumentBuffer.Put(
-			PrimaryArgument(new std::string(arguments.substr(0, separator1))));
-	argumentBuffer.Put(new std::string(force));
-	argumentBuffer.Put(new std::string(position));
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(arguments.substr(0, separator1));
+	Commands::argumentBuffer.Put(force);
+	Commands::argumentBuffer.Put(position);
 }
 
 // registerentity <entityID> <position> <rotation> <scale>
 void RegisterEntity()
 {
-	std::string* entityID = argumentBuffer.Get().var.sval;
-	std::string* position = argumentBuffer.Get().var.sval;
-	std::string* rotation = argumentBuffer.Get().var.sval;
-	std::string* scale    = argumentBuffer.Get().var.sval;
+	std::string entityID = Commands::GetArgument<std::string>();
+	std::string position = Commands::GetArgument<std::string>();
+	std::string rotation = Commands::GetArgument<std::string>();
+	std::string scale    = Commands::GetArgument<std::string>();
 
-	Entity* entity   = new Entity(*entityID);
-	entity->Position = Double3FromString(*position);
-	entity->Rotation = QuaternionFromString(*rotation);
-	entity->Scale    = Double3FromString(*scale);
+	Entity* entity   = new Entity(entityID);
+	entity->Position = Double3FromString(position);
+	entity->Rotation = QuaternionFromString(rotation);
+	entity->Scale    = Double3FromString(scale);
 
 	World::Singleton->RegisterEntity(entity);
-
-	delete entityID;
-	delete position;
-	delete rotation;
-	delete scale;
 }
 
-void RegisterEntityParser(std::string& arguments)
+void RegisterEntityParser(const std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
+	Commands::ValidateArgumentCount(parts, 4);
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(RegisterEntity);
+	Commands::functionBuffer.Put(RegisterEntity);
 
 	// Put argument
-	argumentBuffer.Put(new std::string(parts[0]));  // EntityId
-	argumentBuffer.Put(new std::string(parts[1]));  // Position
-	argumentBuffer.Put(new std::string(parts[2]));  // Rotation
-	argumentBuffer.Put(new std::string(parts[3]));  // Scale
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(parts[0]);  // EntityId
+	Commands::argumentBuffer.Put(parts[1]);  // Position
+	Commands::argumentBuffer.Put(parts[2]);  // Rotation
+	Commands::argumentBuffer.Put(parts[3]);  // Scale
 }
 
 // unregisterentity <entityID>
 void UnregisterEntity()
 {
-	std::string* entityId = argumentBuffer.Get().var.sval;
+	std::string entityId = Commands::GetArgument<std::string>();
 
-	World::Singleton->UnregisterEntity(*entityId);
-
-	delete entityId;
+	World::Singleton->UnregisterEntity(entityId);
 }
 
-void UnregisterEntityParser(std::string& arguments)
+void UnregisterEntityParser(const std::string& arguments)
 {
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(UnregisterEntity);
+	Commands::functionBuffer.Put(UnregisterEntity);
 
 	// Put argument
-	argumentBuffer.Put(new std::string(arguments));  // EntityId
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(arguments);  // EntityId
 }
 
 // adddistanceconstraint <constraintID> <entityID> <position> <entityID> <position> <distance>
 void AddDistanceConstraint()
 {
-	std::string* constraintID = argumentBuffer.Get().var.sval;
-	std::string* entityId1    = argumentBuffer.Get().var.sval;
-	std::string* position1str = argumentBuffer.Get().var.sval;
-	std::string* entityId2    = argumentBuffer.Get().var.sval;
-	std::string* position2str = argumentBuffer.Get().var.sval;
-	float distance            = argumentBuffer.Get().var.fval;
+	std::string constraintID = Commands::GetArgument<std::string>();
+	std::string entityId1    = Commands::GetArgument<std::string>();
+	std::string position1str = Commands::GetArgument<std::string>();
+	std::string entityId2    = Commands::GetArgument<std::string>();
+	std::string position2str = Commands::GetArgument<std::string>();
+	float distance           = Commands::GetArgument<float>();
 
-	Double3 position1 = Double3FromString(*position1str);
-	Double3 position2 = Double3FromString(*position2str);
+	Double3 position1 = Double3FromString(position1str);
+	Double3 position2 = Double3FromString(position2str);
 
 	DynamicEntity* entity1    = GetDynamicEntity(entityId1);
-	auto entity2PairThingFUCK = World::Singleton->Entities.find(*entityId2);
+	auto entity2PairThingFUCK = World::Singleton->Entities.find(entityId2);
 
 	if (entity1 == nullptr ||
 	    entity2PairThingFUCK == World::Singleton->Entities.end() ||
@@ -291,69 +242,53 @@ void AddDistanceConstraint()
 	Entity* entity2 = entity2PairThingFUCK->second;
 
 	// Do the thing
-	DistanceConstraint* constraint = new DistanceConstraint(*constraintID);
+	DistanceConstraint* constraint = new DistanceConstraint(constraintID);
 	constraint->AttachmentPoint    = position1;
 	constraint->TargetPoint        = position2;
 	constraint->TargetEntity       = entity2;
 	constraint->Distance           = distance;
 	constraint->IsRigid            = true;
 	entity1->Constraints.push_back(constraint);
-
-	delete constraintID;
-	delete entityId1;
-	delete position1str;
-	delete entityId1;
-	delete position2str;
 }
 
-void AddDistanceConstraintParser(std::string& arguments)
+void AddDistanceConstraintParser(const std::string& arguments)
 {
 	auto parts     = Split(arguments, '|');
 	float distance = stof(parts[7]);
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(AddDistanceConstraint);
+	Commands::functionBuffer.Put(AddDistanceConstraint);
 
 	// The first 7 arguments are strings :D
 	for (size_t i = 0; i < 5; i++) {
 		// Put argument
-		argumentBuffer.Put(new std::string(parts[i]));
+		Commands::argumentBuffer.Put(parts[i]);
 	}
 
-	argumentBuffer.Put(distance);
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(distance);
 }
 
 // setowner <entityID> <ownerID>
 void SetOwner()
 {
-	std::string* entity = argumentBuffer.Get().var.sval;
-	std::string* owner  = argumentBuffer.Get().var.sval;
+	std::string entity = Commands::GetArgument<std::string>();
+	std::string owner  = Commands::GetArgument<std::string>();
 
-	if (World::Singleton->Entities.find(*entity) ==
+	if (World::Singleton->Entities.find(entity) ==
 	    World::Singleton->Entities.end()) {
 		// Entity is not present in world D:
 		printf("Attempted to set owner of non-existent entity (%s) to %s\n",
-		       entity->c_str(),
-		       owner->c_str());
-		delete entity;
-		delete owner;
+		       entity.c_str(),
+		       owner.c_str());
 		return;
 	}
 
-	World::Singleton->Entities[*entity]->Owner = owner;
-
-	delete entity;
-	// IMPORTANT: We are not deleting the owner here because it is used as a pointer by the entity!
-	// If this ever changes we should definitely add a delete here to avoid memory leak
+	World::Singleton->Entities[entity]->Owner = owner;
 }
 
-void SetOwnerParser(std::string& arguments)
+void SetOwnerParser(const std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
 
@@ -365,50 +300,46 @@ void SetOwnerParser(std::string& arguments)
 		return;
 	}
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(SetOwner);
+	Commands::functionBuffer.Put(SetOwner);
 
-	argumentBuffer.Put(new std::string(parts[0]));  // EntityID
-	argumentBuffer.Put(new std::string(parts[1]));  // OwnerID
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(parts[0]);  // EntityID
+	Commands::argumentBuffer.Put(parts[1]);  // OwnerID
 }
 
 // requestairship <locationID> <position> <rotation> <userID>
 void RequestAirship()
 {
-	std::string* locationID  = argumentBuffer.Get().var.sval;
-	std::string* positionStr = argumentBuffer.Get().var.sval;
-	std::string* rotationStr = argumentBuffer.Get().var.sval;
-	std::string* userID      = argumentBuffer.Get().var.sval;
+	std::string locationID  = Commands::GetArgument<std::string>();
+	std::string positionStr = Commands::GetArgument<std::string>();
+	std::string rotationStr = Commands::GetArgument<std::string>();
+	std::string userID      = Commands::GetArgument<std::string>();
 
 	bool succeeded = true;
 
-	auto location = World::Singleton->Entities.find(*locationID);
+	auto location = World::Singleton->Entities.find(locationID);
 
 	if (location == World::Singleton->Entities.end()) {
 		printf(
 				"Attempted to request airship atocation with entity id \"%s\" but the location entity does not exist.\n",
-				locationID->c_str());
+				locationID.c_str());
 		succeeded = false;
 	}
 
 	Double3 position;
 	Quaternion rotation;
 
-	if (!TryDouble3FromString(*positionStr, position)) {
+	if (!TryDouble3FromString(positionStr, position)) {
 		printf("Unable to parse position string during \"requestairship\": %s\n",
-		       positionStr->c_str());
+		       positionStr.c_str());
 		succeeded = false;
 	}
 
-	if (!TryQuaternionFromString(*rotationStr, rotation)) {
+	if (!TryQuaternionFromString(rotationStr, rotation)) {
 		printf("Unable to parse rotation string during \"requestairship\": %s\n",
-		       rotationStr->c_str());
+		       rotationStr.c_str());
 		succeeded = false;
 	}
 
@@ -419,22 +350,14 @@ void RequestAirship()
 		Airship* airship = new Airship(Airship::GetNextID());
 		World::Singleton->RegisterEntity(airship);
 
-		std::string* instruction =
-				new std::string("SpawnAirship " + airship->ID + "|" + *positionStr +
-		                    "|" + *rotationStr + "|");
+		std::string instruction = "SpawnAirship " + airship->ID + "|" +
+		                          positionStr + "|" + rotationStr + "|";
 
 		Send(instruction);
-
-		delete instruction;
 	}
-
-	delete locationID;
-	delete positionStr;
-	delete rotationStr;
-	delete userID;
 }
 
-void RequestAirshipParser(std::string& arguments)
+void RequestAirshipParser(const std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
 
@@ -446,17 +369,13 @@ void RequestAirshipParser(std::string& arguments)
 		return;
 	}
 
-	// Lock the buffers to safely write to them
-	bufferAccessMutex.lock();
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	functionBuffer.Put(RequestAirship);
+	Commands::functionBuffer.Put(RequestAirship);
 
-	argumentBuffer.Put(new std::string(parts[0]));  // LocationID
-	argumentBuffer.Put(new std::string(parts[1]));  // Position
-	argumentBuffer.Put(new std::string(parts[2]));  // Rotation
-	argumentBuffer.Put(new std::string(parts[3]));  // UserID
-
-	// Unlock buffers
-	bufferAccessMutex.unlock();
+	Commands::argumentBuffer.Put(parts[0]);  // LocationID
+	Commands::argumentBuffer.Put(parts[1]);  // Position
+	Commands::argumentBuffer.Put(parts[2]);  // Rotation
+	Commands::argumentBuffer.Put(parts[3]);  // UserID
 }
