@@ -110,6 +110,11 @@ Double3 Lerp(const Double3& a, const Double3& b, double t)
 }
 
 // Assignment operator overloads
+Double3::operator btVector3()
+{
+	return btVector3(x, y, z);
+}
+
 Double3& Double3::operator=(const btVector3& b)
 {
 	this->x = b.getX();
