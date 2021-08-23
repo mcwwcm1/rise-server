@@ -106,7 +106,7 @@ void SetPitchParser(const std::string& arguments)
 	auto parts = Split(arguments, '|');
 	Commands::ValidateArgumentCount(parts, 2);
 
-	float pitch = stof(parts[1]);
+	float pitch = stof(parts[1]) * 2 - 1;
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
@@ -132,7 +132,7 @@ void SetYawParser(const std::string& arguments)
 	auto parts = Split(arguments, '|');
 	Commands::ValidateArgumentCount(parts, 2);
 
-	float yaw = stof(parts[1]);
+	float yaw = stof(parts[1]) * 2 - 1;
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 

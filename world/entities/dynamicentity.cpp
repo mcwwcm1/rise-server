@@ -17,6 +17,10 @@ DynamicEntity::DynamicEntity(std::string id, Double3 position, Quaternion rotati
 
 	auto info = btRigidBody::btRigidBodyConstructionInfo(10, MotionState, Shape);
 
+	info.m_localInertia   = btVector3(1, 1, 1);
+	info.m_linearDamping  = 0.7;
+	info.m_angularDamping = .7;
+
 	RigidBody = new btRigidBody(info);  // Builds a dynamic RigidBody
 }
 
@@ -29,7 +33,6 @@ DynamicEntity::~DynamicEntity()
 
 void DynamicEntity::RunTick(float dt)
 {
-	RigidBody->setGravity(btVector3(0, 0, 0));
 }
 
 void DynamicEntity::RegisterToDynamicsWorld(btDynamicsWorld* world)
@@ -50,15 +53,12 @@ EntityMotionState::EntityMotionState(Entity* targetEntity)
 
 void EntityMotionState::getWorldTransform(btTransform& worldTrans) const
 {
-	printf("getting world transform\n");
 	worldTrans.setOrigin(TargetEntity->Position);
 	worldTrans.setRotation(TargetEntity->Rotation);
 }
 
 void EntityMotionState::setWorldTransform(const btTransform& worldTrans)
 {
-	printf("Setting new position stuff: %f\n", worldTrans.getOrigin().getY());
-
 	TargetEntity->Position = worldTrans.getOrigin();
 	TargetEntity->Rotation = worldTrans.getRotation();
 

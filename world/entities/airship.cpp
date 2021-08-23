@@ -10,17 +10,11 @@ Airship::Airship(std::string id) : Airship(id, Double3(0, 0, 0), Quaternion::ide
 Airship::Airship(std::string id, Double3 position, Quaternion rotation) : DynamicEntity(id, position, rotation)
 {
 	// HARDCODED COLLIDER SHAPE = BAD
-	//SphereShape* s1 = new SphereShape(2);
-	//s1->Position    = Double3(0, 0, -2.5);
-	//Colliders.push_back(s1);
-	//
-	//SphereShape* s2 = new SphereShape(2);
-	//s2->Position    = Double3(0, 0, -0.5);
-	//Colliders.push_back(s2);
-	//
-	//SphereShape* s3 = new SphereShape(2);
-	//s3->Position    = Double3(0, 0, 1.5);
-	//Colliders.push_back(s3);
+	btSphereShape* sphereShape = new btSphereShape(2);
+
+	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 2.5)), sphereShape);
+	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 0.5)), sphereShape);
+	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, -2)), sphereShape);
 
 	Throttle = 0;
 	Pitch    = 0;
@@ -29,7 +23,6 @@ Airship::Airship(std::string id, Double3 position, Quaternion rotation) : Dynami
 
 void Airship::RunTick(float dt)
 {
-	return;
 	Double3 forward, right, up;
 
 	forward = GetForward();
@@ -38,17 +31,21 @@ void Airship::RunTick(float dt)
 
 	float speed = RigidBody->getLinearVelocity().length();
 
+	RigidBody->activate();  // Activate the body because it likes to be innactive
+
+	RigidBody->setGravity(btVector3(0, 0, 0));  // Dumb. Move it later
+
 	// Apply thrust
-	RigidBody->applyCentralForce(forward * Throttle * 30);
+	RigidBody->applyCentralForce(forward * Throttle * 35);
 
 	// Apply yaw steering
-	Rigidbody->applyTorque(up * Yaw * speed * -70);
+	RigidBody->applyTorque(up * Yaw * speed * .15 * -1);
 
 	// Apply pitch steering
-	RigidBody->applyTorque(right * Pitch * speed * 30);
+	RigidBody->applyTorque(right * Pitch * speed * .15 * -1);
 
 	// Self-righting
-	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 500);
+	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 3);
 
 	DynamicEntity::RunTick(dt);
 }

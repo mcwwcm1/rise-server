@@ -42,3 +42,7 @@ class DynamicEntity : public Entity
 	virtual void RegisterToDynamicsWorld(btDynamicsWorld* world);
 	virtual void UnregisterFromDynamicsWorld(btDynamicsWorld* world);
 };
+
+class CustomRigidbody : public btRigidBody
+{
+};

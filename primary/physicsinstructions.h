@@ -51,8 +51,8 @@ void RegisterStaticColliderParser(const std::string& arguments)
 	Commands::functionBuffer.Put(RegisterStaticCollider);
 
 	// Put arguments
-	//Commands::argumentBuffer.Put(radius);
-	//Commands::argumentBuffer.Put(positionString);
+	Commands::argumentBuffer.Put(radius);
+	Commands::argumentBuffer.Put(positionString);
 }
 
 // addforce <entityID> <force> <position>
