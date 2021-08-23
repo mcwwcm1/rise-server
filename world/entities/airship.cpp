@@ -3,11 +3,9 @@
 
 #include "airship.h"
 
-size_t Airship::_currentAirshipIndex = 0;  // Dumb.
+Airship::Airship() : Airship::Airship(Double3(0, 0, 0), Quaternion::identity) {}
 
-Airship::Airship(std::string id) : Airship(id, Double3(0, 0, 0), Quaternion::identity) {}
-
-Airship::Airship(std::string id, Double3 position, Quaternion rotation) : DynamicEntity(id, position, rotation, 10)
+Airship::Airship(Double3 position, Quaternion rotation) : DynamicEntity(position, rotation, 10)
 {
 	// HARDCODED COLLIDER SHAPE = BAD
 	btSphereShape* sphereShape = new btSphereShape(2);
@@ -23,6 +21,11 @@ Airship::Airship(std::string id, Double3 position, Quaternion rotation) : Dynami
 	Throttle = 0;
 	Pitch    = 0;
 	Yaw      = 0;
+}
+
+std::string Airship::GetCreationCommand()
+{
+	return "SpawnAirship " + ID + "|" + Position.ToString() + "|" + Rotation.ToString() + "|";
 }
 
 void Airship::RunTick(float dt)
@@ -50,18 +53,19 @@ void Airship::RunTick(float dt)
 
 	// Self-righting
 	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 200);
-
-	DynamicEntity::RunTick(dt);
 }
 
-btVector3 Airship::GetForward() { return Double3(0, 0, 1) * Rotation; }
-
-btVector3 Airship::GetUp() { return Double3(0, 1, 0) * Rotation; }
-
-btVector3 Airship::GetRight() { return Double3(1, 0, 0) * Rotation; }
-
-std::string Airship::GetNextID()
+btVector3 Airship::GetForward()
 {
-	_currentAirshipIndex++;
-	return "airship_" + std::to_string(_currentAirshipIndex);
+	return Double3(0, 0, 1) * Rotation;
+}
+
+btVector3 Airship::GetUp()
+{
+	return Double3(0, 1, 0) * Rotation;
+}
+
+btVector3 Airship::GetRight()
+{
+	return Double3(1, 0, 0) * Rotation;
 }

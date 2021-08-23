@@ -8,14 +8,17 @@
 class BugSwarmEntity : public Entity
 {
  public:
+	std::string BugID;
 	float SpawnRate, UpdateRate;
 	Double3 Range;
-	int MaxBugs;
-	int Capacity;
+	int MaxBugs;   // The maximum bugs allowed out at any given time
+	int Capacity;  // The total number of bugs to spawn from this swarm
 	float MinSpeed, MaxSpeed;
-	Double3 TargetPosition;
+	Double3 TargetPosition;  // (Local, relative to entity) Bugs will trend towards this location
 
-	BugSwarmEntity(std::string id);
+	BugSwarmEntity();
+
+	virtual std::string GetCreationCommand() override;
 
 	virtual void RunTick(float dt);
 

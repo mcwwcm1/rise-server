@@ -2,19 +2,20 @@
 // Purpose: Implements entity.h
 
 #include "entity.h"
+#include "world/world.h"
 
-Entity::Entity() {}
+Entity::Entity() : Entity(Double3(0, 0, 0), Quaternion::identity) {}
 
-Entity::Entity(std::string id) : Entity(id, Double3(0, 0, 0), Quaternion::identity) {}
-
-Entity::Entity(std::string id, Double3 position, Quaternion rotation)
+Entity::Entity(Double3 position, Quaternion rotation)
 {
-	ID       = id;
+	ID       = World::GetNextID();
 	Position = position;
 	Rotation = rotation;
 }
 
-void Entity::RunTick(float dt) {}
+void Entity::RunTick(float dt)
+{
+}
 
 void Entity::SubmitChange(std::string field, std::string change)
 {

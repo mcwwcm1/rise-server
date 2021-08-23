@@ -3,11 +3,14 @@
 
 #include "bugswarmentity.h"
 
-BugSwarmEntity::BugSwarmEntity(std::string id) : Entity(id) {}
+BugSwarmEntity::BugSwarmEntity() : Entity() {}
 
-void BugSwarmEntity::RunTick(float dt)
+std::string BugSwarmEntity::GetCreationCommand()
 {
+	return "SpawnEntity " + BugID + "|" + Position.ToString() + "|";
 }
+
+void BugSwarmEntity::RunTick(float dt) {}
 
 void BugSwarmEntity::SubmitAllParameters()
 {

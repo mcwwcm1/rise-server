@@ -26,7 +26,6 @@ using tcp           = boost::asio::ip::tcp;
 #include "core/session.h"
 #include "core/listener.h"
 #include "core/send.h"
-#include "core/worldtick.h"
 
 // Include primary functions
 #include "primary/echo.h"
@@ -50,8 +49,6 @@ int main(int argc, char* argv[])
 	Commands::Register("setyaw", SetYawParser);
 	Commands::Register("registerstaticcollider", RegisterStaticColliderParser);
 	Commands::Register("addforce", AddForceParser);
-	Commands::Register("registerentity", RegisterEntityParser);
-	Commands::Register("unregisterentity", UnregisterEntityParser);
 	Commands::Register("setowner", SetOwnerParser);
 	Commands::Register("adddistanceconstraint", AddDistanceConstraintParser);
 	Commands::Register("requestairship", RequestAirshipParser);
@@ -89,7 +86,7 @@ int main(int argc, char* argv[])
 				Commands::functionBuffer.Get()();
 			}
 
-			WorldTick();
+			World::Singleton->RunTick();
 		}
 
 		std::this_thread::sleep_for(timespan);

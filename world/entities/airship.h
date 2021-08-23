@@ -9,21 +9,17 @@
 
 class Airship : public DynamicEntity
 {
- private:
-	static size_t _currentAirshipIndex;
-
  public:
 	float Throttle, Pitch, Yaw = 0;
 
 	Airship();
-	Airship(std::string id);
-	Airship(std::string id, Double3 position, Quaternion rotation);
+	Airship(Double3 position, Quaternion rotation);
 
-	void RunTick(float dt);
+	std::string virtual GetCreationCommand() override;
+
+	virtual void RunTick(float dt) override;
 
 	btVector3 GetForward();
 	btVector3 GetRight();
 	btVector3 GetUp();
-
-	static std::string GetNextID();  // Provides the next airship id
 };

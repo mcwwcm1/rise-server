@@ -5,13 +5,10 @@
 #include "mysticmath/mysticmath.h"
 #include "../physics/physicsspace.h"
 
-DynamicEntity::DynamicEntity() : DynamicEntity("null") {}
+DynamicEntity::DynamicEntity() : DynamicEntity(Double3(0, 0, 0), Quaternion::identity, 1) {}
 
-DynamicEntity::DynamicEntity(std::string id) : DynamicEntity(id, Double3(0, 0, 0), Quaternion::identity, 1) {}
-
-DynamicEntity::DynamicEntity(std::string id, Double3 position, Quaternion rotation, float mass) : Entity(id, position, rotation)
+DynamicEntity::DynamicEntity(Double3 position, Quaternion rotation, float mass) : Entity(position, rotation)
 {
-	ID          = id;
 	Shape       = new btCompoundShape();
 	MotionState = new EntityMotionState(this);
 

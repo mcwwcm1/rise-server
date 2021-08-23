@@ -1,6 +1,8 @@
 // File: timeddistributor.h
 // Purpose: A distributor that attempts to distribute entities at fixed time intervals
 
+#pragma once
+
 #include "distributor.h"
 #include "mysticmath/double3.h"
 
@@ -16,6 +18,6 @@ class TimedDistributor : public Distributor
 
 	float Delay;
 
-	virtual void TryDistribute(Double3 position);
-	virtual void Distribute(Double3 position) = 0;
+	virtual void TryDistribute(std::vector<Double3> positions);
+	virtual void Distribute(std::vector<Double3> positions) = 0;
 };

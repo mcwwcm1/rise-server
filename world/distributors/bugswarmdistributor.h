@@ -1,15 +1,22 @@
 // File: bugswarmddistributor.h
 // Purpose: A distributor that attempts to distribute bugs around the players
 
+#pragma once
+
 #include "timeddistributor.h"
+#include "world/entities/bugswarmentity.h"
 
 class BugSwarmDistributor : public TimedDistributor
 {
  public:
 	BugSwarmDistributor(float range, float delay, float spacing, std::string bugID) : TimedDistributor(range, delay), Spacing(spacing), BugID(bugID){};
 
-	float Spacing;
+	float Spacing            = 10;  // The minimum spacing between swarms
+	float MinDistance        = 50;  // The minimum distance from any given position
+	int MaxPerPosition       = 5;   // The maximum number of entities within the range of a position
+	int MaxSpawnPerIteration = 5;   // The maximum number of entities to spawn per "Distribute" method
+	int MaxSpawnAttempts     = 10;
 	std::string BugID;
 
-	void virtual Distribute(Double3 position);
+	void virtual Distribute(std::vector<Double3> positions);
 };

@@ -27,8 +27,7 @@ class DynamicEntity : public Entity
 {
  public:
 	DynamicEntity();
-	DynamicEntity(std::string id);
-	DynamicEntity(std::string id, Double3 position, Quaternion rotation, float mass);
+	DynamicEntity(Double3 position, Quaternion rotation, float mass);
 
 	virtual ~DynamicEntity();
 
