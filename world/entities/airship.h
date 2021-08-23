@@ -17,17 +17,13 @@ class Airship : public DynamicEntity
 
 	Airship();
 	Airship(std::string id);
-
-	Matrix4x4 GetTransformMatrix();
-	Double3 GetPosition();
-	Quaternion GetRotation();
-	Double3 GetScale();
+	Airship(std::string id, Double3 position, Quaternion rotation);
 
 	void RunTick(float dt);
 
-	Double3 GetForward();
-	Double3 GetRight();
-	Double3 GetUp();
+	btVector3 GetForward();
+	btVector3 GetRight();
+	btVector3 GetUp();
 
 	static std::string GetNextID();  // Provides the next airship id
 };

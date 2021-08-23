@@ -7,6 +7,8 @@
 #include "world/world.h"
 #include "../utilities.h"
 #include "core/send.h"
+#include "mysticmath/double3.h"
+#include "mysticmath/quaternion.h"
 
 Airship* GetAirship(const std::string& id)
 {
@@ -27,12 +29,17 @@ void RequestAirship()
 		printf(
 				"Attempted to request airship at location with entity id \"%s\" but the location entity does not exist.\n",
 				locationID.c_str());
+		return;
 	}
 
 	position = location->second->LocalPointToGlobal(position);
 	rotation = location->second->LocalRotationToGlobal(rotation);
 
-	Airship* airship = new Airship(Airship::GetNextID());
+	Airship* airship = new Airship(Airship::GetNextID(), position, rotation);
+
+	airship->SetLocalPosition(position);
+	airship->SetLocalRotation(rotation);
+
 	World::Singleton->RegisterEntity(airship);
 
 	std::string instruction = "SpawnAirship " + airship->ID + "|" + position.ToString() + "|" + rotation.ToString() + "|";
@@ -46,7 +53,7 @@ void RequestAirshipParser(const std::string& arguments)
 	Commands::ValidateArgumentCount(parts, 4);
 
 	Double3 position    = Double3FromString(parts[1]);
-	Quaternion rotation = QuaternionFromString(parts[1]);
+	Quaternion rotation = QuaternionFromString(parts[2]);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 

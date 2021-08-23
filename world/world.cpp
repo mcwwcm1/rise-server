@@ -2,6 +2,7 @@
 // Purpose: Implements world.h
 
 #include "world.h"
+#include <bullet/btBulletDynamicsCommon.h>
 
 World* World::Singleton = new World();
 
@@ -17,9 +18,9 @@ bool World::RegisterEntity(Entity* entity)
 
 	Entities.insert({entity->ID, entity});
 
-	PhysicsEntity* pe = dynamic_cast<PhysicsEntity*>(entity);
+	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
 
-	if (pe != nullptr) { Space->RegisterEntity(pe); }
+	if (de != nullptr) { Space->RegisterEntity(de); }
 
 	printf("Registered entity: %s\n", entity->ID.c_str());
 
@@ -46,9 +47,9 @@ bool World::UnregisterEntity(Entity* entity)
 
 	Entities.erase(e);
 
-	PhysicsEntity* pe = dynamic_cast<PhysicsEntity*>(entity);
+	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
 
-	if (pe != nullptr) { Space->UnregisterEntity(pe); }
+	if (de != nullptr) { Space->UnregisterEntity(de); }
 
 	printf("Unregistered entity: %s\n", entity->ID.c_str());
 

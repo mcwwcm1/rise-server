@@ -9,3 +9,4 @@
 
 float DegreesToRadians(float degrees);
 float RadiansToDegrees(float radians);
+float Lerp(float a, float b, float f);

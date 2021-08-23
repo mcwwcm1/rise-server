@@ -94,6 +94,7 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 		if (_userID == "") {
 			_userID                   = arguments;
 			_registeredUsers[_userID] = this;
+			Send("Registered");  // Send confirmation back to Neos
 			printf("Registered session for user \"%s\".\n", _userID.c_str());
 		}
 	} else if (parsingFn == nullptr) {

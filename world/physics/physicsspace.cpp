@@ -4,8 +4,7 @@
 #include "physicsspace.h"
 
 #include "../entities/dynamicentity.h"
-#include "constraints/distanceconstraint.h"
-#include "shapes/sphereshape.h"
+#include <bullet/btBulletDynamicsCommon.h>
 
 PhysicsSpace::PhysicsSpace() { PhysicsSpace(0); }
 
@@ -13,15 +12,25 @@ PhysicsSpace::PhysicsSpace(double updateRate)
 {
 	this->UpdateRate = updateRate;
 	this->FixedDT    = 1 / updateRate;
+
+	CollissionConfiuration = new btDefaultCollisionConfiguration();
+	CollissionDispatcher   = new btCollisionDispatcher(CollissionConfiuration);
+	OverlappingPairChache  = new btDbvtBroadphase();
+	ConstraintsSolver      = new btSequentialImpulseConstraintSolver;
+	DynamicsWorld          = new btDiscreteDynamicsWorld(CollissionDispatcher, OverlappingPairChache, ConstraintsSolver, CollissionConfiuration);
+
+	DynamicsWorld->setGravity(btVector3(0, -9.812, 0));
 }
 
-void PhysicsSpace::RegisterEntity(PhysicsEntity* entity)
+void PhysicsSpace::RegisterEntity(DynamicEntity* entity)
 {
 	entities.push_back(entity);
 	entity->Space = this;
+
+	entity->RegisterToDynamicsWorld(DynamicsWorld);
 }
 
-void PhysicsSpace::UnregisterEntity(PhysicsEntity* entity)
+void PhysicsSpace::UnregisterEntity(DynamicEntity* entity)
 {
 	for (auto it = entities.begin(); it != entities.end(); ++it) {
 		if (*it == entity) {
@@ -31,9 +40,13 @@ void PhysicsSpace::UnregisterEntity(PhysicsEntity* entity)
 	}
 
 	entity->Space = nullptr;
+
+	entity->UnregisterFromDynamicsWorld(DynamicsWorld);
 }
 
 void PhysicsSpace::RunTick()
 {
-	for (PhysicsEntity* entity : entities) { entity->RunTick(FixedDT); }
+	for (DynamicEntity* entity : entities) { entity->RunTick(FixedDT); }
+
+	DynamicsWorld->stepSimulation(1 / 20.0f, 0);  // Step simulation
 }

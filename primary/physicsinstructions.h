@@ -11,9 +11,7 @@
 #include "../utilities.h"
 #include "../world/entities/dynamicentity.h"
 #include "../world/entities/entity.h"
-#include "../world/physics/constraints/distanceconstraint.h"
 #include "../world/physics/physicsspace.h"
-#include "../world/physics/shapes/sphereshape.h"
 #include "../world/world.h"
 
 DynamicEntity* GetDynamicEntity(const std::string& id)
@@ -23,19 +21,21 @@ DynamicEntity* GetDynamicEntity(const std::string& id)
 
 void RegisterStaticCollider()
 {
-	Shape* colliderShape       = new SphereShape(Commands::GetArgument<float>());
-	std::string positionString = Commands::GetArgument<std::string>();
-	colliderShape->Position    = Double3FromString(positionString);
-
-	auto staticColliders = World::Singleton->Entities.find("staticColliders");
-
-	if (staticColliders == World::Singleton->Entities.end()) {
-		World::Singleton->RegisterEntity(new PhysicsEntity("staticColliders"));
-		staticColliders = World::Singleton->Entities.find("staticColliders");
-	}
-
-	PhysicsEntity* e = dynamic_cast<PhysicsEntity*>(staticColliders->second);
-	e->Colliders.push_back(colliderShape);
+	//btCollisionShape* colliderShape    = new btSphereShape(Commands::GetArgument<float>());
+	//std::string positionString         = Commands::GetArgument<std::string>();
+	//btCollisionObject* collisionObject = new btCollisionObject();
+	//collisionObject->setCollisionShape(colliderShape);
+	//collisionObject->setWorldTransform(Double3FromString(positionString))
+	//
+	//		auto staticColliders = World::Singleton->Entities.find("staticColliders");
+	//
+	//if (staticColliders == World::Singleton->Entities.end()) {
+	//	World::Singleton->RegisterEntity(new PhysicsEntity("staticColliders"));
+	//	staticColliders = World::Singleton->Entities.find("staticColliders");
+	//}
+	//
+	//PhysicsEntity* e = dynamic_cast<PhysicsEntity*>(staticColliders->second);
+	//e->Colliders.push_back(colliderShape);
 }
 
 void RegisterStaticColliderParser(const std::string& arguments)
@@ -51,8 +51,8 @@ void RegisterStaticColliderParser(const std::string& arguments)
 	Commands::functionBuffer.Put(RegisterStaticCollider);
 
 	// Put arguments
-	Commands::argumentBuffer.Put(radius);
-	Commands::argumentBuffer.Put(positionString);
+	//Commands::argumentBuffer.Put(radius);
+	//Commands::argumentBuffer.Put(positionString);
 }
 
 // addforce <entityID> <force> <position>
@@ -67,7 +67,7 @@ void AddForce()
 	if (entity != World::Singleton->Entities.end()) {
 		DynamicEntity* pe = dynamic_cast<DynamicEntity*>(entity->second);
 		if (pe != nullptr)
-			pe->AddForceAtPosition(force, position);
+			pe->RigidBody->applyForce(force, position);
 	}
 }
 
@@ -113,14 +113,7 @@ void AddDistanceConstraint()
 
 	Entity* entity2 = entity2PairThingFUCK->second;
 
-	// Do the thing
-	DistanceConstraint* constraint = new DistanceConstraint(constraintID);
-	constraint->AttachmentPoint    = position1;
-	constraint->TargetPoint        = position2;
-	constraint->TargetEntity       = entity2;
-	constraint->Distance           = distance;
-	constraint->IsRigid            = true;
-	entity1->Constraints.push_back(constraint);
+	// ADD CONSTRAINT HERE
 }
 
 void AddDistanceConstraintParser(const std::string& arguments)

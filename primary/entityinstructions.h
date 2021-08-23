@@ -14,12 +14,10 @@ void RegisterEntity()
 	std::string entityID = Commands::GetArgument<std::string>();
 	Double3 position     = Commands::GetArgument<Double3>();
 	Quaternion rotation  = Commands::GetArgument<Quaternion>();
-	Double3 scale        = Commands::GetArgument<Double3>();
 
 	Entity* entity   = new Entity(entityID);
 	entity->Position = position;
 	entity->Rotation = rotation;
-	entity->Scale    = scale;
 
 	World::Singleton->RegisterEntity(entity);
 }
@@ -31,7 +29,6 @@ void RegisterEntityParser(const std::string& arguments)
 
 	Double3 position    = Double3FromString(parts[1]);
 	Quaternion rotation = QuaternionFromString(parts[2]);
-	Double3 scale       = Double3FromString(parts[3]);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
@@ -42,7 +39,6 @@ void RegisterEntityParser(const std::string& arguments)
 	Commands::argumentBuffer.Put(parts[0]);  // EntityId
 	Commands::argumentBuffer.Put(position);  // Position
 	Commands::argumentBuffer.Put(rotation);  // Rotation
-	Commands::argumentBuffer.Put(scale);     // Scale
 }
 
 // unregisterentity <entityID>
