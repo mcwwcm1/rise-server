@@ -115,14 +115,9 @@ void AddDistanceConstraint()
 		return;
 	}
 
-	printf("WE ARE HERE 7\n");
-
 	auto constraint = new DistanceConstraint(*entity1, *entity2, position1, position2, distance);
 
-	printf("WE ARE HERE 8\n");
-
 	World::Singleton->Space->DynamicsWorld->addConstraint(constraint);
-	printf("ADDED CONSTRAINT\n");
 }
 
 void AddDistanceConstraintParser(const std::string& arguments)
