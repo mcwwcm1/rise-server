@@ -12,8 +12,9 @@ This document was looking a bit lonely so I added a pic:
 1. Be cool
 2. Have gcc and make installed, most recent version of each
 3. Also have libboost-dev or equivalent installed
-4. Navigate to project directory
-5. "make all"
+4. Also have libbullet-dev installed
+5. Navigate to project directory
+6. "make all"
 
 ## Helpful Links:
 

@@ -13,8 +13,9 @@ struct Double3 {
  public:
 	double x, y, z;
 
-	Double3(double x, double y, double z);
 	Double3();
+	Double3(double value);
+	Double3(double x, double y, double z);
 
 	double Magnitude() const;
 	double MagnitudeSquared() const;
