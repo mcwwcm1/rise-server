@@ -3,23 +3,34 @@
 
 #pragma once
 
+#include <bullet/btBulletDynamicsCommon.h>
 #include <vector>
 
-#include "../entities/physicsentity.h"
+#include "../entities/dynamicentity.h"
+
+class DynamicEntity;
 
 class PhysicsSpace
 {
+ private:
+	btDefaultCollisionConfiguration* CollissionConfiuration;
+	btCollisionDispatcher* CollissionDispatcher;
+	btBroadphaseInterface* OverlappingPairChache;
+	btSequentialImpulseConstraintSolver* ConstraintsSolver;
+
  public:
-	std::vector<PhysicsEntity*> entities = std::vector<PhysicsEntity*>(0);
+	PhysicsSpace(double updateRate);
+	PhysicsSpace();  // I know why this has to be here :) It's silly
+
+	btDiscreteDynamicsWorld* DynamicsWorld;
+
+	std::vector<DynamicEntity*> entities = std::vector<DynamicEntity*>(0);
 
 	double UpdateRate;
 	double FixedDT;
 
-	PhysicsSpace(double updateRate);
-	PhysicsSpace();  // I know why this has to be here :) It's silly
-
-	void RegisterEntity(PhysicsEntity* boentitydy);
-	void UnregisterEntity(PhysicsEntity* entity);
+	void RegisterEntity(DynamicEntity* boentitydy);
+	void UnregisterEntity(DynamicEntity* entity);
 
 	void RunTick();
 	void CheckCollision();

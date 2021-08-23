@@ -3,40 +3,27 @@
 
 #include "airship.h"
 
-#include "../physics/constraints/distanceconstraint.h"
-#include "../physics/shapes/sphereshape.h"
-
 size_t Airship::_currentAirshipIndex = 0;  // Dumb.
 
-Airship::Airship(std::string id) : DynamicEntity(id)
+Airship::Airship(std::string id) : Airship(id, Double3(0, 0, 0), Quaternion::identity) {}
+
+Airship::Airship(std::string id, Double3 position, Quaternion rotation) : DynamicEntity(id, position, rotation, 10)
 {
 	// HARDCODED COLLIDER SHAPE = BAD
-	SphereShape* s1 = new SphereShape(2);
-	s1->Position    = Double3(0, 0, -2.5);
-	Colliders.push_back(s1);
+	btSphereShape* sphereShape = new btSphereShape(2);
 
-	SphereShape* s2 = new SphereShape(2);
-	s2->Position    = Double3(0, 0, -0.5);
-	Colliders.push_back(s2);
+	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 2.5)), sphereShape);
+	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 0.5)), sphereShape);
+	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, -2)), sphereShape);
 
-	SphereShape* s3 = new SphereShape(2);
-	s3->Position    = Double3(0, 0, 1.5);
-	Colliders.push_back(s3);
+	btVector3 inertia;
+	Shape->calculateLocalInertia(RigidBody->getMass(), inertia);
+	RigidBody->setMassProps(RigidBody->getMass(), inertia);
 
 	Throttle = 0;
 	Pitch    = 0;
 	Yaw      = 0;
-	Drag     = 0.5f;
 }
-
-Matrix4x4 Airship::GetTransformMatrix()
-{
-	return GetTRSMatrix(Position, Rotation, Scale);
-}
-
-Double3 Airship::GetPosition() { return Position; }
-Quaternion Airship::GetRotation() { return Rotation; }
-Double3 Airship::GetScale() { return Scale; }
 
 void Airship::RunTick(float dt)
 {
@@ -46,28 +33,32 @@ void Airship::RunTick(float dt)
 	right   = GetRight();
 	up      = GetUp();
 
-	float speed = Velocity.Magnitude();
+	float speed = RigidBody->getLinearVelocity().length();
+
+	RigidBody->activate();  // Activate the body because it likes to be innactive
+
+	RigidBody->setGravity(btVector3(0, 0, 0));  // Dumb. Move it later
 
 	// Apply thrust
-	AddForce(forward * Throttle * 30);
+	RigidBody->applyCentralForce(forward * Throttle * 45);
 
 	// Apply yaw steering
-	AddTorque(up * Yaw * speed * -70);
+	RigidBody->applyTorque(up * Yaw * speed * -25);
 
 	// Apply pitch steering
-	AddTorque(right * Pitch * speed * 30);
+	RigidBody->applyTorque(right * Pitch * speed * 20);
 
 	// Self-righting
-	AddTorque(Cross(Double3(0, -1, 0), up) * 500);
+	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 200);
 
 	DynamicEntity::RunTick(dt);
 }
 
-Double3 Airship::GetForward() { return Double3(0, 0, 1) * Rotation; }
+btVector3 Airship::GetForward() { return Double3(0, 0, 1) * Rotation; }
 
-Double3 Airship::GetRight() { return Double3(1, 0, 0) * Rotation; }
+btVector3 Airship::GetUp() { return Double3(0, 1, 0) * Rotation; }
 
-Double3 Airship::GetUp() { return Double3(0, 1, 0) * Rotation; }
+btVector3 Airship::GetRight() { return Double3(1, 0, 0) * Rotation; }
 
 std::string Airship::GetNextID()
 {

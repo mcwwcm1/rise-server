@@ -22,5 +22,7 @@ void Send(const std::string& userID, const std::string& sendString)
 	if (session != nullptr) {
 		// Invoke the send function of the headless' websocket session
 		session->Send(sendString);
+	} else {
+		printf("Tried to send message to unregistered user: %s\n", userID.c_str());
 	}
 }

@@ -88,6 +88,9 @@ Quaternion Quaternion::FromEuler(Double3 euler)
 Quaternion QuaternionFromString(const std::string& s)
 {
 	auto parts = Split(s.substr(1, s.length() - 1), ';');
+	if (parts.size() != 4) {
+		throw std::invalid_argument("Invalid number of parts for quaternion, expected 4");
+	}
 	return Quaternion(
 			stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
@@ -116,6 +119,20 @@ Quaternion FromToRotation(const Double3& a, const Double3& b)
 						 c.z,
 						 sqrt(a.MagnitudeSquared() * b.MagnitudeSquared()) + Dot(a, b))
 	    .Normalized();
+}
+
+Quaternion::operator btQuaternion()
+{
+	return btQuaternion(x, y, z, w);
+}
+
+Quaternion& Quaternion::operator=(const btQuaternion& b)
+{
+	this->x = b.getX();
+	this->y = b.getY();
+	this->z = b.getZ();
+	this->w = b.getW();
+	return *this;
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& b)

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <math.h>
+#include <btBulletDynamicsCommon.h>
 
 #include <sstream>
 #include <string>
@@ -27,6 +28,8 @@ struct Double3 {
 	std::string ToString() const;
 
 	// Assignment operator overloads
+	operator btVector3();
+	Double3& operator=(const btVector3& b);
 	Double3& operator+=(const Double3& b);
 	Double3& operator-=(const Double3& b);
 	Double3& operator*=(const Double3& b);

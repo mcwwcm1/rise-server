@@ -5,7 +5,14 @@
 
 Entity::Entity() {}
 
-Entity::Entity(std::string id) { this->ID = id; }
+Entity::Entity(std::string id) : Entity(id, Double3(0, 0, 0), Quaternion::identity) {}
+
+Entity::Entity(std::string id, Double3 position, Quaternion rotation)
+{
+	ID       = id;
+	Position = position;
+	Rotation = rotation;
+}
 
 void Entity::SubmitChange(std::string field, std::string change)
 {
@@ -15,25 +22,19 @@ void Entity::SubmitChange(std::string field, std::string change)
 
 void Entity::SetLocalPosition(const Double3& newPosition)
 {
-	this->Position = newPosition;
+	Position = newPosition;
 	SubmitChange("position", newPosition.ToString());
 }
 
 void Entity::SetLocalRotation(const Quaternion& newRotation)
 {
-	this->Rotation = newRotation;
+	Rotation = newRotation;
 	SubmitChange("rotation", newRotation.ToString());
-}
-
-void Entity::SetLocalScale(const Double3& newScale)
-{
-	this->Scale = newScale;
-	SubmitChange("scale", newScale.ToString());
 }
 
 Matrix4x4 Entity::GetTransformMatrix()
 {
-	return GetTRSMatrix(Position, Rotation, Scale);
+	return GetTRSMatrix(Position, Rotation, Double3(1, 1, 1));
 }
 
 Double3 Entity::LocalPointToGlobal(Double3 point)
@@ -48,5 +49,5 @@ Quaternion Entity::LocalRotationToGlobal(Quaternion rotation)
 
 Double3 Entity::LocalVectorToGlobal(Double3 vector)
 {
-	return (vector * Rotation) * Scale;
+	return vector * Rotation;
 }

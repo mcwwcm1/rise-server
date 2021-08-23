@@ -7,6 +7,7 @@
 
 #include <sstream>
 #include <string>
+#include <btBulletDynamicsCommon.h>
 
 #include "double3.h"
 #include "mysticmath.h"
@@ -29,6 +30,8 @@ struct Quaternion {
 
 	std::string ToString() const;
 
+	operator btQuaternion();
+	Quaternion& operator=(const btQuaternion& b);
 	Quaternion& operator+=(const Quaternion& b);
 	Quaternion& operator-=(const Quaternion& b);
 	Quaternion& operator*=(const Quaternion& b);
