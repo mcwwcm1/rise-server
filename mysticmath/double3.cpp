@@ -14,6 +14,8 @@ Double3::Double3(double x, double y, double z)
 	this->z = z;
 }
 
+Double3::Double3(double value) : Double3(value, value, value) {}
+
 Double3::Double3()
 {
 	x = 0;

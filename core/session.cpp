@@ -119,7 +119,7 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 
 	// Release the lock
 	_mutex.unlock();
-	
+
 	//Do another read
 	DoRead();
 }
