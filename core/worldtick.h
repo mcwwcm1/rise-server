@@ -12,6 +12,10 @@ void WorldTick()
 	World::Singleton->Space->RunTick();
 
 	for (auto entity : World::Singleton->Entities) {
+		if (entity.second == nullptr) {
+			printf("FOUND NULL ENTITY D:\n");
+			continue;
+		}
 		if (entity.second->Dirty) {
 			std::string changes = "ChangeTable " + entity.second->ID + "|";
 			for (auto change : entity.second->ChangeTable) {

@@ -17,11 +17,12 @@ class PhysicsSpace
 	btCollisionDispatcher* CollissionDispatcher;
 	btBroadphaseInterface* OverlappingPairChache;
 	btSequentialImpulseConstraintSolver* ConstraintsSolver;
-	btDiscreteDynamicsWorld* DynamicsWorld;
 
  public:
 	PhysicsSpace(double updateRate);
 	PhysicsSpace();  // I know why this has to be here :) It's silly
+
+	btDiscreteDynamicsWorld* DynamicsWorld;
 
 	std::vector<DynamicEntity*> entities = std::vector<DynamicEntity*>(0);
 

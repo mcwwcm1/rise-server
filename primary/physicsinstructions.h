@@ -13,29 +13,32 @@
 #include "../world/entities/entity.h"
 #include "../world/physics/physicsspace.h"
 #include "../world/world.h"
+#include "../world/physics/constraints/distanceconstraint.h"
 
 DynamicEntity* GetDynamicEntity(const std::string& id)
 {
-	return dynamic_cast<DynamicEntity*>(World::Singleton->Entities[id]);
+	auto e = World::Singleton->Entities.find(id);
+	if (e == World::Singleton->Entities.end()) {
+		return nullptr;
+	}
+	return dynamic_cast<DynamicEntity*>(e->second);
 }
 
+// registerstaticcollider <position> <radius>
 void RegisterStaticCollider()
 {
-	//btCollisionShape* colliderShape    = new btSphereShape(Commands::GetArgument<float>());
-	//std::string positionString         = Commands::GetArgument<std::string>();
-	//btCollisionObject* collisionObject = new btCollisionObject();
-	//collisionObject->setCollisionShape(colliderShape);
-	//collisionObject->setWorldTransform(Double3FromString(positionString))
-	//
-	//		auto staticColliders = World::Singleton->Entities.find("staticColliders");
-	//
-	//if (staticColliders == World::Singleton->Entities.end()) {
-	//	World::Singleton->RegisterEntity(new PhysicsEntity("staticColliders"));
-	//	staticColliders = World::Singleton->Entities.find("staticColliders");
-	//}
-	//
-	//PhysicsEntity* e = dynamic_cast<PhysicsEntity*>(staticColliders->second);
-	//e->Colliders.push_back(colliderShape);
+	btSphereShape* shape = new btSphereShape(Commands::GetArgument<float>());
+	Double3 position     = Commands::GetArgument<Double3>();
+
+	auto staticColliders = World::Singleton->Entities.find("staticColliders");
+
+	if (staticColliders == World::Singleton->Entities.end()) {
+		World::Singleton->RegisterEntity(new DynamicEntity("staticColliders", Double3(0, 0, 0), Quaternion::identity, 0));  // 0 mass = static object
+		staticColliders = World::Singleton->Entities.find("staticColliders");
+	}
+
+	DynamicEntity* e = dynamic_cast<DynamicEntity*>(staticColliders->second);
+	e->Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(position.x, position.y, position.z)), shape);
 }
 
 void RegisterStaticColliderParser(const std::string& arguments)
@@ -43,7 +46,8 @@ void RegisterStaticColliderParser(const std::string& arguments)
 	std::string radiusString   = arguments.substr(0, arguments.find(' '));
 	std::string positionString = arguments.substr(arguments.find(' '));
 
-	float radius = stof(radiusString);
+	float radius     = stof(radiusString);
+	Double3 position = Double3FromString(positionString);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
@@ -52,7 +56,7 @@ void RegisterStaticColliderParser(const std::string& arguments)
 
 	// Put arguments
 	Commands::argumentBuffer.Put(radius);
-	Commands::argumentBuffer.Put(positionString);
+	Commands::argumentBuffer.Put(position);
 }
 
 // addforce <entityID> <force> <position>
@@ -100,20 +104,25 @@ void AddDistanceConstraint()
 	std::string position2str = Commands::GetArgument<std::string>();
 	float distance           = Commands::GetArgument<float>();
 
-	Double3 position1 = Double3FromString(position1str);
-	Double3 position2 = Double3FromString(position2str);
+	btVector3 position1 = Double3FromString(position1str);
+	btVector3 position2 = Double3FromString(position2str);
 
-	DynamicEntity* entity1    = GetDynamicEntity(entityId1);
-	auto entity2PairThingFUCK = World::Singleton->Entities.find(entityId2);
+	DynamicEntity* entity1 = GetDynamicEntity(entityId1);
+	DynamicEntity* entity2 = GetDynamicEntity(entityId2);
 
-	if (entity1 == nullptr ||
-	    entity2PairThingFUCK == World::Singleton->Entities.end() ||
-	    entity2PairThingFUCK->second == nullptr)
-		return;  // One of the entities does not exist
+	if (entity1 == nullptr || entity2 == nullptr) {
+		printf("Attempted to add constraint to a non-dynamic / non-existent entity.\n");
+		return;
+	}
 
-	Entity* entity2 = entity2PairThingFUCK->second;
+	printf("WE ARE HERE 7\n");
 
-	// ADD CONSTRAINT HERE
+	auto constraint = new DistanceConstraint(*entity1, *entity2, position1, position2, distance);
+
+	printf("WE ARE HERE 8\n");
+
+	World::Singleton->Space->DynamicsWorld->addConstraint(constraint);
+	printf("ADDED CONSTRAINT\n");
 }
 
 void AddDistanceConstraintParser(const std::string& arguments)

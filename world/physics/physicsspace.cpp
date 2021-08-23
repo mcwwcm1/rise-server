@@ -48,5 +48,5 @@ void PhysicsSpace::RunTick()
 {
 	for (DynamicEntity* entity : entities) { entity->RunTick(FixedDT); }
 
-	DynamicsWorld->stepSimulation(1 / 20.0f, 0);  // Step simulation
+	DynamicsWorld->stepSimulation(1 / UpdateRate, 0);  // Step simulation
 }

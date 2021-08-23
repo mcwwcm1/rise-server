@@ -15,9 +15,7 @@ void RegisterEntity()
 	Double3 position     = Commands::GetArgument<Double3>();
 	Quaternion rotation  = Commands::GetArgument<Quaternion>();
 
-	Entity* entity   = new Entity(entityID);
-	entity->Position = position;
-	entity->Rotation = rotation;
+	Entity* entity = new DynamicEntity(entityID, position, rotation, 0);
 
 	World::Singleton->RegisterEntity(entity);
 }

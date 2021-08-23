@@ -7,19 +7,20 @@
 
 DynamicEntity::DynamicEntity() : DynamicEntity("null") {}
 
-DynamicEntity::DynamicEntity(std::string id) : DynamicEntity(id, Double3(0, 0, 0), Quaternion::identity) {}
+DynamicEntity::DynamicEntity(std::string id) : DynamicEntity(id, Double3(0, 0, 0), Quaternion::identity, 1) {}
 
-DynamicEntity::DynamicEntity(std::string id, Double3 position, Quaternion rotation) : Entity(id, position, rotation)
+DynamicEntity::DynamicEntity(std::string id, Double3 position, Quaternion rotation, float mass) : Entity(id, position, rotation)
 {
 	ID          = id;
 	Shape       = new btCompoundShape();
 	MotionState = new EntityMotionState(this);
 
-	auto info = btRigidBody::btRigidBodyConstructionInfo(10, MotionState, Shape);
+	auto info = btRigidBody::btRigidBodyConstructionInfo(mass, MotionState, Shape);
 
 	info.m_localInertia   = btVector3(1, 1, 1);
 	info.m_linearDamping  = 0.7;
 	info.m_angularDamping = .7;
+	info.m_restitution    = 0;
 
 	RigidBody = new btRigidBody(info);  // Builds a dynamic RigidBody
 }
@@ -31,9 +32,7 @@ DynamicEntity::~DynamicEntity()
 		Space->UnregisterEntity(this);
 }
 
-void DynamicEntity::RunTick(float dt)
-{
-}
+void DynamicEntity::RunTick(float dt) {}
 
 void DynamicEntity::RegisterToDynamicsWorld(btDynamicsWorld* world)
 {
