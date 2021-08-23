@@ -32,8 +32,6 @@ DynamicEntity::~DynamicEntity()
 		Space->UnregisterEntity(this);
 }
 
-void DynamicEntity::RunTick(float dt) {}
-
 void DynamicEntity::RegisterToDynamicsWorld(btDynamicsWorld* world)
 {
 	printf("Registering to dynamics world\n");

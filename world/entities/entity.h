@@ -30,6 +30,8 @@ class Entity
 	Double3 Position;
 	Quaternion Rotation;
 
+	virtual void RunTick(float dt);
+
 	void SetLocalPosition(const Double3& newPosition);
 	void SetLocalRotation(const Quaternion& newRotation);
 

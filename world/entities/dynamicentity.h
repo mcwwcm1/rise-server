@@ -37,8 +37,6 @@ class DynamicEntity : public Entity
 	btCompoundShape* Shape;
 	EntityMotionState* MotionState;
 
-	virtual void RunTick(float dt);
-
 	virtual void RegisterToDynamicsWorld(btDynamicsWorld* world);
 	virtual void UnregisterFromDynamicsWorld(btDynamicsWorld* world);
 };

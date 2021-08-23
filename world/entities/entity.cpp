@@ -14,6 +14,8 @@ Entity::Entity(std::string id, Double3 position, Quaternion rotation)
 	Rotation = rotation;
 }
 
+void Entity::RunTick(float dt) {}
+
 void Entity::SubmitChange(std::string field, std::string change)
 {
 	Dirty              = true;
@@ -23,13 +25,13 @@ void Entity::SubmitChange(std::string field, std::string change)
 void Entity::SetLocalPosition(const Double3& newPosition)
 {
 	Position = newPosition;
-	SubmitChange("position", newPosition.ToString());
+	SubmitChange("Position", newPosition.ToString());
 }
 
 void Entity::SetLocalRotation(const Quaternion& newRotation)
 {
 	Rotation = newRotation;
-	SubmitChange("rotation", newRotation.ToString());
+	SubmitChange("Rotation", newRotation.ToString());
 }
 
 Matrix4x4 Entity::GetTransformMatrix()
