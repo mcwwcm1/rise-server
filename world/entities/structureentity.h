@@ -3,6 +3,9 @@
 
 #include "dynamicentity.h"
 
-class StructureEntity : DynamicEntity
+class StructureEntity : public DynamicEntity
 {
+ public:
+	StructureEntity(Double3 position, Quaternion rotation);
+	virtual std::string GetCreationCommand();
 };

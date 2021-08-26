@@ -5,9 +5,8 @@
 
 void TimedDistributor::TryDistribute(std::vector<Double3> positions)
 {
-	if (clock() - _clock > Delay) {
+	if (clock() - _clock > Delay * 1000) {
 		_clock = clock();
-
 		Distribute(positions);
 	}
 }

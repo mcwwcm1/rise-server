@@ -1,6 +1,8 @@
 // File: bugswarmentity.h
 // Purpose: For spawning bug swarms in game around users
 
+#pragma once
+
 #include "entity.h"
 #include "mysticmath/double3.h"
 #include "mysticmath/double2.h"
@@ -17,6 +19,8 @@ class BugSwarmEntity : public Entity
 	Double3 TargetPosition;  // (Local, relative to entity) Bugs will trend towards this location
 
 	BugSwarmEntity();
+
+	virtual ~BugSwarmEntity();
 
 	virtual std::string GetCreationCommand() override;
 

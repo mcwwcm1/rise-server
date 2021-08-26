@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "entities/entity.h"
+#include "entities/userentity.h"
 #include "physics/physicsspace.h"
 #include "world/distributors/bugswarmdistributor.h"
 
@@ -20,6 +21,7 @@ class World
 
 	PhysicsSpace* Space = new PhysicsSpace(20);
 
+	std::unordered_map<std::string, UserEntity*> Users;
 	std::unordered_map<std::string, Entity*> Entities;
 	std::vector<Distributor*> Distributors;
 

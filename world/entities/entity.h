@@ -19,7 +19,7 @@ class Entity
 	Entity();
 	Entity(Double3 position, Quaternion rotation);
 
-	virtual ~Entity() = default;
+	virtual ~Entity();
 
 	bool DontSync = false;
 
@@ -32,6 +32,7 @@ class Entity
 	Quaternion Rotation;
 
 	virtual std::string GetCreationCommand() = 0;
+	virtual std::string GetDestructionCommand();
 
 	virtual void RunTick(float dt);
 

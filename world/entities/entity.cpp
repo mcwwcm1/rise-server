@@ -13,9 +13,17 @@ Entity::Entity(Double3 position, Quaternion rotation)
 	Rotation = rotation;
 }
 
-void Entity::RunTick(float dt)
+Entity::~Entity()
 {
+	World::Singleton->UnregisterEntity(this);
 }
+
+std::string Entity::GetDestructionCommand()
+{
+	return "DestroyEntity " + ID + "|";
+}
+
+void Entity::RunTick(float dt) {}
 
 void Entity::SubmitChange(std::string field, std::string change)
 {

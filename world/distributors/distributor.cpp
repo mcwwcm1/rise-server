@@ -6,13 +6,23 @@
 
 void Distributor::CleanupDistant(std::vector<Double3> positions)
 {
-	for (auto it = Entities.rend(); it != Entities.rbegin(); ++it) {
+	std::vector<Entity*> dueForCleanup;
+	dueForCleanup.reserve(Entities.size());  // To avoid memory re-allocation
+
+	for (auto e : Entities) {
+		bool inBounds = false;
 		for (Double3 p : positions) {
-			if (((*it)->Position - p).MagnitudeSquared() > Range * Range) {
-				DestroyEntity(*it);
+			if ((e->Position - p).MagnitudeSquared() < Range * Range) {
+				inBounds = true;
+				break;
 			}
 		}
+		if (!inBounds)
+			dueForCleanup.push_back(e);
 	}
+
+	for (auto e : dueForCleanup)
+		DestroyEntity(e);
 }
 
 void Distributor::AddEntity(Entity* entity)

@@ -6,6 +6,7 @@
 #include "world/distributors/bugswarmdistributor.h"
 #include "world/distributors/distributor.h"
 #include "core/send.h"
+#include "entities/structureentity.h"
 
 unsigned long long World::currentEntityIndex = 0;
 
@@ -13,7 +14,11 @@ World* World::Singleton = new World();
 
 World::World()
 {
-	auto d = new BugSwarmDistributor(200, 2, 20, "WobbleFly");
+	// Initialize a single structure entity to act as the starter island (Terrible solution)
+	StructureEntity* starterIsland = new StructureEntity(Double3(0, 0, 0), Quaternion::identity);
+	RegisterEntity(starterIsland);
+
+	auto d = new BugSwarmDistributor(35, 2, 10, "WobbleFly");
 	Distributors.push_back(d);
 }
 
@@ -22,10 +27,23 @@ void World::RunTick()
 	// Tick physics
 	Space->RunTick();
 
+	// Tick distributors
+	std::vector<Double3> positions;
+	positions.reserve(Users.size());
+
+	for (auto u : Users) {
+		positions.push_back(u.second->Position);
+	}
+
+	for (Distributor* d : Distributors) {
+		d->CleanupDistant(positions);
+		d->TryDistribute(positions);
+	}
+
 	// Handle change tables
 	for (auto entity : Entities) {
 		if (entity.second == nullptr) {
-			printf("FOUND NULL ENTITY D:\n");
+			printf("FOUND NULL ENTITY DURING WORLD TICK D:\n");
 			continue;
 		}
 		if (entity.second->Dirty && !entity.second->DontSync) {
@@ -34,16 +52,7 @@ void World::RunTick()
 				changes += change.first + "|" + change.second + "|";
 			}
 
-			if (!entity.second->Owner.has_value()) {
-				// Unable to send changetable due to the owner of the entity not being assigned
-				continue;
-			}
-			if (Session::GetUserSession(entity.second->Owner.value()) == nullptr) {
-				// Unable to send changetable due to the owner of the entity not being a registered user
-				continue;
-			}
-
-			Send(entity.second->Owner.value(), changes);
+			Send(changes);
 			entity.second->ChangeTable.clear();
 			entity.second->Dirty = false;
 		}
@@ -68,16 +77,17 @@ bool World::RegisterEntity(Entity* entity)
 
 	Entities.insert({entity->ID, entity});
 
-	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
+	// If the entity is a UserEntity, add them to Users
+	UserEntity* ue = dynamic_cast<UserEntity*>(entity);
+	if (ue != nullptr) { Users[ue->UserID] = ue; }
 
+	// If the entity is a DynamicEntity, register it to the physics space
+	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
 	if (de != nullptr) { Space->RegisterEntity(de); }
 
 	// Tell Neos that a new entity is in town
 	if (!entity->DontSync) {
-		if (entity->Owner)
-			Send(entity->Owner.value(), entity->GetCreationCommand());
-		else
-			Send(entity->GetCreationCommand());
+		Send(entity->GetCreationCommand());  // Send creation to headless
 	}
 
 	printf("Registered entity: %s\n", entity->ID.c_str());
@@ -105,10 +115,18 @@ bool World::UnregisterEntity(Entity* entity)
 
 	Entities.erase(e);
 
-	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
+	// If the entity is a UserEntity, remove them from Users
+	UserEntity* ue = dynamic_cast<UserEntity*>(entity);
+	if (ue != nullptr) { Users.erase(ue->UserID); }
 
+	// If the entity is a DynamicEntity then unregister it from the physics space
+	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
 	if (de != nullptr) { Space->UnregisterEntity(de); }
 
+	// Tell Neos that an entity is no longer in town
+	if (!entity->DontSync) {
+		Send(entity->GetDestructionCommand());  // Send creation to headless
+	}
 	printf("Unregistered entity: %s\n", entity->ID.c_str());
 
 	return true;

@@ -29,8 +29,8 @@ DynamicEntity* GetDynamicEntity(const std::string& id)
 void RegisterStaticCollider()
 {
 	std::string entityID = Commands::GetArgument<std::string>();
-	btSphereShape* shape = new btSphereShape(Commands::GetArgument<float>());
 	Double3 position     = Commands::GetArgument<Double3>();
+	btSphereShape* shape = new btSphereShape(Commands::GetArgument<float>());
 
 	auto entity = World::Singleton->Entities.find(entityID);
 
@@ -47,8 +47,8 @@ void RegisterStaticColliderParser(const std::string& arguments)
 
 	Commands::ValidateArgumentCount(parts, 3);
 
-	float radius     = stof(parts[1]);
-	Double3 position = Double3FromString(parts[2]);
+	Double3 position = Double3FromString(parts[1]);
+	float radius     = stof(parts[2]);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
@@ -57,8 +57,8 @@ void RegisterStaticColliderParser(const std::string& arguments)
 
 	// Put arguments
 	Commands::argumentBuffer.Put(parts[0]);  // EntityID
-	Commands::argumentBuffer.Put(radius);
 	Commands::argumentBuffer.Put(position);
+	Commands::argumentBuffer.Put(radius);
 }
 
 // addforce <entityID> <force> <position>

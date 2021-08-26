@@ -53,9 +53,10 @@ void EntityMotionState::getWorldTransform(btTransform& worldTrans) const
 
 void EntityMotionState::setWorldTransform(const btTransform& worldTrans)
 {
-	TargetEntity->Position = worldTrans.getOrigin();
-	TargetEntity->Rotation = worldTrans.getRotation();
-
-	TargetEntity->SubmitChange("position", TargetEntity->Position.ToString());
-	TargetEntity->SubmitChange("rotation", TargetEntity->Rotation.ToString());
+	Double3 pos;
+	pos = worldTrans.getOrigin();
+	Quaternion rot;
+	rot = worldTrans.getRotation();
+	TargetEntity->SetLocalPosition(pos);
+	TargetEntity->SetLocalRotation(rot);
 }

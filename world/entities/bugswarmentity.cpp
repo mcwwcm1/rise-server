@@ -2,12 +2,18 @@
 // Purpose: Implements bugswarmentity.h
 
 #include "bugswarmentity.h"
+#include "world/world.h"
 
 BugSwarmEntity::BugSwarmEntity() : Entity() {}
 
+BugSwarmEntity::~BugSwarmEntity()
+{
+	World::Singleton->UnregisterEntity(this);
+}
+
 std::string BugSwarmEntity::GetCreationCommand()
 {
-	return "SpawnEntity " + BugID + "|" + Position.ToString() + "|";
+	return "SpawnEntity " + BugID + "|" + ID + "|";
 }
 
 void BugSwarmEntity::RunTick(float dt) {}

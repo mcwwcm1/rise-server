@@ -33,6 +33,7 @@ using tcp           = boost::asio::ip::tcp;
 #include "primary/airshipcontrol.h"
 #include "primary/echoto.h"
 #include "primary/entityinstructions.h"
+#include "primary/userdata.h"
 
 int main(int argc, char* argv[])
 {
@@ -52,6 +53,7 @@ int main(int argc, char* argv[])
 	Commands::Register("setowner", SetOwnerParser);
 	Commands::Register("adddistanceconstraint", AddDistanceConstraintParser);
 	Commands::Register("requestairship", RequestAirshipParser);
+	Commands::Register("setuserposition", SetUserPositionParser);
 	//-----------------------End of function initialization step------------------------------------------
 
 	// Check command line arguments
@@ -81,7 +83,7 @@ int main(int argc, char* argv[])
 		{
 			std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
-			//Iterate over all elements in function buffer until empty
+			// Iterate over all elements in function buffer until empty
 			while (!Commands::functionBuffer.Empty()) {
 				Commands::functionBuffer.Get()();
 			}
