@@ -5,13 +5,10 @@
 #include "mysticmath/mysticmath.h"
 #include "../physics/physicsspace.h"
 
-DynamicEntity::DynamicEntity() : DynamicEntity("null") {}
+DynamicEntity::DynamicEntity() : DynamicEntity(Double3(0, 0, 0), Quaternion::identity, 1) {}
 
-DynamicEntity::DynamicEntity(std::string id) : DynamicEntity(id, Double3(0, 0, 0), Quaternion::identity, 1) {}
-
-DynamicEntity::DynamicEntity(std::string id, Double3 position, Quaternion rotation, float mass) : Entity(id, position, rotation)
+DynamicEntity::DynamicEntity(Double3 position, Quaternion rotation, float mass) : Entity(position, rotation)
 {
-	ID          = id;
 	Shape       = new btCompoundShape();
 	MotionState = new EntityMotionState(this);
 
@@ -31,8 +28,6 @@ DynamicEntity::~DynamicEntity()
 	if (Space != nullptr)
 		Space->UnregisterEntity(this);
 }
-
-void DynamicEntity::RunTick(float dt) {}
 
 void DynamicEntity::RegisterToDynamicsWorld(btDynamicsWorld* world)
 {
@@ -58,9 +53,10 @@ void EntityMotionState::getWorldTransform(btTransform& worldTrans) const
 
 void EntityMotionState::setWorldTransform(const btTransform& worldTrans)
 {
-	TargetEntity->Position = worldTrans.getOrigin();
-	TargetEntity->Rotation = worldTrans.getRotation();
-
-	TargetEntity->SubmitChange("position", TargetEntity->Position.ToString());
-	TargetEntity->SubmitChange("rotation", TargetEntity->Rotation.ToString());
+	Double3 pos;
+	pos = worldTrans.getOrigin();
+	Quaternion rot;
+	rot = worldTrans.getRotation();
+	TargetEntity->SetLocalPosition(pos);
+	TargetEntity->SetLocalRotation(rot);
 }

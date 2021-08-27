@@ -8,56 +8,6 @@
 #include "utilities.h"
 #include "world/world.h"
 
-// registerentity <entityID> <position> <rotation> <scale>
-void RegisterEntity()
-{
-	std::string entityID = Commands::GetArgument<std::string>();
-	Double3 position     = Commands::GetArgument<Double3>();
-	Quaternion rotation  = Commands::GetArgument<Quaternion>();
-
-	Entity* entity = new DynamicEntity(entityID, position, rotation, 0);
-
-	World::Singleton->RegisterEntity(entity);
-}
-
-void RegisterEntityParser(const std::string& arguments)
-{
-	auto parts = Split(arguments, '|');
-	Commands::ValidateArgumentCount(parts, 4);
-
-	Double3 position    = Double3FromString(parts[1]);
-	Quaternion rotation = QuaternionFromString(parts[2]);
-
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
-
-	// Put function pointer
-	Commands::functionBuffer.Put(RegisterEntity);
-
-	// Put argument
-	Commands::argumentBuffer.Put(parts[0]);  // EntityId
-	Commands::argumentBuffer.Put(position);  // Position
-	Commands::argumentBuffer.Put(rotation);  // Rotation
-}
-
-// unregisterentity <entityID>
-void UnregisterEntity()
-{
-	std::string entityId = Commands::GetArgument<std::string>();
-
-	World::Singleton->UnregisterEntity(entityId);
-}
-
-void UnregisterEntityParser(const std::string& arguments)
-{
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
-
-	// Put function pointer
-	Commands::functionBuffer.Put(UnregisterEntity);
-
-	// Put argument
-	Commands::argumentBuffer.Put(arguments);  // EntityId
-}
-
 // setowner <entityID> <ownerID>
 void SetOwner()
 {

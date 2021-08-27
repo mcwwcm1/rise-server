@@ -27,5 +27,6 @@ double RandomDouble(double min = std::numeric_limits<double>::min(),
 Double3 RandomDouble3(Double3 min = std::numeric_limits<double>::min(),
                       Double3 max = std::numeric_limits<double>::max());
 Double3 RandomInUnitSphere();
+Double3 RandomUnitVector();
 unsigned int WeightedRandom(const std::vector<double>& weights);
 }  // namespace Random

@@ -35,16 +35,12 @@ void RequestAirship()
 	position = location->second->LocalPointToGlobal(position);
 	rotation = location->second->LocalRotationToGlobal(rotation);
 
-	Airship* airship = new Airship(Airship::GetNextID(), position, rotation);
+	Airship* airship = new Airship(position, rotation);
 
 	airship->SetLocalPosition(position);
 	airship->SetLocalRotation(rotation);
 
 	World::Singleton->RegisterEntity(airship);
-
-	std::string instruction = "SpawnAirship " + airship->ID + "|" + position.ToString() + "|" + rotation.ToString() + "|";
-
-	Send(instruction);
 }
 
 void RequestAirshipParser(const std::string& arguments)

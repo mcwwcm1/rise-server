@@ -17,10 +17,11 @@ class Entity
 {
  public:
 	Entity();
-	Entity(std::string id);
-	Entity(std::string id, Double3 position, Quaternion rotation);
+	Entity(Double3 position, Quaternion rotation);
 
-	virtual ~Entity() = default;
+	virtual ~Entity();
+
+	bool DontSync = false;
 
 	std::string ID;
 	std::optional<std::string> Owner;
@@ -29,6 +30,11 @@ class Entity
 
 	Double3 Position;
 	Quaternion Rotation;
+
+	virtual std::string GetCreationCommand() = 0;
+	virtual std::string GetDestructionCommand();
+
+	virtual void RunTick(float dt);
 
 	void SetLocalPosition(const Double3& newPosition);
 	void SetLocalRotation(const Quaternion& newRotation);

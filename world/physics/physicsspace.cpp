@@ -46,7 +46,8 @@ void PhysicsSpace::UnregisterEntity(DynamicEntity* entity)
 
 void PhysicsSpace::RunTick()
 {
-	for (DynamicEntity* entity : entities) { entity->RunTick(FixedDT); }
+	for (DynamicEntity* entity : entities)
+		entity->RunTick(FixedDT);
 
 	DynamicsWorld->stepSimulation(1 / UpdateRate, 0);  // Step simulation
 }

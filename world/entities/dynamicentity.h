@@ -27,8 +27,7 @@ class DynamicEntity : public Entity
 {
  public:
 	DynamicEntity();
-	DynamicEntity(std::string id);
-	DynamicEntity(std::string id, Double3 position, Quaternion rotation, float mass);
+	DynamicEntity(Double3 position, Quaternion rotation, float mass);
 
 	virtual ~DynamicEntity();
 
@@ -36,8 +35,6 @@ class DynamicEntity : public Entity
 	btRigidBody* RigidBody;
 	btCompoundShape* Shape;
 	EntityMotionState* MotionState;
-
-	virtual void RunTick(float dt);
 
 	virtual void RegisterToDynamicsWorld(btDynamicsWorld* world);
 	virtual void UnregisterFromDynamicsWorld(btDynamicsWorld* world);
