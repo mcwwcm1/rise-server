@@ -24,30 +24,31 @@ DynamicEntity* GetDynamicEntity(const std::string& id)
 	return dynamic_cast<DynamicEntity*>(e->second);
 }
 
-// registerstaticcollider <position> <radius>
+// This will not exist later once we have structure colliders defined in the db
+// registerstaticcollider <entityID> <position> <radius>
 void RegisterStaticCollider()
 {
-	btSphereShape* shape = new btSphereShape(Commands::GetArgument<float>());
+	std::string entityID = Commands::GetArgument<std::string>();
 	Double3 position     = Commands::GetArgument<Double3>();
+	btSphereShape* shape = new btSphereShape(Commands::GetArgument<float>());
 
-	auto staticColliders = World::Singleton->Entities.find("staticColliders");
+	auto entity = World::Singleton->Entities.find(entityID);
 
-	if (staticColliders == World::Singleton->Entities.end()) {
-		World::Singleton->RegisterEntity(new DynamicEntity("staticColliders", Double3(0, 0, 0), Quaternion::identity, 0));  // 0 mass = static object
-		staticColliders = World::Singleton->Entities.find("staticColliders");
-	}
+	if (entity == nullptr)
+		return;
 
-	DynamicEntity* e = dynamic_cast<DynamicEntity*>(staticColliders->second);
+	DynamicEntity* e = dynamic_cast<DynamicEntity*>(entity->second);
 	e->Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(position.x, position.y, position.z)), shape);
 }
 
 void RegisterStaticColliderParser(const std::string& arguments)
 {
-	std::string radiusString   = arguments.substr(0, arguments.find(' '));
-	std::string positionString = arguments.substr(arguments.find(' '));
+	auto parts = Split(arguments, '|');
 
-	float radius     = stof(radiusString);
-	Double3 position = Double3FromString(positionString);
+	Commands::ValidateArgumentCount(parts, 3);
+
+	Double3 position = Double3FromString(parts[1]);
+	float radius     = stof(parts[2]);
 
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
@@ -55,8 +56,9 @@ void RegisterStaticColliderParser(const std::string& arguments)
 	Commands::functionBuffer.Put(RegisterStaticCollider);
 
 	// Put arguments
-	Commands::argumentBuffer.Put(radius);
+	Commands::argumentBuffer.Put(parts[0]);  // EntityID
 	Commands::argumentBuffer.Put(position);
+	Commands::argumentBuffer.Put(radius);
 }
 
 // addforce <entityID> <force> <position>

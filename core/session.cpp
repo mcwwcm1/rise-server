@@ -132,11 +132,12 @@ void Session::OnWrite(boost::beast::error_code ec,
 	_buffer.consume(_buffer.size());
 	// Release the lock
 	_mutex.unlock();
+
+	DoRead();
 }
 
 void Session::OnSend(boost::shared_ptr<std::string const> const& ss)
 {
-	//printf("Send mutex locked\n");
 	// Grab a lock
 	_mutex.lock();
 	// We are not currently writing, so send this immediately
@@ -147,11 +148,5 @@ void Session::OnSend(boost::shared_ptr<std::string const> const& ss)
 
 void Session::Send(const std::string& str)
 {
-	const auto boostStr = boost::make_shared<std::string const>(std::move(str));
-	// Post our work to the strand, this ensures
-	// that the members of `this` will not be
-	// accessed concurrently.
-	boost::asio::post(_ws.get_executor(),
-	                  boost::beast::bind_front_handler(
-												&Session::OnSend, shared_from_this(), boostStr));
+	_ws.write(boost::asio::buffer(str));
 }

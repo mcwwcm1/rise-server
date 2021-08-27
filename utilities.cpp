@@ -78,20 +78,19 @@ Double3 RandomDouble3(Double3 min, Double3 max)
 
 Double3 RandomInUnitSphere()
 {
-	double u        = RandomDouble();
-	double v        = RandomDouble();
-	double theta    = u * 2.0 * M_PI;
-	double phi      = acos(2.0 * v - 1.0);
-	double r        = cbrt(RandomDouble());
+	return RandomUnitVector() * cbrt(RandomDouble(0, 1));  // Use cube root to avoid center clustering :D
+}
+
+Double3 RandomUnitVector()
+{
+	double theta    = RandomDouble(-M_PI, M_PI);
+	double phi      = acos(RandomDouble(-1, 1));
 	double sinTheta = sin(theta);
 	double cosTheta = cos(theta);
 	double sinPhi   = sin(phi);
 	double cosPhi   = cos(phi);
-	double x        = r * sinPhi * cosTheta;
-	double y        = r * sinPhi * sinTheta;
-	double z        = r * cosPhi;
 
-	return Double3(x, y, z);
+	return Double3(sinPhi * cosTheta, sinPhi * sinTheta, cosPhi);
 }
 
 unsigned int WeightedRandom(const std::vector<double>& weights)

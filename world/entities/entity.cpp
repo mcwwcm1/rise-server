@@ -2,17 +2,28 @@
 // Purpose: Implements entity.h
 
 #include "entity.h"
+#include "world/world.h"
 
-Entity::Entity() {}
+Entity::Entity() : Entity(Double3(0, 0, 0), Quaternion::identity) {}
 
-Entity::Entity(std::string id) : Entity(id, Double3(0, 0, 0), Quaternion::identity) {}
-
-Entity::Entity(std::string id, Double3 position, Quaternion rotation)
+Entity::Entity(Double3 position, Quaternion rotation)
 {
-	ID       = id;
+	ID       = World::GetNextID();
 	Position = position;
 	Rotation = rotation;
 }
+
+Entity::~Entity()
+{
+	World::Singleton->UnregisterEntity(this);
+}
+
+std::string Entity::GetDestructionCommand()
+{
+	return "DestroyEntity " + ID + "|";
+}
+
+void Entity::RunTick(float dt) {}
 
 void Entity::SubmitChange(std::string field, std::string change)
 {
@@ -23,13 +34,13 @@ void Entity::SubmitChange(std::string field, std::string change)
 void Entity::SetLocalPosition(const Double3& newPosition)
 {
 	Position = newPosition;
-	SubmitChange("position", newPosition.ToString());
+	SubmitChange("Position", newPosition.ToString());
 }
 
 void Entity::SetLocalRotation(const Quaternion& newRotation)
 {
 	Rotation = newRotation;
-	SubmitChange("rotation", newRotation.ToString());
+	SubmitChange("Rotation", newRotation.ToString());
 }
 
 Matrix4x4 Entity::GetTransformMatrix()
