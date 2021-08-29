@@ -3,9 +3,11 @@
 
 #include "bugswarmdistributor.h"
 #include "utilities.h"
+#include "world/world.h"
 
 void BugSwarmDistributor::Distribute(std::vector<Double3> positions)
 {
+	// Spawn entities
 	for (size_t p = 0; p < (positions.size() * MaxPerPosition) - Entities.size(); p++) {
 		for (int i = 0; i < MaxSpawnAttempts; i++) {
 			Double3 direction = Random::RandomInUnitSphere();

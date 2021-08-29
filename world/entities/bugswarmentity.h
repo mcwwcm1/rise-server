@@ -6,6 +6,7 @@
 #include "entity.h"
 #include "mysticmath/double3.h"
 #include "mysticmath/double2.h"
+#include "userentity.h"
 
 class BugSwarmEntity : public Entity
 {
@@ -17,6 +18,7 @@ class BugSwarmEntity : public Entity
 	int Capacity;  // The total number of bugs to spawn from this swarm
 	float MinSpeed, MaxSpeed;
 	Double3 TargetPosition;  // (Local, relative to entity) Bugs will trend towards this location
+	Entity* TargetEntity;    // Will override the TargetPosition
 
 	BugSwarmEntity();
 
@@ -25,6 +27,10 @@ class BugSwarmEntity : public Entity
 	virtual std::string GetCreationCommand() override;
 
 	virtual void RunTick(float dt);
-
+	virtual void CatchBug(UserEntity* user);
+	virtual void SetTargetPosition(const Double3& position);
+	virtual void SetTargetEntity(Entity* entity);
+	virtual void UntargetEntity();
+	virtual void SetRange(const Double3& range);
 	virtual void SubmitAllParameters();
 };

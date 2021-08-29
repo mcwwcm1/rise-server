@@ -25,12 +25,17 @@ class PhysicsSpace
 	btDiscreteDynamicsWorld* DynamicsWorld;
 
 	std::vector<DynamicEntity*> entities = std::vector<DynamicEntity*>(0);
+	std::unordered_map<std::string, btTypedConstraint*> Constraints;
 
 	double UpdateRate;
 	double FixedDT;
 
 	void RegisterEntity(DynamicEntity* boentitydy);
 	void UnregisterEntity(DynamicEntity* entity);
+
+	void RegisterConstraint(std::string id, btTypedConstraint* constraint);
+	void UnregisterConstraint(std::string id);
+	btTypedConstraint* GetConstraint(std::string id);
 
 	void RunTick();
 	void CheckCollision();

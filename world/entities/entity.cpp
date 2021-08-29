@@ -25,10 +25,13 @@ std::string Entity::GetDestructionCommand()
 
 void Entity::RunTick(float dt) {}
 
-void Entity::SubmitChange(std::string field, std::string change)
+void Entity::SubmitChange(std::string field, std::string change, bool override)
 {
-	Dirty              = true;
-	ChangeTable[field] = change;
+	Dirty = true;
+	if (override)
+		ChangeTable[field] = {change};
+	else
+		ChangeTable[field].push_back(change);
 }
 
 void Entity::SetLocalPosition(const Double3& newPosition)
@@ -48,17 +51,10 @@ Matrix4x4 Entity::GetTransformMatrix()
 	return GetTRSMatrix(Position, Rotation, Double3(1, 1, 1));
 }
 
-Double3 Entity::LocalPointToGlobal(Double3 point)
-{
-	return point * GetTransformMatrix();
-}
+Double3 Entity::LocalPointToGlobal(Double3 point) { return point * GetTransformMatrix(); }
+Quaternion Entity::LocalRotationToGlobal(Quaternion rotation) { return rotation * Rotation; }
+Double3 Entity::LocalVectorToGlobal(Double3 vector) { return vector * Rotation; }
 
-Quaternion Entity::LocalRotationToGlobal(Quaternion rotation)
-{
-	return rotation * this->Rotation;
-}
-
-Double3 Entity::LocalVectorToGlobal(Double3 vector)
-{
-	return vector * Rotation;
-}
+Double3 Entity::GlobalPointToLocal(Double3 point) { return point - Position * Rotation.Conjugate(); }
+Quaternion Entity::GlobalRotationToLocal(Quaternion rotation) { return rotation * Rotation.Conjugate(); }
+Double3 Entity::GlobalVectorToLocal(Double3 vector) { return vector * Rotation.Conjugate(); }

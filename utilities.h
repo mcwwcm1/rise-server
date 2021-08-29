@@ -15,6 +15,7 @@
 #include "mysticmath/double3.h"
 
 std::vector<std::string> Split(const std::string& str, char delimiter);
+std::string VectorToString(const std::vector<std::string> vec, char delimiter, bool trailingDelimiter = true);
 void BoostFail(boost::beast::error_code ec, char const* what);
 
 namespace Random

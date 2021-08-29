@@ -1,37 +1,47 @@
 // File: items.h
 // Purpose: Stores relevant item information that is pulled from the DB
 
+#pragma once
+
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include <iterator>
+#include <memory>
+#include <functional>
+
+struct ItemProperty {
+ public:
+	std::string Name;
+	double Value;  // I want this to be any arbitrary type ideally - Coffee :)
+	ItemProperty(std::string name, double value) : Name(name), Value(value){};
+};
 
 struct ItemInfo {
  public:
-	std::string ItemID;
-	std::vector<std::string> Tags;
-	bool Stackable;
-	size_t QupyValue;
-	size_t DalfitchDepth;
+	static std::unordered_map<std::string, ItemInfo*> RegisteredItems;
+
+	const std::string ItemID;
+	const std::vector<std::string> Tags;
+	const bool Stackable;
+	const size_t QupyValue;
+	const size_t DalfitchDepth;
+	std::vector<ItemProperty*> Properties;  // Should eventually be const
+
+	static ItemInfo* GetItemByID(std::string id);
+	static void RegisterItem(ItemInfo* item);
+
+	ItemInfo(std::string itemID, std::vector<std::string> tags, bool stackable, size_t qupyValue, size_t dalfitchDepth) : ItemID(itemID), Tags(tags), Stackable(stackable), QupyValue(qupyValue), DalfitchDepth(dalfitchDepth){};
 };
 
-std::unordered_map<std::string, ItemInfo*> RegisteredItems;
-
-ItemInfo* GetItemByID(std::string id)
-{
-	auto i = RegisteredItems.find(id);
-	if (i != RegisteredItems.end())
-		return i->second;
-
-	return nullptr;
-};
+void AddDummyItemData();
 
 struct ItemStack {
  public:
 	ItemInfo* Item;
 	size_t StackSize;
 
-	ItemStack(std::string itemID, size_t stackSize = 1) : Item(GetItemByID(itemID)), StackSize(stackSize){};
+	ItemStack() = default;
+	ItemStack(std::string itemID, size_t stackSize = 1) : Item(ItemInfo::GetItemByID(itemID)), StackSize(stackSize){};
 	ItemStack(ItemInfo* item, size_t stackSize = 1) : Item(item), StackSize(stackSize){};
 
 	size_t HeldCapacity() const;
@@ -41,20 +51,17 @@ struct ItemStack {
 struct Inventory {
  public:
 	size_t capacity;
-	std::unordered_map<std::string, ItemStack*> Items;
+	std::unordered_map<std::string, ItemStack> Items;
 
 #pragma region Item handling
-	// Returns weather this inventory contains the given items
+	// Returns whether this inventory contains the given items
 	bool HasItems(std::string itemID, size_t amount) const;
-	// Returns weather this inventory contains the given items
+	// Returns whether this inventory contains the given items
 	bool HasItems(ItemInfo* item, size_t amount) const;
-	// Returns weather this inventory contains the given item
+	// Returns whether this inventory contains the given item
 	bool HasItem(std::string itemID) const;
-	// Returns weather this inventory contains the given item
+	// Returns whether this inventory contains the given item
 	bool HasItem(ItemInfo* item) const;
-
-	ItemStack* GetItemStack(ItemInfo* item) const;
-	ItemStack* GetItemStack(std::string itemID) const;
 
 	// Returns whether there is enough capacity within this inventory to hold the given inventory
 	bool CanHoldInventory(const Inventory& inventory) const;
@@ -88,6 +95,10 @@ struct Inventory {
 	// Attempts to take an item from this inventory. This may fail, returning an empty stack.
 	ItemStack TakeItem(ItemInfo* item);
 #pragma endregion
+
+	std::function<void(ItemStack)> ItemChangedCallback;
+	std::function<void(ItemStack)> ItemAddedCallback;
+	std::function<void(ItemStack)> ItemRemovedCallback;
 
 	size_t RemainingCapacity() const;
 	size_t HeldCapacity() const;

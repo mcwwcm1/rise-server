@@ -15,6 +15,7 @@ class World
 {
  private:
 	long unsigned long static currentEntityIndex;  // :)
+	clock_t static lastSaveTime;
 
  public:
 	static World* Singleton;

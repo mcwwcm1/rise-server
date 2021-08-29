@@ -141,3 +141,21 @@ void AddDistanceConstraintParser(const std::string& arguments)
 
 	Commands::argumentBuffer.Put(distance);
 }
+
+// removeconstraint <constraintID>
+void RemoveConstraint()
+{
+	std::string constraintID = Commands::GetArgument<std::string>();
+
+	World::Singleton->Space->UnregisterConstraint(constraintID);
+}
+
+void RemoveConstraintParser(const std::string& arguments)
+{
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
+	// Put function pointer
+	Commands::functionBuffer.Put(RemoveConstraint);
+
+	Commands::argumentBuffer.Put(arguments);  // ConstraintID
+}

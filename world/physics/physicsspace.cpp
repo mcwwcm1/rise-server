@@ -44,10 +44,33 @@ void PhysicsSpace::UnregisterEntity(DynamicEntity* entity)
 	entity->UnregisterFromDynamicsWorld(DynamicsWorld);
 }
 
+void PhysicsSpace::RegisterConstraint(std::string id, btTypedConstraint* constraint)
+{
+	if (GetConstraint(id) != nullptr) {
+		printf("Warning: Attempted to register constraint but a constraint with the id %s is already registered!\n", id.c_str());
+		return;
+	}
+
+	Constraints[id] = constraint;
+}
+void PhysicsSpace::UnregisterConstraint(std::string id)
+{
+	if (GetConstraint(id) == nullptr) {
+		printf("Warning: Attempted to unregister constraint (%s) but it was not found!\n", id.c_str());
+		return;
+	}
+
+	Constraints.erase(id);
+}
+btTypedConstraint* PhysicsSpace::GetConstraint(std::string id)
+{
+	auto constraint = Constraints.find(id);
+	if (constraint == Constraints.end())
+		return nullptr;
+	return constraint->second;
+}
+
 void PhysicsSpace::RunTick()
 {
-	for (DynamicEntity* entity : entities)
-		entity->RunTick(FixedDT);
-
 	DynamicsWorld->stepSimulation(1 / UpdateRate, 0);  // Step simulation
 }

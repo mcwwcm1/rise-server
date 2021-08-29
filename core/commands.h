@@ -35,7 +35,7 @@ class PrimaryArgument
 	}
 
  private:
-	std::variant<int, float, double, std::string, Double3, Quaternion> mValue;
+	std::variant<int, float, double, size_t, std::string, Double3, Quaternion> mValue;
 };
 
 namespace Commands

@@ -35,11 +35,29 @@ using tcp           = boost::asio::ip::tcp;
 #include "primary/entityinstructions.h"
 #include "primary/userdata.h"
 
+// Include dumb shit
+#include "data/items.h"
+
 int main(int argc, char* argv[])
 {
 	//connection to the db. Just for testing, don't uncomment.
 	pqxx::connection dbConn("dbname=riseserver user=postgres password=ePU&#B%72j2nRhA$RpK!Hfu++8XYbGQv host=funnyanimalfacts.com port=5432");
 	printf("DB Connection Successful\n");
+
+	pqxx::work transaction{dbConn};
+
+	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = 'U-Blobfish';");
+
+	if (!response.empty()) {
+		for (auto bf : response)
+			std::cout << bf["qp"] << "\n";
+	} else {
+		std::cout << "NO BLOBFISH\n";
+		transaction.exec("INSERT INTO player(userid, qp, location) VALUES('U-Blobfish', 1000000, 'starterIsland');");
+		std::cout << "MADE BLOBFISH :D\n";
+	}
+
+	transaction.commit();
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
@@ -50,10 +68,15 @@ int main(int argc, char* argv[])
 	Commands::Register("setyaw", SetYawParser);
 	Commands::Register("registerstaticcollider", RegisterStaticColliderParser);
 	Commands::Register("addforce", AddForceParser);
-	Commands::Register("setowner", SetOwnerParser);
 	Commands::Register("adddistanceconstraint", AddDistanceConstraintParser);
+	Commands::Register("removeconstraint", RemoveConstraintParser);
 	Commands::Register("requestairship", RequestAirshipParser);
 	Commands::Register("setuserposition", SetUserPositionParser);
+	Commands::Register("sellitems", SellItemsParser);
+	Commands::Register("catchbug", CatchBugParser);
+	Commands::Register("userspawned", UserSpawnedParser);
+	Commands::Register("equipitem", EquipItemParser);
+	Commands::Register("dequipitem", DequipItemParser);
 	//-----------------------End of function initialization step------------------------------------------
 
 	// Check command line arguments
@@ -77,6 +100,10 @@ int main(int argc, char* argv[])
 	std::vector<std::thread> v;
 	v.reserve(threads - 1);
 	for (auto i = threads - 1; i > 0; --i) v.emplace_back([&ioc] { ioc.run(); });
+
+	return EXIT_SUCCESS;
+
+	AddDummyItemData();  // REMOVE THIS WHEN WE HAVE DB STUFF
 
 	std::chrono::milliseconds timespan(1000 / 20);  //defines sleep timespan in ms
 	while (true) {
