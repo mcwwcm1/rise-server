@@ -12,7 +12,6 @@
 #include <vector>
 #include <unordered_map>
 #include <chrono>
-#include <pqxx/pqxx>
 
 namespace beast     = boost::beast;
 namespace http      = beast::http;
@@ -21,6 +20,7 @@ namespace net       = boost::asio;
 using tcp           = boost::asio::ip::tcp;
 
 // Include core headers
+#include "core/database.h"
 #include "core/commands.h"
 #include "core/circularbuffer.h"
 #include "core/session.h"
@@ -40,25 +40,11 @@ using tcp           = boost::asio::ip::tcp;
 
 int main(int argc, char* argv[])
 {
-	//connection to the db. Just for testing, don't uncomment.
-	pqxx::connection dbConn("dbname=riseserver user=postgres password=ePU&#B%72j2nRhA$RpK!Hfu++8XYbGQv host=funnyanimalfacts.com port=5432");
-	printf("DB Connection Successful\n");
-
-	pqxx::work transaction{dbConn};
-
-	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = 'U-Blobfish';");
-
-	if (!response.empty()) {
-		for (auto bf : response)
-			std::cout << bf["qp"] << "\n";
-	} else {
-		std::cout << "NO BLOBFISH\n";
-		transaction.exec("INSERT INTO player(userid, qp, location) VALUES('U-Blobfish', 1000000, 'starterIsland');");
-		std::cout << "MADE BLOBFISH :D\n";
-	}
-
-	transaction.commit();
-
+	//debug db stuff
+	Database::dbConnect();
+	std::cout << "Blobfish has " << to_string(Database::getUserQpCount("U-Blobfish")) << "qpies" << std::endl;
+	std::cout << "Blobfish's location is " << to_string(Database::getUserLocation("U-Blobfish")) << std::endl;
+	
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
 	Commands::Register("echo", EchoParser);
