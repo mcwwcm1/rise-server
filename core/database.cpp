@@ -43,10 +43,10 @@ void alterUserQpCount(std::string userID, int64_t delta)
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = '" + transaction.quote(userID) + "';");
 	
-	currentQP = response.begin()["qp"].as(uint64_t);
+	uint64_t currentQP = response.begin()["qp"].as(uint64);
 	currentQP += delta;
 	
-	transaction.exec("UPDATE player SET qp = " + to_string(currentQP) + " WHERE userid = '" + transaction.quote(userID) + "';");
+	transaction.exec("UPDATE player SET qp = " + std::to_string(currentQP) + " WHERE userid = '" + transaction.quote(userID) + "';");
 	transaction.commit();
 }
 
@@ -58,12 +58,10 @@ std::string getUserLocation(std::string userID)
 	return response.begin()["location"].c_str();
 }
 
-std::string setUserLocation(std::string userID, std::string newLocation)
+void setUserLocation(std::string userID, std::string newLocation)
 {
 	pqxx::work transaction{*dbConn};
 	transaction.exec("UPDATE player SET location = " + transaction.quote(newLocation) + " WHERE userid = '" + transaction.quote(userID) + "';");
-	
-	return response.begin()["location"].c_str();
 }
 
 } // namespace Database
