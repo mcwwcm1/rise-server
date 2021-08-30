@@ -34,8 +34,10 @@ void RegisterStaticCollider()
 
 	auto entity = World::Singleton->Entities.find(entityID);
 
-	if (entity == nullptr)
+	if (entity == World::Singleton->Entities.end()) {
+		printf("Tried to attach static collider to non-existent entity!\n");
 		return;
+	}
 
 	DynamicEntity* e = dynamic_cast<DynamicEntity*>(entity->second);
 	e->Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(position.x, position.y, position.z)), shape);
