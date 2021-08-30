@@ -13,7 +13,7 @@ void dbConnect()
 	std::cout << "DB Connection Successful" << std::endl;
 }
 
-void createPlayer(std::string userID)
+void createPlayer(const std::string& userID)
 {
 	pqxx::work transaction{*dbConn};
 	
@@ -30,7 +30,7 @@ void createPlayer(std::string userID)
 	transaction.commit();
 }
 
-uint64_t getUserQpCount(std::string userID)
+uint64_t getUserQpCount(const std::string& userID)
 {
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = " + transaction.quote(userID) + ";");
@@ -38,7 +38,7 @@ uint64_t getUserQpCount(std::string userID)
 	return response.begin()["qp"].as<uint64_t>();
 }
 
-void alterUserQpCount(std::string userID, int64_t delta)
+void alterUserQpCount(const std::string& userID, int64_t delta)
 {
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = " + transaction.quote(userID) + ";");
@@ -50,7 +50,7 @@ void alterUserQpCount(std::string userID, int64_t delta)
 	transaction.commit();
 }
 
-std::string getUserLocation(std::string userID)
+std::string getUserLocation(const std::string& userID)
 {
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = " + transaction.quote(userID) + ";");
@@ -58,7 +58,7 @@ std::string getUserLocation(std::string userID)
 	return response.begin()["location"].c_str();
 }
 
-void setUserLocation(std::string userID, std::string newLocation)
+void setUserLocation(const std::string& userID, const std::string& newLocation)
 {
 	pqxx::work transaction{*dbConn};
 	transaction.exec("UPDATE player SET location = " + transaction.quote(newLocation) + " WHERE userid = " + transaction.quote(userID) + ";");
