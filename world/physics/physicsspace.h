@@ -6,6 +6,7 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/BulletDynamics/ConstraintSolver/btTypedConstraint.h>
 #include <vector>
+#include <unordered_map>
 
 #include "../entities/dynamicentity.h"
 
