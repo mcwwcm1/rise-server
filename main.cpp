@@ -42,8 +42,11 @@ int main(int argc, char* argv[])
 {
 	//debug db stuff
 	Database::dbConnect();
-	std::cout << "Blobfish has " << std::to_string(Database::getUserQpCount("U-Blobfish")) << "qpies" << std::endl;
+	std::cout << "Blobfish has " << std::to_string(Database::getUserQpCount("U-Blobfish")) << " qpies" << std::endl;
 	std::cout << "Blobfish's location is " << Database::getUserLocation("U-Blobfish") << std::endl;
+	std::cout << "Stealing Blobfish his qpies..." << std::endl;
+	Database::alterUserQpCount("U-Blobfish", 500000); //actually gives qpies, cause we're nice. :>
+	std::cout << "Blobfish now has " << std::to_string(Database::getUserQpCount("U-Blobfish")) << " qpies" << std::endl;
 	
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
