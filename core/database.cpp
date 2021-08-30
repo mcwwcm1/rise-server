@@ -62,6 +62,7 @@ void setUserLocation(std::string userID, std::string newLocation)
 {
 	pqxx::work transaction{*dbConn};
 	transaction.exec("UPDATE player SET location = " + transaction.quote(newLocation) + " WHERE userid = " + transaction.quote(userID) + ";");
+	transaction.commit();
 }
 
 } // namespace Database
