@@ -35,7 +35,7 @@ uint64_t getUserQpCount(std::string userID)
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = '" + transaction.quote(userID) + "';");
 	
-	return response.begin()["qp"].as(uint64_t);
+	return response.begin()["qp"].as<uint64_t>();
 }
 
 void alterUserQpCount(std::string userID, int64_t delta)
@@ -43,7 +43,7 @@ void alterUserQpCount(std::string userID, int64_t delta)
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = '" + transaction.quote(userID) + "';");
 	
-	uint64_t currentQP = response.begin()["qp"].as(uint64);
+	uint64_t currentQP = response.begin()["qp"].as<uint64_t>();
 	currentQP += delta;
 	
 	transaction.exec("UPDATE player SET qp = " + std::to_string(currentQP) + " WHERE userid = '" + transaction.quote(userID) + "';");
