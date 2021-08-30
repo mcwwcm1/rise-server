@@ -4,6 +4,7 @@
 #pragma once
 
 #include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/BulletDynamics/ConstraintSolver/btTypedConstraint.h>
 #include <vector>
 
 #include "../entities/dynamicentity.h"
