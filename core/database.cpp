@@ -29,8 +29,8 @@ void createPlayer(const std::string& userID, int qpCount, std::string location)
 		std::cout << "Created user '" + transaction.quote(userID) + "'";
 		
 		transaction.commit();
-	} catch (...) {
-		std::cout << "Error while inserting player into the DB User ID: '" << userID << "' Aborting transaction." << std::endl;
+	} catch (const std::exception& exception) {
+		std::cout << "Error while inserting player into the DB User ID: '" << userID << "' Aborting transaction." << std::endl << "Exception: " << std::endl << exception.what() << std::endl;
 		transaction.abort();
 	}
 }
@@ -49,8 +49,8 @@ void alterUserQpCount(const std::string& userID, int64_t delta)
 	try {
 		transaction.exec("UPDATE player SET qp = qp + " + std::to_string(delta) + " WHERE userid = " + transaction.quote(userID) + ";");
 		transaction.commit();
-	} catch (...) {
-		std::cout << "Error while altering user QP count. User ID: '" << userID << "' Aborting transaction." << std::endl;
+	} catch (const std::exception& exception) {
+		std::cout << "Error while altering user QP count. User ID: '" << userID << "' Aborting transaction." << std::endl << "Exception: " << std::endl << exception.what() << std::endl;
 		transaction.abort();
 	}
 }
@@ -69,8 +69,8 @@ void setUserLocation(const std::string& userID, const std::string& newLocation)
 	try {
 		transaction.exec("UPDATE player SET location = " + transaction.quote(newLocation) + " WHERE userid = " + transaction.quote(userID) + ";");
 		transaction.commit();
-	} catch (...) {
-		std::cout << "Error while setting user location. User ID: '" << userID << "' Location: '" << newLocation << "' Aborting transaction." << std::endl;
+	} catch (const std::exception& exception) {
+		std::cout << "Error while setting user location. User ID: '" << userID << "' Location: '" << newLocation << "' Aborting transaction." << std::endl << "Exception: " << std::endl << exception.what() << std::endl;
 		transaction.abort();
 	}
 }
@@ -80,7 +80,7 @@ void alterInventoryItemCount(const std::string& userID, const std::string& itemL
 	pqxx::work transaction{*dbConn};
 	
 	try {
-		pqxx::result foundItems = transaction.exec("SELECT * FROM inventory inv JOIN player p ON(inv.userid, p.id) JOIN item i ON(inv.itemid, i.id) WHERE p.userid = " + transaction.quote(userID) + " AND itemid = " + transaction.quote(itemLabel) + ";");
+		pqxx::result foundItems = transaction.exec("SELECT * FROM inventory inv JOIN player p ON(inv.userid = p.id) JOIN item i ON(inv.itemid = i.id) WHERE p.userid = " + transaction.quote(userID) + " AND i.label = " + transaction.quote(itemLabel) + ";");
 		
 		if (foundItems.empty()) {
 			//add the item
@@ -97,8 +97,8 @@ void alterInventoryItemCount(const std::string& userID, const std::string& itemL
 		}
 		
 		transaction.commit();
-	} catch (...) {
-		std::cout << "Error while altering inventory item count. User ID: '" << userID << "', Item ID: '" << itemLabel << "' Aborting transaction." << std::endl;
+	} catch (const std::exception& exception) {
+		std::cout << "Error while altering inventory item count. User ID: '" << userID << "', Item ID: '" << itemLabel << "' Aborting transaction." << std::endl << "Exception: " << std::endl << exception.what() << std::endl;
 		transaction.abort();
 	}
 }
@@ -119,8 +119,8 @@ void deletePlayer(const std::string& userID)
 		transaction.exec("DELETE FROM player WHERE id = " + transaction.quote(userID) + ";");
 		
 		transaction.commit();
-	} catch (...) {
-		std::cout << "Error while deleting player. User ID: '" << userID << "' Aborting transaction." << std::endl;
+	} catch (const std::exception& exception) {
+		std::cout << "Error while deleting player. User ID: '" << userID << "' Aborting transaction." << std::endl << "Exception: " << std::endl << exception.what() << std::endl;
 		transaction.abort();
 	}
 }
