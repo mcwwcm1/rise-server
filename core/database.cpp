@@ -7,13 +7,13 @@ pqxx::connection* dbConn;
 
 namespace Database
 {
-void dbConnect()
+void DbConnect()
 {
 	dbConn = new pqxx::connection("dbname=riseserver user=postgres password=ePU&#B%72j2nRhA$RpK!Hfu++8XYbGQv host=funnyanimalfacts.com port=5432");
 	std::cout << "DB Connection Successful" << std::endl;
 }
 
-void createPlayer(const std::string& userID, int qpCount, std::string location)
+void CreatePlayer(const std::string& userID, int qpCount, std::string location)
 {
 	pqxx::work transaction{*dbConn};
 	
@@ -35,7 +35,7 @@ void createPlayer(const std::string& userID, int qpCount, std::string location)
 	}
 }
 
-uint64_t getUserQpCount(const std::string& userID)
+uint64_t GetUserQpCount(const std::string& userID)
 {
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = " + transaction.quote(userID) + ";");
@@ -43,7 +43,7 @@ uint64_t getUserQpCount(const std::string& userID)
 	return response.begin()["qp"].as<uint64_t>();
 }
 
-void alterUserQpCount(const std::string& userID, int64_t delta)
+void AlterUserQpCount(const std::string& userID, int64_t delta)
 {
 	pqxx::work transaction{*dbConn};
 	try {
@@ -55,7 +55,7 @@ void alterUserQpCount(const std::string& userID, int64_t delta)
 	}
 }
 
-std::string getUserLocation(const std::string& userID)
+std::string GetUserLocation(const std::string& userID)
 {
 	pqxx::work transaction{*dbConn};
 	pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = " + transaction.quote(userID) + ";");
@@ -63,7 +63,7 @@ std::string getUserLocation(const std::string& userID)
 	return response.empty()? "" : response.begin()["location"].c_str();
 }
 
-void setUserLocation(const std::string& userID, const std::string& newLocation)
+void SetUserLocation(const std::string& userID, const std::string& newLocation)
 {
 	pqxx::work transaction{*dbConn};
 	try {
@@ -75,7 +75,7 @@ void setUserLocation(const std::string& userID, const std::string& newLocation)
 	}
 }
 
-void alterInventoryItemCount(const std::string& userID, const std::string& itemLabel, int delta)
+void AlterInventoryItemCount(const std::string& userID, const std::string& itemLabel, int delta)
 {
 	pqxx::work transaction{*dbConn};
 	
@@ -103,7 +103,7 @@ void alterInventoryItemCount(const std::string& userID, const std::string& itemL
 	}
 }
 
-uint64_t getInventoryItemCount(const std::string& userID, const std::string& itemLabel)
+uint64_t GetInventoryItemCount(const std::string& userID, const std::string& itemLabel)
 {
 	pqxx::work transaction{*dbConn};
 	pqxx::result itemAmounts = transaction.exec("SELECT inv.amount FROM inventory inv JOIN player p ON(inv.userid = p.id) JOIN item i ON(inv.itemid = i.id) WHERE p.userid = " + transaction.quote(userID) + " AND i.label = " + transaction.quote(itemLabel) + ";");
@@ -111,7 +111,7 @@ uint64_t getInventoryItemCount(const std::string& userID, const std::string& ite
 	return itemAmounts.empty()? 0 : itemAmounts.begin()["amount"].as<uint64_t>();
 }
 
-void deletePlayer(const std::string& userID)
+void DeletePlayer(const std::string& userID)
 {
 	pqxx::work transaction{*dbConn};
 	try {
@@ -125,7 +125,7 @@ void deletePlayer(const std::string& userID)
 	}
 }
 
-void getQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* userIDs, std::vector<uint64_t>* qpCounts) {
+void GetQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* userIDs, std::vector<uint64_t>* qpCounts) {
 	pqxx::work transaction{*dbConn};
 	pqxx::result leaderboardResults = transaction.exec("SELECT userid, qp FROM player ORDER BY qp DESC OFFSET " + std::to_string(from) + " LIMIT " + std::to_string(to - from) + ";");
 	//fill userIDs

@@ -40,26 +40,26 @@ using tcp           = boost::asio::ip::tcp;
 
 void testDB() {
 	Database::dbConnect();
-	std::cout << "Blobfish has " << std::to_string(Database::getUserQpCount("U-Blobfish")) << " qpies" << std::endl;
-	std::cout << "Blobfish's location is " << Database::getUserLocation("U-Blobfish") << std::endl;
+	std::cout << "Blobfish has " << std::to_string(Database::GetUserQpCount("U-Blobfish")) << " qpies" << std::endl;
+	std::cout << "Blobfish's location is " << Database::GetUserLocation("U-Blobfish") << std::endl;
 	
 	std::cout << "Stealing Blobfish his qpies..." << std::endl;
-	Database::alterUserQpCount("U-Blobfish", 500000); //actually gives qpies, cause we're nice. :>
-	std::cout << "Blobfish now has " << std::to_string(Database::getUserQpCount("U-Blobfish")) << " qpies" << std::endl;
+	Database::AlterUserQpCount("U-Blobfish", 500000); //actually gives qpies, cause we're nice. :>
+	std::cout << "Blobfish now has " << std::to_string(Database::GetUserQpCount("U-Blobfish")) << " qpies" << std::endl;
 	
 	std::cout << "Sending Blobfish to the Shadow Realm..." << std::endl;
-	Database::setUserLocation("U-Blobfish", "shadowRealm");
-	std::cout << "Blobfish's location is now " << Database::getUserLocation("U-Blobfish") << std::endl;
+	Database::SetUserLocation("U-Blobfish", "shadowRealm");
+	std::cout << "Blobfish's location is now " << Database::GetUserLocation("U-Blobfish") << std::endl;
 	
 	std::cout << "Giving Blobfish a BlobfishItem..." << std::endl;
-	Database::alterInventoryItemCount("U-Blobfish", "BlobfishItem", 1);
-	std::cout << "Blobfish now has " << std::to_string(Database::getInventoryItemCount("U-Blobfish", "BlobfishItem")) << " of BlobfishItem." << std::endl;
+	Database::AlterInventoryItemCount("U-Blobfish", "BlobfishItem", 1);
+	std::cout << "Blobfish now has " << std::to_string(Database::GetInventoryItemCount("U-Blobfish", "BlobfishItem")) << " of BlobfishItem." << std::endl;
 	
 	
 	std::cout << "Fetching Leaderboards..." << std::endl;
 	std::vector<uint64_t> moneys;
 	std::vector<std::string> people;
-	Database::getQpLeaderboard(0, 1, &people, &moneys);
+	Database::GetQpLeaderboard(0, 1, &people, &moneys);
 	for (auto name : people) {
 		std::cout << name << std::endl;
 	}
