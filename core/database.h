@@ -23,4 +23,7 @@ void setUserLocation(const std::string& userID, const std::string& newLocation);
 void alterInventoryItemCount(const std::string& userID, const std::string& itemLabel, int amount);
 //retrieves the amount a player has of an item in their inventory.
 uint64_t getInventoryItemCount(const std::string& userID, const std::string& itemLabel);
+//deletes a player and all associated data from the database.
+//this is irreversible.
+void deletePlayer(const std::string& userID);
 }

@@ -30,6 +30,7 @@ void createPlayer(const std::string& userID, int qpCount, std::string location)
 		
 		transaction.commit();
 	} catch (...) {
+		std::cout << "Error while inserting player into the DB User ID: '" << userID << "' Aborting transaction." << std::endl;
 		transaction.abort();
 	}
 }
@@ -49,6 +50,7 @@ void alterUserQpCount(const std::string& userID, int64_t delta)
 		transaction.exec("UPDATE player SET qp = qp + " + std::to_string(delta) + " WHERE userid = " + transaction.quote(userID) + ";");
 		transaction.commit();
 	} catch (...) {
+		std::cout << "Error while altering user QP count. User ID: '" << userID << "' Aborting transaction." << std::endl;
 		transaction.abort();
 	}
 }
@@ -68,6 +70,7 @@ void setUserLocation(const std::string& userID, const std::string& newLocation)
 		transaction.exec("UPDATE player SET location = " + transaction.quote(newLocation) + " WHERE userid = " + transaction.quote(userID) + ";");
 		transaction.commit();
 	} catch (...) {
+		std::cout << "Error while setting user location. User ID: '" << userID << "' Location: '" << newLocation << "' Aborting transaction." << std::endl;
 		transaction.abort();
 	}
 }
@@ -95,6 +98,7 @@ void alterInventoryItemCount(const std::string& userID, const std::string& itemL
 		
 		transaction.commit();
 	} catch (...) {
+		std::cout << "Error while altering inventory item count. User ID: '" << userID << "', Item ID: '" << itemLabel << "' Aborting transaction." << std::endl;
 		transaction.abort();
 	}
 }
