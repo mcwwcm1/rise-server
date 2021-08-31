@@ -54,6 +54,18 @@ void testDB() {
 	std::cout << "Giving Blobfish a BlobfishItem..." << std::endl;
 	Database::alterInventoryItemCount("U-Blobfish", "BlobfishItem", 1);
 	std::cout << "Blobfish now has " << std::to_string(Database::getInventoryItemCount("U-Blobfish", "BlobfishItem")) << " of BlobfishItem." << std::endl;
+	
+	
+	std::cout << "Fetching Leaderboards..." << std::endl;
+	std::vector<uint64_t> moneys;
+	std::vector<std::string> people;
+	Database::getQpLeaderboard(0, 1, &people, &moneys);
+	for (auto name : people) {
+		std::cout << name << std::endl;
+	}
+	for (auto qp : moneys) {
+		std::cout << std::to_string(qp) << std::endl;
+	}
 }
 
 int main(int argc, char* argv[])

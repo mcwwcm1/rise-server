@@ -1,5 +1,6 @@
 
 #include <string>
+#include <vector>
 
 namespace Database
 {
@@ -26,4 +27,8 @@ uint64_t getInventoryItemCount(const std::string& userID, const std::string& ite
 //deletes a player and all associated data from the database.
 //this is irreversible.
 void deletePlayer(const std::string& userID);
+//Appends user IDs and their qp counts, sorted by qp count in descending order to the two passed vectors.
+//The 'from' parameter gives the first spot to be included (0-inexed) and the 'to' parameter gives the spot to stop at. (it will not be included)
+//This means passing from = 10 and to = 12 will return places 10 and 11.
+void getQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* userIDs, std::vector<uint64_t>* qpCounts);
 }

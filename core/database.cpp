@@ -125,4 +125,21 @@ void deletePlayer(const std::string& userID)
 	}
 }
 
+void getQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* userIDs, std::vector<uint64_t>* qpCounts) {
+	pqxx::work transaction{*dbConn};
+	pqxx::result leaderboardResults = transaction.exec("SELECT userid, qp FROM player ORDER BY qp DESC OFFSET " + std::to_string(from) + " LIMIT " + std::to_string(to - from) + ";");
+	//fill userIDs
+	if (userIDs) {
+		for (auto row : leaderboardResults) {
+			userIDs->push_back(row["userid"].c_str());
+		}
+	}
+	//fill qpCounts
+	if (qpCounts) {
+		for (auto row : leaderboardResults) {
+			qpCounts->push_back(row["qp"].as<uint64_t>());
+		}
+	}
+}
+
 } // namespace Database
