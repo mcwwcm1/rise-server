@@ -111,4 +111,18 @@ uint64_t getInventoryItemCount(const std::string& userID, const std::string& ite
 	return itemAmounts.empty()? 0 : itemAmounts.begin()["amount"].as<uint64_t>();
 }
 
+void deletePlayer(const std::string& userID)
+{
+	pqxx::work transaction{*dbConn};
+	try {
+		//TODO: Properly clean up tables that need it once they exist, as default behavior is to delete every column that the deleted entry gets referenced in.
+		transaction.exec("DELETE FROM player WHERE id = " + transaction.quote(userID) + ";");
+		
+		transaction.commit();
+	} catch (...) {
+		std::cout << "Error while deleting player. User ID: '" << userID << "' Aborting transaction." << std::endl;
+		transaction.abort();
+	}
+}
+
 } // namespace Database
