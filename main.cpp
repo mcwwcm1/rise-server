@@ -60,7 +60,7 @@ void testDB()
 	std::cout << "Fetching Leaderboards..." << std::endl;
 	std::vector<uint64_t> moneys;
 	std::vector<std::string> people;
-	Database::GetQpLeaderboard(0, 1, &people, &moneys);
+	Database::GetQpLeaderboard(0, 100, &people, &moneys);
 	for (auto name : people) {
 		std::cout << name << std::endl;
 	}
