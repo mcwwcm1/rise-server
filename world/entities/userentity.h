@@ -38,7 +38,7 @@ class UserEntity : public Entity
 	void InventoryItemRemoved(ItemStack item);
 	void InventoryItemChanged(ItemStack item);
 
-	void SendInventoryData();
+	void SendClearInventory();
 
 	virtual std::string GetCreationCommand();
 };

@@ -28,10 +28,14 @@ void Entity::RunTick(float dt) {}
 void Entity::SubmitChange(std::string field, std::string change, bool override)
 {
 	Dirty = true;
-	if (override)
-		ChangeTable[field] = {change};
-	else
-		ChangeTable[field].push_back(change);
+	if (override) {
+		for (auto it = ChangeTable.end(); it != ChangeTable.begin(); --it) {
+			if (it->first == field)
+				ChangeTable.erase(it);
+		}
+	}
+
+	ChangeTable.push_back({field, change});
 }
 
 void Entity::SetLocalPosition(const Double3& newPosition)

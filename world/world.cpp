@@ -7,6 +7,8 @@
 #include "world/distributors/distributor.h"
 #include "core/send.h"
 #include "entities/structureentity.h"
+#include <thread>
+#include <chrono>
 
 unsigned long long World::currentEntityIndex = 0;
 clock_t World::lastSaveTime                  = 0;
@@ -25,6 +27,11 @@ World::World()
 
 void World::RunTick()
 {
+	if (!initialized) {
+		Send("CleanAll");
+		initialized = true;
+	}
+
 	// Tick Entities
 	for (auto entity : Entities)
 		entity.second->RunTick(Space->FixedDT);
@@ -54,8 +61,7 @@ void World::RunTick()
 		if (entity.second->Dirty && !entity.second->DontSync) {
 			std::string changes = "ChangeTable " + entity.second->ID + "|";
 			for (auto change : entity.second->ChangeTable) {
-				for (auto val : change.second)
-					changes += change.first + "|" + val + "|";
+				changes += change.first + "|" + change.second + "|";
 			}
 
 			Send(changes);

@@ -26,7 +26,7 @@ class Entity
 
 	std::string ID;
 	std::optional<std::string> Owner;
-	std::unordered_map<std::string, std::vector<std::string>> ChangeTable;
+	std::vector<std::pair<std::string, std::string>> ChangeTable;
 	bool Dirty = false;
 
 	Double3 Position;

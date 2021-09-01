@@ -3,6 +3,7 @@
 
 #include "userentity.h"
 #include <algorithm>
+#include "core/database.h"
 
 UserEntity::UserEntity(std::string userID) : Entity()
 {
@@ -14,6 +15,8 @@ UserEntity::UserEntity(std::string userID) : Entity()
 	UserInventory->ItemRemovedCallback = [&](ItemStack is) { InventoryItemRemoved(is); };
 	UserInventory->ItemChangedCallback = [&](ItemStack is) { InventoryItemChanged(is); };
 
+	SendClearInventory();
+
 	UserInventory->AddItem("starterNet");
 	UserInventory->AddItem("starterGrapple");
 	UserInventory->AddItem("starterZap");
@@ -23,11 +26,16 @@ UserEntity::UserEntity(std::string userID) : Entity()
 	EquipmentSlots.reserve(2);
 	EquipmentSlots.emplace_back(std::vector<std::string>({"equippable"}));
 	EquipmentSlots.emplace_back(std::vector<std::string>({"equippable"}));
+
+	Database::CreatePlayer(UserID, 0, "starterIsland");
+	Qupies = Database::GetUserQpCount(UserID);
+	SubmitChange("QupyCount", std::to_string(Qupies));
 }
 
 void UserEntity::AddQupies(size_t amount)
 {
 	Qupies += amount;
+	Database::AlterUserQpCount(UserID, amount);
 	SubmitChange("QupyCount", std::to_string(amount));
 }
 
@@ -86,17 +94,24 @@ bool UserEntity::HasItemEquipped(std::string itemID)
 
 void UserEntity::InventoryItemAdded(ItemStack item)
 {
+	printf("Adding %s to %s\n", item.Item->ItemID.c_str(), UserID.c_str());
 	SubmitChange("InvAdd", item.Item->ItemID + ":" + std::to_string(item.StackSize), false);
 }
 
 void UserEntity::InventoryItemRemoved(ItemStack item)
 {
+	printf("Removing %s from %s\n", item.Item->ItemID.c_str(), UserID.c_str());
 	SubmitChange("InvRemove", item.Item->ItemID, false);
 }
 
 void UserEntity::InventoryItemChanged(ItemStack item)
 {
 	SubmitChange("InvChange", item.Item->ItemID + ":" + std::to_string(item.StackSize), false);
+}
+
+void UserEntity::SendClearInventory()
+{
+	SubmitChange("InvClear", "");
 }
 
 std::string UserEntity::GetCreationCommand()
