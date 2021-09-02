@@ -41,7 +41,6 @@ using tcp           = boost::asio::ip::tcp;
 
 void testDB()
 {
-	Database::DbConnect();
 	std::cout << "Blobfish has " << std::to_string(Database::GetUserQpCount("U-Blobfish")) << " qpies" << std::endl;
 	std::cout << "Blobfish's location is " << Database::GetUserLocation("U-Blobfish") << std::endl;
 
@@ -71,10 +70,10 @@ void testDB()
 
 int main(int argc, char* argv[])
 {
-	//debug db stuff
-	//testDB();
 
 	Database::DbConnect();
+	//debug db stuff
+	//testDB();
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
