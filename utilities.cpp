@@ -30,7 +30,7 @@ std::string VectorToString(const std::vector<std::string> vec, char delimiter, b
 
 void BoostFail(boost::beast::error_code ec, char const* what)
 {
-	printf("Boost failure: %s\n", ec.message().c_str());
+	printf("Boost failure (%s): %s\n", what, ec.message().c_str());
 }
 
 std::string Vector3ToString(const btVector3& vec)
