@@ -1,5 +1,5 @@
 #Environment
-CXX = g++-11
+CXX = g++
 DBFLAGS = -g -Wall -pthread -std=c++20 -DBT_USE_DOUBLE_PRECISION
 BDFLAGS = -Wall -o2 -pthread -std=c++20
 ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
