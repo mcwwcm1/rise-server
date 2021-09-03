@@ -36,4 +36,6 @@ class World
 	bool RegisterEntity(Entity* entity);
 	bool UnregisterEntity(std::string entityId);
 	bool UnregisterEntity(Entity* entity);
+	Entity* GetEntity(std::string entityId);
+	bool HasEntity(std::string entityId);
 };

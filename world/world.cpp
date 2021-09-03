@@ -21,7 +21,9 @@ World::World()
 	StructureEntity* starterIsland = new StructureEntity(Double3(0, 0, 0), Quaternion::identity);
 	RegisterEntity(starterIsland);
 
-	auto d = new BugSwarmDistributor(35, 2, 10, "wobbleFly");
+	auto d = new BugSwarmDistributor(35, 2, 25, "WobbleFly");
+	Distributors.push_back(d);
+	d = new BugSwarmDistributor(35, 2, 25, "Crystallis");
 	Distributors.push_back(d);
 }
 
@@ -48,7 +50,7 @@ void World::RunTick()
 	}
 
 	for (Distributor* d : Distributors) {
-		//d->CleanupDistant(positions);
+		d->CleanupDistant(positions);
 		d->TryDistribute(positions);
 	}
 
@@ -145,3 +147,12 @@ bool World::UnregisterEntity(Entity* entity)
 
 	return true;
 }
+
+Entity* World::GetEntity(std::string entityId)
+{
+	auto found = Entities.find(entityId);
+	if (found != Entities.end())
+		return found->second;
+	return nullptr;
+}
+bool World::HasEntity(std::string entityId) { return GetEntity(entityId) != nullptr; }
