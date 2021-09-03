@@ -17,8 +17,8 @@ class BugSwarmEntity : public Entity
 	int MaxBugs;   // The maximum bugs allowed out at any given time
 	int Capacity;  // The total number of bugs to spawn from this swarm
 	float MinSpeed, MaxSpeed;
-	Double3 TargetPosition;  // (Local, relative to entity) Bugs will trend towards this location
-	Entity* TargetEntity;    // Will override the TargetPosition
+	Double3 TargetPosition;          // (Local, relative to entity) Bugs will trend towards this location
+	Entity* TargetEntity = nullptr;  // Will override the TargetPosition
 
 	BugSwarmEntity();
 
