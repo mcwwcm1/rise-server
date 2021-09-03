@@ -13,7 +13,7 @@ BugSwarmEntity::~BugSwarmEntity()
 
 std::string BugSwarmEntity::GetCreationCommand()
 {
-	return "SpawnEntity " + BugID + "|" + ID + "|";
+	return "SpawnEntity BugSwarm|" + ID + "|";
 }
 
 void BugSwarmEntity::RunTick(float dt)
@@ -21,7 +21,7 @@ void BugSwarmEntity::RunTick(float dt)
 	if (TargetEntity == nullptr) {
 		// Attract entities
 		for (auto u : World::Singleton->Users) {
-			if (u.second->HasItemEquipped("starterZap"))  // BAD! Use property system to find how much an item attracts bugs
+			if (u.second->HasItemEquipped("StarterZap"))  // BAD! Use property system to find how much an item attracts bugs
 			{
 				if ((Position - u.second->Position).Magnitude() < 30) {
 					SetTargetEntity(u.second);
@@ -32,7 +32,7 @@ void BugSwarmEntity::RunTick(float dt)
 	} else {
 		UserEntity* user = dynamic_cast<UserEntity*>(TargetEntity);
 		if (user != nullptr) {
-			if (!user->HasItemEquipped("starterZap")) {
+			if (!user->HasItemEquipped("StarterZap")) {
 				UntargetEntity();
 			}
 		}
@@ -87,4 +87,5 @@ void BugSwarmEntity::SubmitAllParameters()
 	SubmitChange("BSCapacity", std::to_string(Capacity));
 	SubmitChange("BSSpeed", Double2(MinSpeed, MaxSpeed).ToString());
 	SubmitChange("BSTarget", TargetPosition.ToString());
+	SubmitChange("BSAddBug", BugID);
 }
