@@ -16,18 +16,20 @@ ItemInfo* ItemInfo::GetItemByID(std::string id)
 // Not staying, DB FIX :D This comment means nothing. I'm numb.
 void AddDummyItemData()
 {
-	ItemInfo::RegisterItem(new ItemInfo("starterNet", std::vector<std::string>({"equippable", "bugNet"}), false, 25, 5));
-	ItemInfo::RegisterItem(new ItemInfo("starterGrapple", std::vector<std::string>({"equippable", "grapple"}), false, 25, 8));
-	auto zapzap = new ItemInfo("starterZap", std::vector<std::string>({"equippable", "bugZapper"}), false, 25, 5);
-	zapzap->Properties.push_back(new ItemProperty("attractsBugs", 1));
+	ItemInfo::RegisterItem(new ItemInfo("StarterNet", std::vector<std::string>({"equippable", "bugNet"}), false, 25, 5));
+	ItemInfo::RegisterItem(new ItemInfo("StarterGrapple", std::vector<std::string>({"equippable", "grapple"}), false, 25, 8));
+	auto zapzap = new ItemInfo("StarterZap", std::vector<std::string>({"equippable", "bugZapper"}), false, 25, 5);
+	zapzap->Properties.push_back(new ItemProperty("AttractsBugs", 1));
 	ItemInfo::RegisterItem(zapzap);
-	ItemInfo::RegisterItem(new ItemInfo("flareLauncher", std::vector<std::string>({"equippable", "flareLauncher"}), false, 30, 10));
-	ItemInfo::RegisterItem(new ItemInfo("wobbleFly", std::vector<std::string>({"bug"}), true, 5, 1));
+	ItemInfo::RegisterItem(new ItemInfo("FlareLauncher", std::vector<std::string>({"equippable", "flareLauncher"}), false, 30, 10));
+	ItemInfo::RegisterItem(new ItemInfo("WobbleFly", std::vector<std::string>({"bug"}), true, 5, 1));
+	ItemInfo::RegisterItem(new ItemInfo("Crystallis", std::vector<std::string>({"bug"}), true, 8, 1));
 }
 
 void ItemInfo::RegisterItem(ItemInfo* item)
 {
 	RegisteredItems[item->ItemID] = item;
+	printf("registered item %s\n", item->ItemID.c_str());
 	// std::string tags              = VectorToString(item->Tags, '|');
 	// Send("SetItemTags " + item->ItemID + "|" + tags + "|");
 	// Send("SetItemStackable " + item->ItemID + "|" + std::to_string(item->Stackable) + "|");
@@ -123,7 +125,7 @@ ItemStack Inventory::TakeItems(ItemInfo* item, size_t amount)
 size_t Inventory::RemainingCapacity() const { return capacity - HeldCapacity(); }
 size_t Inventory::HeldCapacity() const
 {
-	size_t currentCount;
+	size_t currentCount = 0;
 	for (auto i : Items)
 		currentCount += i.second.HeldCapacity();
 

@@ -15,7 +15,8 @@ Entity::Entity(Double3 position, Quaternion rotation)
 
 Entity::~Entity()
 {
-	World::Singleton->UnregisterEntity(this);
+	if (World::Singleton->HasEntity(ID))
+		World::Singleton->UnregisterEntity(this);
 }
 
 std::string Entity::GetDestructionCommand()
@@ -28,10 +29,11 @@ void Entity::RunTick(float dt) {}
 void Entity::SubmitChange(std::string field, std::string change, bool override)
 {
 	Dirty = true;
-	if (override) {
+	if (override && false) {
 		for (auto it = ChangeTable.end(); it != ChangeTable.begin(); --it) {
-			if (it->first == field)
+			if (it->first == field) {
 				ChangeTable.erase(it);
+			}
 		}
 	}
 

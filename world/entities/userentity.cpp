@@ -7,9 +7,11 @@
 
 UserEntity::UserEntity(std::string userID) : Entity()
 {
+	printf("Creating user %s\n", userID.c_str());
 	UserID = userID;
 
-	UserInventory = new Inventory();
+	UserInventory           = new Inventory();
+	UserInventory->capacity = 1000000000;  // Practically infinite space for now.
 
 	UserInventory->ItemAddedCallback   = [&](ItemStack is) { InventoryItemAdded(is); };
 	UserInventory->ItemRemovedCallback = [&](ItemStack is) { InventoryItemRemoved(is); };
@@ -17,10 +19,10 @@ UserEntity::UserEntity(std::string userID) : Entity()
 
 	SendClearInventory();
 
-	UserInventory->AddItem("starterNet");
-	UserInventory->AddItem("starterGrapple");
-	UserInventory->AddItem("starterZap");
-	UserInventory->AddItem("flareLauncher");
+	UserInventory->AddItem("StarterNet");
+	UserInventory->AddItem("StarterGrapple");
+	UserInventory->AddItem("StarterZap");
+	UserInventory->AddItem("FlareLauncher");
 
 	// Create equipment slots that accept "Equippable" items
 	EquipmentSlots.reserve(2);
@@ -36,7 +38,7 @@ void UserEntity::AddQupies(size_t amount)
 {
 	Qupies += amount;
 	Database::AlterUserQpCount(UserID, amount);
-	SubmitChange("QupyCount", std::to_string(amount));
+	SubmitChange("QupyCount", std::to_string(Qupies));
 }
 
 bool UserEntity::EquipItem(std::string itemID, size_t slotIndex)
