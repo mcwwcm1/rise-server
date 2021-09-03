@@ -31,4 +31,6 @@ void DeletePlayer(const std::string& userID);
 //The 'from' parameter gives the first spot to be included (0-inexed) and the 'to' parameter gives the spot to stop at. (it will not be included)
 //This means passing from = 10 and to = 12 will return places 10 and 11.
 void GetQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* userIDs, std::vector<uint64_t>* qpCounts);
+//returns the total value of qpies of all current users combined
+uint64_t GetQpAbsoluteTotal();
 }

@@ -142,4 +142,12 @@ void GetQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* user
 	}
 }
 
+uint64_t GetQpAbsoluteTotal()
+{
+	pqxx::work transaction{*dbConn};
+	pqxx::result totalsResult = transaction.exec("SELECT SUM(qp) FROM player;");
+	
+	return totalsResult.begin()["sum"].as<uint64_t>();
+}
+
 } // namespace Database
