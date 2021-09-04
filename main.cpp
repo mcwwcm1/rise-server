@@ -12,7 +12,6 @@
 #include <vector>
 #include <unordered_map>
 #include <chrono>
-#include <pqxx/pqxx>
 
 namespace beast     = boost::beast;
 namespace http      = beast::http;
@@ -21,6 +20,7 @@ namespace net       = boost::asio;
 using tcp           = boost::asio::ip::tcp;
 
 // Include core headers
+#include "core/database.h"
 #include "core/commands.h"
 #include "core/circularbuffer.h"
 #include "core/session.h"
@@ -34,12 +34,46 @@ using tcp           = boost::asio::ip::tcp;
 #include "primary/echoto.h"
 #include "primary/entityinstructions.h"
 #include "primary/userdata.h"
+#include "primary/leaderboards.h"
+
+// Include dumb shit
+#include "data/items.h"
+
+void testDB()
+{
+	std::cout << "Blobfish has " << std::to_string(Database::GetUserQpCount("U-Blobfish")) << " qpies" << std::endl;
+	std::cout << "Blobfish's location is " << Database::GetUserLocation("U-Blobfish") << std::endl;
+
+	std::cout << "Stealing Blobfish his qpies..." << std::endl;
+	Database::AlterUserQpCount("U-Blobfish", 500000);  //actually gives qpies, cause we're nice. :>
+	std::cout << "Blobfish now has " << std::to_string(Database::GetUserQpCount("U-Blobfish")) << " qpies" << std::endl;
+
+	std::cout << "Sending Blobfish to the Shadow Realm..." << std::endl;
+	Database::SetUserLocation("U-Blobfish", "shadowRealm");
+	std::cout << "Blobfish's location is now " << Database::GetUserLocation("U-Blobfish") << std::endl;
+
+	std::cout << "Giving Blobfish a BlobfishItem..." << std::endl;
+	Database::AlterInventoryItemCount("U-Blobfish", "BlobfishItem", 1);
+	std::cout << "Blobfish now has " << std::to_string(Database::GetInventoryItemCount("U-Blobfish", "BlobfishItem")) << " of BlobfishItem." << std::endl;
+
+	std::cout << "Fetching Leaderboards..." << std::endl;
+	std::vector<uint64_t> moneys;
+	std::vector<std::string> people;
+	Database::GetQpLeaderboard(0, 100, &people, &moneys);
+	for (auto name : people) {
+		std::cout << name << std::endl;
+	}
+	for (auto qp : moneys) {
+		std::cout << std::to_string(qp) << std::endl;
+	}
+}
 
 int main(int argc, char* argv[])
 {
-	//connection to the db. Just for testing, don't uncomment.
-	pqxx::connection dbConn("dbname=riseserver user=postgres password=ePU&#B%72j2nRhA$RpK!Hfu++8XYbGQv host=funnyanimalfacts.com port=5432");
-	printf("DB Connection Successful\n");
+
+	Database::DbConnect();
+	//debug db stuff
+	//testDB();
 
 	//-------------------------Intialize function parsing map, array and buffers---------------------------
 	//Populate parseMap
@@ -50,10 +84,16 @@ int main(int argc, char* argv[])
 	Commands::Register("setyaw", SetYawParser);
 	Commands::Register("registerstaticcollider", RegisterStaticColliderParser);
 	Commands::Register("addforce", AddForceParser);
-	Commands::Register("setowner", SetOwnerParser);
 	Commands::Register("adddistanceconstraint", AddDistanceConstraintParser);
+	Commands::Register("removeconstraint", RemoveConstraintParser);
 	Commands::Register("requestairship", RequestAirshipParser);
 	Commands::Register("setuserposition", SetUserPositionParser);
+	Commands::Register("sellitems", SellItemsParser);
+	Commands::Register("catchbug", CatchBugParser);
+	Commands::Register("userspawned", UserSpawnedParser);
+	Commands::Register("equipitem", EquipItemParser);
+	Commands::Register("dequipitem", DequipItemParser);
+	Commands::Register("updateleaderboard", UpdateLeaderboardParser);
 	//-----------------------End of function initialization step------------------------------------------
 
 	// Check command line arguments
@@ -78,20 +118,23 @@ int main(int argc, char* argv[])
 	v.reserve(threads - 1);
 	for (auto i = threads - 1; i > 0; --i) v.emplace_back([&ioc] { ioc.run(); });
 
+	AddDummyItemData();  // REMOVE THIS WHEN WE HAVE DB STUFF
+
 	std::chrono::milliseconds timespan(1000 / 20);  //defines sleep timespan in ms
 	while (true) {
-		{
-			std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+		std::this_thread::sleep_for(timespan);
 
-			// Iterate over all elements in function buffer until empty
-			while (!Commands::functionBuffer.Empty()) {
-				Commands::functionBuffer.Get()();
-			}
+		std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
-			World::Singleton->RunTick();
+		// Iterate over all elements in function buffer until empty
+		while (!Commands::functionBuffer.Empty()) {
+			Commands::functionBuffer.Get()();
 		}
 
-		std::this_thread::sleep_for(timespan);
+		if (Session::GetHeadless() == nullptr)
+			continue;
+
+		World::Singleton->RunTick();
 	}
 	return EXIT_SUCCESS;
 }

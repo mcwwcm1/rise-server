@@ -15,6 +15,8 @@ class World
 {
  private:
 	long unsigned long static currentEntityIndex;  // :)
+	clock_t static lastSaveTime;
+	bool initialized                             = false;
 
  public:
 	static World* Singleton;
@@ -34,4 +36,6 @@ class World
 	bool RegisterEntity(Entity* entity);
 	bool UnregisterEntity(std::string entityId);
 	bool UnregisterEntity(Entity* entity);
+	Entity* GetEntity(std::string entityId);
+	bool HasEntity(std::string entityId);
 };

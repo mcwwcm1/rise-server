@@ -8,7 +8,7 @@
 class DistanceConstraint : public btPoint2PointConstraint
 {
  protected:
-	btScalar m_distance;
+	btScalar m_distance = 0.0;
 
  public:
 	DistanceConstraint(DynamicEntity& entity1, DynamicEntity& entity2, const btVector3& pivotInA, const btVector3& pivotInB, btScalar dist)

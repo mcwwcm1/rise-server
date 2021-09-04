@@ -8,25 +8,24 @@
 #include "utilities.h"
 #include "world/world.h"
 
-// setowner <entityID> <ownerID>
-void SetOwner()
+// catchbug <entityID> <userID>
+void CatchBug()
 {
-	std::string entity = Commands::GetArgument<std::string>();
-	std::string owner  = Commands::GetArgument<std::string>();
+	std::string entityID = Commands::GetArgument<std::string>();
+	std::string userID   = Commands::GetArgument<std::string>();
 
-	if (World::Singleton->Entities.find(entity) ==
-	    World::Singleton->Entities.end()) {
-		// Entity is not present in world D:
-		printf("Attempted to set owner of non-existent entity (%s) to %s\n",
-		       entity.c_str(),
-		       owner.c_str());
-		return;
-	}
+	auto entityPair = World::Singleton->Entities.find(entityID);
+	auto userPair   = World::Singleton->Users.find(userID);
 
-	World::Singleton->Entities[entity]->Owner = owner;
+	if (entityPair == World::Singleton->Entities.end() || userPair == World::Singleton->Users.end()) return;
+
+	BugSwarmEntity* bugSwarm = dynamic_cast<BugSwarmEntity*>(entityPair->second);
+
+	if (bugSwarm != nullptr)
+		bugSwarm->CatchBug(userPair->second);
 }
 
-void SetOwnerParser(const std::string& arguments)
+void CatchBugParser(const std::string& arguments)
 {
 	auto parts = Split(arguments, '|');
 	Commands::ValidateArgumentCount(parts, 2);
@@ -34,8 +33,8 @@ void SetOwnerParser(const std::string& arguments)
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	Commands::functionBuffer.Put(SetOwner);
+	Commands::functionBuffer.Put(CatchBug);
 
 	Commands::argumentBuffer.Put(parts[0]);  // EntityID
-	Commands::argumentBuffer.Put(parts[1]);  // OwnerID
+	Commands::argumentBuffer.Put(parts[1]);  // UserID
 }

@@ -34,8 +34,10 @@ void RegisterStaticCollider()
 
 	auto entity = World::Singleton->Entities.find(entityID);
 
-	if (entity == nullptr)
+	if (entity == World::Singleton->Entities.end()) {
+		printf("Tried to attach static collider to non-existent entity!\n");
 		return;
+	}
 
 	DynamicEntity* e = dynamic_cast<DynamicEntity*>(entity->second);
 	e->Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(position.x, position.y, position.z)), shape);
@@ -119,7 +121,7 @@ void AddDistanceConstraint()
 
 	auto constraint = new DistanceConstraint(*entity1, *entity2, position1, position2, distance);
 
-	World::Singleton->Space->DynamicsWorld->addConstraint(constraint);
+	World::Singleton->Space->RegisterConstraint(constraintID, constraint);
 }
 
 void AddDistanceConstraintParser(const std::string& arguments)
@@ -140,4 +142,25 @@ void AddDistanceConstraintParser(const std::string& arguments)
 	}
 
 	Commands::argumentBuffer.Put(distance);
+}
+
+// removeconstraint <constraintID>
+void RemoveConstraint()
+{
+	std::string constraintID = Commands::GetArgument<std::string>();
+	auto constraint          = World::Singleton->Space->GetConstraint(constraintID);
+	if (constraint != nullptr) {
+		World::Singleton->Space->UnregisterConstraint(constraintID);
+		delete constraint;
+	}
+}
+
+void RemoveConstraintParser(const std::string& arguments)
+{
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
+	// Put function pointer
+	Commands::functionBuffer.Put(RemoveConstraint);
+
+	Commands::argumentBuffer.Put(arguments);  // ConstraintID
 }

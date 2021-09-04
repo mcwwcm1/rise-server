@@ -18,6 +18,16 @@ std::vector<std::string> Split(const std::string& str, char delimiter)
 	return result;
 }
 
+std::string VectorToString(const std::vector<std::string> vec, char delimiter, bool trailingDelimiter)
+{
+	std::string result;
+	for (std::string part : vec)
+		result += part + delimiter;
+	if (!trailingDelimiter)
+		result.pop_back();
+	return result;
+}
+
 void BoostFail(boost::beast::error_code ec, char const* what)
 {
 	printf("Boost failure (%s): %s\n", what, ec.message().c_str());

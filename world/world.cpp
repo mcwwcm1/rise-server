@@ -7,8 +7,11 @@
 #include "world/distributors/distributor.h"
 #include "core/send.h"
 #include "entities/structureentity.h"
+#include <thread>
+#include <chrono>
 
 unsigned long long World::currentEntityIndex = 0;
+clock_t World::lastSaveTime                  = 0;
 
 World* World::Singleton = new World();
 
@@ -18,12 +21,23 @@ World::World()
 	StructureEntity* starterIsland = new StructureEntity(Double3(0, 0, 0), Quaternion::identity);
 	RegisterEntity(starterIsland);
 
-	auto d = new BugSwarmDistributor(35, 2, 10, "WobbleFly");
+	auto d = new BugSwarmDistributor(35, 2, 50, "WobbleFly");
+	Distributors.push_back(d);
+	d = new BugSwarmDistributor(35, 2, 50, "Crystallis");
 	Distributors.push_back(d);
 }
 
 void World::RunTick()
 {
+	if (!initialized) {
+		Send("CleanAll");
+		initialized = true;
+	}
+
+	// Tick Entities
+	for (auto entity : Entities)
+		entity.second->RunTick(Space->FixedDT);
+
 	// Tick physics
 	Space->RunTick();
 
@@ -57,6 +71,8 @@ void World::RunTick()
 			entity.second->Dirty = false;
 		}
 	}
+
+	// Save data to DB if enough time has passed
 }
 
 std::string World::GetNextID()
@@ -117,7 +133,7 @@ bool World::UnregisterEntity(Entity* entity)
 
 	// If the entity is a UserEntity, remove them from Users
 	UserEntity* ue = dynamic_cast<UserEntity*>(entity);
-	if (ue != nullptr) { Users.erase(ue->UserID); }
+	if (ue != nullptr) { Users.erase(ue->ID); }
 
 	// If the entity is a DynamicEntity then unregister it from the physics space
 	DynamicEntity* de = dynamic_cast<DynamicEntity*>(entity);
@@ -131,3 +147,12 @@ bool World::UnregisterEntity(Entity* entity)
 
 	return true;
 }
+
+Entity* World::GetEntity(std::string entityId)
+{
+	auto found = Entities.find(entityId);
+	if (found != Entities.end())
+		return found->second;
+	return nullptr;
+}
+bool World::HasEntity(std::string entityId) { return GetEntity(entityId) != nullptr; }
