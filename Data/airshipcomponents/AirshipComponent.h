@@ -1,8 +1,8 @@
 // File: AirshipComponent.h
 // Purpose: The base type for airship components (Hulls, wings, engines, etc...)
 
-#include "mysticmath/double3.h"
-#include "mysticmath/quaternion.h"
+#include "MysticMath/Double3.h"
+#include "MysticMath/Quaternion.h"
 #include "btBulletDynamicsCommon.h"
 #include <vector>
 

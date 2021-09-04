@@ -1,7 +1,7 @@
 // File: HullComponent.h
 // Purpose: defines the hull component of an airship
 
-#include "rootcomponent.h"
+#include "RootComponent.h"
 #include "Interfaces/Damageable.h"
 #include <vector>
 

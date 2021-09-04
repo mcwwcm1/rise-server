@@ -1,7 +1,7 @@
 // File: HullComponent.h
 // Purpose: defines the hull component of an airship
 
-#include "hullcomponent.h"
+#include "HullComponent.h"
 
 void HullComponent::DealDamage(float damage)
 {
