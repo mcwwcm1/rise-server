@@ -43,13 +43,13 @@ void Airship::RunTick(float dt)
 	RigidBody->setGravity(btVector3(0, 0, 0));  // Dumb. Move it later
 
 	// Apply thrust
-	RigidBody->applyCentralForce(forward * Throttle * 20);
+	RigidBody->applyCentralForce(forward * Throttle * 25);
 
 	// Apply yaw steering
 	RigidBody->applyTorque(up * Dot(Yaw, speed) * -5);
 
 	// Apply pitch steering
-	RigidBody->applyTorque(right * Dot(Pitch, speed) * 5);
+	RigidBody->applyTorque(right * Dot(Pitch, speed) * 7);
 
 	// Self-righting
 	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 200);

@@ -21,9 +21,9 @@ World::World()
 	StructureEntity* starterIsland = new StructureEntity(Double3(0, 0, 0), Quaternion::identity);
 	RegisterEntity(starterIsland);
 
-	auto d = new BugSwarmDistributor(35, 2, 25, "WobbleFly");
+	auto d = new BugSwarmDistributor(35, 2, 50, "WobbleFly");
 	Distributors.push_back(d);
-	d = new BugSwarmDistributor(35, 2, 25, "Crystallis");
+	d = new BugSwarmDistributor(35, 2, 50, "Crystallis");
 	Distributors.push_back(d);
 }
 
