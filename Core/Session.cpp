@@ -83,8 +83,18 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 
 	boost::ignore_unused(bytes_transferred);
 	// This indicates that the session was closed
-	if (ec == boost::beast::websocket::error::closed) return;
-	if (ec) { BoostFail(ec, "read"); }
+	if (ec == boost::beast::websocket::error::closed) { return; }
+	if (ec) {
+		BoostFail(ec, "read");
+		if (_userID.length() > 0) {
+			printf("Websocket connection lost. Unregistering '%s'...\n", _userID.c_str());
+			auto it = _registeredUsers.find(_userID);
+			if (it != _registeredUsers.end()) {
+				_registeredUsers.erase(it);
+			}
+		}
+		return;
+	}
 
 	//Separate function call and arguments
 	std::string message   = boost::beast::buffers_to_string(_buffer.data());
