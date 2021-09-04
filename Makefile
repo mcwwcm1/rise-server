@@ -1,33 +1,45 @@
-#Environment
-CXX = g++-11
-DBFLAGS = -g -Wall -pthread -std=c++20 -DBT_USE_DOUBLE_PRECISION -Wno-unknown-pragmas
-BDFLAGS = -Wall -o2 -pthread -std=c++20
-ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
-INCLUDES = -I"$(ROOT_DIR)" -I/usr/include/bullet
-LPQFLAGS = -lpqxx -lpq -lBullet3Collision-float64 -lBullet3Common-float64 -lBullet3Dynamics-float64 -lBullet3Geometry-float64 -lBullet3OpenCL_clew-float64 -lBulletCollision-float64 -lBulletDynamics-float64 -lBulletSoftBody-float64 -lLinearMath-float64
-SRCS := $(shell find . -name "*.cpp")
-OBJS = $(SRCS:.cpp=.o)
+CC := g++-11
 
-#The build target
-TARGETS=rise-test
-all: $(TARGETS)
+TARGET := rise-test
 
-depend: .depend
+SRCDIR := .
+INCDIR := .
+BUILDDIR := Build
+TARGETDIR := .
+SRCEXT := cpp
+DEPEXT := d
+OBJEXT := o
 
-.depend: $(SRCS)
-	rm -f "$@"
-	$(CC) $(CFLAGS) $(INCLUDES) -MM $^ > "$@"
+CFLAGS := -g -Wall -std=c++20 -DBT_USE_DOUBLE_PRECISION -Wno-unknown-pragmas
+LIB := -pthread -lpqxx -lpq -lBullet3Collision-float64 -lBullet3Common-float64 -lBullet3Dynamics-float64 -lBullet3Geometry-float64 -lBullet3OpenCL_clew-float64 -lBulletCollision-float64 -lBulletDynamics-float64 -lBulletSoftBody-float64 -lLinearMath-float64
+INC := -I"$(INCDIR)" -I/usr/include/bullet
 
-include .depend
+SOURCES := $(shell find $(SRCDIR) -type f -name \*.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
-rise-test: $(OBJS)
-	$(CXX) $(DBFLAGS) $(INCLUDES) -o $@ $^ $(LPQFLAGS)
-rise-server: $(OBJS)
-	$(CXX) $(BDFLAGS) $(INCLUDES) -o $@ $^ $(LPQFLAGS)
+all: directories $(TARGET)
 
-.cpp.o:
-	$(CXX) $(DBFLAGS) $(INCLUDES) -c $< -o $@
+directories:
+	@mkdir -p $(BUILDDIR)
 
-# utility
 clean:
-	rm -f $(OBJS) $(TARGETS) .depend
+	@$(RM) -rf $(BUILDDIR)
+
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+rise-test: $(OBJECTS)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+
+rise-server: $(OBJECTS)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INC) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+.PHONY: all clean directories
