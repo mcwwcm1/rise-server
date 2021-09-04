@@ -93,7 +93,7 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 				_registeredUsers.erase(it);
 			}
 		}
-		_ws.close();
+		_ws.close(boost::beast::websocket::close_code::none);
 		return;
 	}
 
