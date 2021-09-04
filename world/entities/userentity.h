@@ -24,10 +24,10 @@ class UserEntity : public Entity
 
 	std::string UserID;
 
-	Inventory* UserInventory;
+	Inventory* UserInventory = nullptr;
 	std::vector<EquipmentSlot> EquipmentSlots;
 
-	size_t Qupies;
+	size_t Qupies = 0;
 
 	void AddQupies(size_t amount);
 	bool EquipItem(std::string itemID, size_t slotIndex);

@@ -13,7 +13,7 @@ class PhysicsSpace;
 class EntityMotionState : public btMotionState
 {
  public:
-	Entity* TargetEntity;
+	Entity* TargetEntity = nullptr;
 
 	EntityMotionState(Entity* targetEntity);
 
@@ -31,10 +31,10 @@ class DynamicEntity : public Entity
 
 	virtual ~DynamicEntity();
 
-	PhysicsSpace* Space;
-	btRigidBody* RigidBody;
-	btCompoundShape* Shape;
-	EntityMotionState* MotionState;
+	PhysicsSpace* Space            = nullptr;
+	btRigidBody* RigidBody         = nullptr;
+	btCompoundShape* Shape         = nullptr;
+	EntityMotionState* MotionState = nullptr;
 
 	virtual void RegisterToDynamicsWorld(btDynamicsWorld* world);
 	virtual void UnregisterFromDynamicsWorld(btDynamicsWorld* world);

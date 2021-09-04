@@ -16,7 +16,7 @@ class World
  private:
 	long unsigned long static currentEntityIndex;  // :)
 	clock_t static lastSaveTime;
-	bool initialized = false;
+	bool initialized                             = false;
 
  public:
 	static World* Singleton;
