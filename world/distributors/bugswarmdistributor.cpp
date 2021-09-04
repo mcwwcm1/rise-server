@@ -55,7 +55,7 @@ void BugSwarmDistributor::Distribute(std::vector<Double3> positions)
 				e->BugID          = BugID;
 				e->SetLocalPosition(targetPos);
 				e->SpawnRate  = 5;
-				e->UpdateRate = .5;
+				e->UpdateRate = BugID == "WobbleFly" ? 0.5 : 0.35;
 				e->Capacity   = 25;
 				e->MaxBugs    = 5;
 				e->Range      = Double3(10, 5, 10);

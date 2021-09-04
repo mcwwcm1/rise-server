@@ -51,15 +51,18 @@ void PhysicsSpace::RegisterConstraint(std::string id, btTypedConstraint* constra
 		return;
 	}
 
+	DynamicsWorld->addConstraint(constraint);
 	Constraints[id] = constraint;
 }
 void PhysicsSpace::UnregisterConstraint(std::string id)
 {
-	if (GetConstraint(id) == nullptr) {
+	auto c = GetConstraint(id);
+	if (c == nullptr) {
 		printf("Warning: Attempted to unregister constraint (%s) but it was not found!\n", id.c_str());
 		return;
 	}
 
+	DynamicsWorld->removeConstraint(c);
 	Constraints.erase(id);
 }
 btTypedConstraint* PhysicsSpace::GetConstraint(std::string id)

@@ -121,7 +121,7 @@ void AddDistanceConstraint()
 
 	auto constraint = new DistanceConstraint(*entity1, *entity2, position1, position2, distance);
 
-	World::Singleton->Space->DynamicsWorld->addConstraint(constraint);
+	World::Singleton->Space->RegisterConstraint(constraintID, constraint);
 }
 
 void AddDistanceConstraintParser(const std::string& arguments)
@@ -148,8 +148,11 @@ void AddDistanceConstraintParser(const std::string& arguments)
 void RemoveConstraint()
 {
 	std::string constraintID = Commands::GetArgument<std::string>();
-
-	World::Singleton->Space->UnregisterConstraint(constraintID);
+	auto constraint          = World::Singleton->Space->GetConstraint(constraintID);
+	if (constraint != nullptr) {
+		World::Singleton->Space->UnregisterConstraint(constraintID);
+		delete constraint;
+	}
 }
 
 void RemoveConstraintParser(const std::string& arguments)

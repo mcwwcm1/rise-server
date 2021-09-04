@@ -25,7 +25,7 @@ Airship::Airship(Double3 position, Quaternion rotation) : DynamicEntity(position
 
 std::string Airship::GetCreationCommand()
 {
-	return "SpawnAirship " + ID + "|" + Position.ToString() + "|" + Rotation.ToString() + "|";
+	return "SpawnEntity StarterAirship|" + ID + "|";
 }
 
 void Airship::RunTick(float dt)
@@ -43,13 +43,13 @@ void Airship::RunTick(float dt)
 	RigidBody->setGravity(btVector3(0, 0, 0));  // Dumb. Move it later
 
 	// Apply thrust
-	RigidBody->applyCentralForce(forward * Throttle * 45);
+	RigidBody->applyCentralForce(forward * Throttle * 30);
 
 	// Apply yaw steering
-	RigidBody->applyTorque(up * Yaw * speed * -25);
+	RigidBody->applyTorque(up * Dot(Yaw, speed) * -20);
 
 	// Apply pitch steering
-	RigidBody->applyTorque(right * Pitch * speed * 20);
+	RigidBody->applyTorque(right * Dot(Pitch, speed) * 20);
 
 	// Self-righting
 	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 200);
