@@ -7,6 +7,13 @@
 
 void BugSwarmDistributor::Distribute(std::vector<Double3> positions)
 {
+	for (auto entity : Entities) {
+		BugSwarmEntity* swarm = dynamic_cast<BugSwarmEntity*>(entity);
+		if (swarm != nullptr && swarm->Capacity <= 0) {
+			DestroyEntity(swarm);
+		}
+	}
+
 	// Spawn entities
 	for (size_t p = 0; p < (positions.size() * MaxPerPosition) - Entities.size(); p++) {
 		for (int i = 0; i < MaxSpawnAttempts; i++) {

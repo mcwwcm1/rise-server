@@ -49,9 +49,6 @@ void BugSwarmEntity::CatchBug(UserEntity* user)
 	SubmitChange("BSCapacity", std::to_string(Capacity));
 
 	user->UserInventory->AddItem(BugID);
-
-	if (Capacity <= 0)
-		delete this;
 }
 
 void BugSwarmEntity::SetTargetPosition(const Double3& position)
