@@ -71,9 +71,10 @@ void RequestAirshipParser(const std::string& arguments)
 void SetThrottle()
 {
 	std::string airshipID = Commands::GetArgument<std::string>();
+	float throttle        = Commands::GetArgument<float>();
 	Airship* airship      = GetAirship(airshipID);
 
-	if (airship != nullptr) airship->Throttle = Commands::GetArgument<float>();
+	if (airship != nullptr) { airship->Throttle = throttle; }
 }
 
 void SetThrottleParser(const std::string& arguments)
@@ -124,9 +125,10 @@ void SetPitchParser(const std::string& arguments)
 void SetYaw()
 {
 	std::string airshipID = Commands::GetArgument<std::string>();
+	float yaw             = Commands::GetArgument<float>();
 	Airship* airship      = GetAirship(airshipID);
 
-	if (airship != nullptr) { airship->Yaw = Commands::GetArgument<float>(); }
+	if (airship != nullptr) { airship->Yaw = yaw; }
 }
 
 void SetYawParser(const std::string& arguments)
