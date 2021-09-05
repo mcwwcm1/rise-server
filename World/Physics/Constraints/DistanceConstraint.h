@@ -29,29 +29,31 @@ class DistanceConstraint : public btPoint2PointConstraint
 		btVector3 posB    = m_rbB.getCenterOfMassTransform().getOrigin() + relB;
 		btVector3 del     = posB - posA;
 		btScalar currDist = btSqrt(del.dot(del));
+		btScalar delta    = currDist - m_distance;
 		btVector3 ortho   = del / currDist;
 		btVector3 p, q;
 		p = relA.cross(ortho);
 		q = relB.cross(ortho);
-		if (!m_rbA.isStaticObject()) {
-			info->m_J1linearAxis[0]  = ortho[0];
-			info->m_J1linearAxis[1]  = ortho[1];
-			info->m_J1linearAxis[2]  = ortho[2];
-			info->m_J1angularAxis[0] = p[0];
-			info->m_J1angularAxis[1] = p[1];
-			info->m_J1angularAxis[2] = p[2];
-		}
-		if (!m_rbB.isStaticObject()) {
-			info->m_J2linearAxis[0]  = -ortho[0];
-			info->m_J2linearAxis[1]  = -ortho[1];
-			info->m_J2linearAxis[2]  = -ortho[2];
-			info->m_J2angularAxis[0] = -q[0];
-			info->m_J2angularAxis[1] = -q[1];
-			info->m_J2angularAxis[2] = -q[2];
+		if (currDist >= m_distance) {
+			if (!m_rbA.isStaticObject()) {
+				info->m_J1linearAxis[0]  = ortho[0];
+				info->m_J1linearAxis[1]  = ortho[1];
+				info->m_J1linearAxis[2]  = ortho[2];
+				info->m_J1angularAxis[0] = p[0];
+				info->m_J1angularAxis[1] = p[1];
+				info->m_J1angularAxis[2] = p[2];
+			}
+			if (!m_rbB.isStaticObject()) {
+				info->m_J2linearAxis[0]  = -ortho[0];
+				info->m_J2linearAxis[1]  = -ortho[1];
+				info->m_J2linearAxis[2]  = -ortho[2];
+				info->m_J2angularAxis[0] = -q[0];
+				info->m_J2angularAxis[1] = -q[1];
+				info->m_J2angularAxis[2] = -q[2];
+			}
 		}
 
-		btScalar delta             = currDist - m_distance;
-		btScalar rhs               = delta < 0 ? 0 : delta * info->fps * info->erp;
+		btScalar rhs               = delta * info->fps * info->erp;
 		info->m_constraintError[0] = rhs;
 		info->cfm[0]               = btScalar(0.f);
 		info->m_lowerLimit[0]      = -SIMD_INFINITY;
