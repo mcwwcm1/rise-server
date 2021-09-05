@@ -112,6 +112,14 @@ void UserEntity::InventoryItemChanged(ItemStack item)
 	SubmitChange("InvChange", item.Item->ItemID + ":" + std::to_string(item.StackSize), false);
 }
 
+void UserEntity::ResubmitFullInventory()
+{
+	SendClearInventory();
+	for (auto i : UserInventory->Items) {
+		SubmitChange("InvAdd", i.second.Item->ItemID + ":" + std::to_string(i.second.StackSize), false);
+	}
+}
+
 void UserEntity::SendClearInventory()
 {
 	SubmitChange("InvClear", "");

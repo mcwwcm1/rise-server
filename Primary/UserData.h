@@ -168,3 +168,22 @@ void DequipItemParser(const std::string& arguments)
 	Commands::argumentBuffer.Put(parts[0]);  // UserID
 	Commands::argumentBuffer.Put(slotIndex);
 }
+
+// requestinventory <userID>
+void RequestInventory()
+{
+	std::string userID = Commands::GetArgument<std::string>();
+	UserEntity* user   = EnsureUserRegistered(userID);
+
+	user->ResubmitFullInventory();
+}
+
+void RequestInventoryParser(const std::string& arguments)
+{
+	// Put function pointer
+	Commands::functionBuffer.Put(RequestInventory);
+
+	// Put arguments
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+	Commands::argumentBuffer.Put(arguments);  // UserID
+}

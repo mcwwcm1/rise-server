@@ -38,6 +38,7 @@ class UserEntity : public Entity
 	void InventoryItemRemoved(ItemStack item);
 	void InventoryItemChanged(ItemStack item);
 
+	void ResubmitFullInventory();
 	void SendClearInventory();
 
 	virtual std::string GetCreationCommand();

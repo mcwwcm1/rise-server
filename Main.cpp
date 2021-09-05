@@ -93,6 +93,8 @@ int main(int argc, char* argv[])
 	Commands::Register("equipitem", EquipItemParser);
 	Commands::Register("dequipitem", DequipItemParser);
 	Commands::Register("updateleaderboard", UpdateLeaderboardParser);
+	Commands::Register("requestinventory", RequestInventoryParser);
+
 	//-----------------------End of function initialization step------------------------------------------
 
 	// Check command line arguments
