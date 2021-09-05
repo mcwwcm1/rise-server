@@ -12,7 +12,12 @@
 
 Airship* GetAirship(const std::string& id)
 {
-	return dynamic_cast<Airship*>(World::Singleton->Entities[id]);
+	auto it = World::Singleton->Entities.find(id);
+	if (it != World::Singleton->Entities.end()) {
+		return dynamic_cast<Airship*>(it->second);
+	}
+
+	return nullptr;
 }
 
 // requestairship <locationID> <position> <rotation> <userID>
@@ -92,9 +97,10 @@ void SetThrottleParser(const std::string& arguments)
 void SetPitch()
 {
 	std::string airshipID = Commands::GetArgument<std::string>();
+	float pitch           = Commands::GetArgument<float>();
 	Airship* airship      = GetAirship(airshipID);
 
-	if (airship != nullptr) { airship->Pitch = Commands::GetArgument<float>(); }
+	if (airship != nullptr) { airship->Pitch = pitch; }
 }
 
 void SetPitchParser(const std::string& arguments)
