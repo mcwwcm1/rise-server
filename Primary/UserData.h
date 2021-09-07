@@ -187,3 +187,23 @@ void RequestInventoryParser(const std::string& arguments)
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 	Commands::argumentBuffer.Put(arguments);  // UserID
 }
+
+// requestinventory <userID>
+void RequestUserData()
+{
+	std::string userID = Commands::GetArgument<std::string>();
+	UserEntity* user   = EnsureUserRegistered(userID);
+
+	user->ResubmitFullInventory();
+	user->SubmitQupies();
+}
+
+void RequestUserDataParser(const std::string& arguments)
+{
+	// Put function pointer
+	Commands::functionBuffer.Put(RequestUserData);
+
+	// Put arguments
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+	Commands::argumentBuffer.Put(arguments);  // UserID
+}
