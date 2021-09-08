@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
 	Commands::Register("dequipitem", DequipItemParser);
 	Commands::Register("updateleaderboard", UpdateLeaderboardParser);
 	Commands::Register("requestinventory", RequestInventoryParser);
+	Commands::Register("requestuserdata", RequestUserDataParser);
 
 	//-----------------------End of function initialization step------------------------------------------
 

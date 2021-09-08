@@ -32,7 +32,7 @@ UserEntity::UserEntity(std::string userID) : Entity()
 
 	Database::CreatePlayer(UserID, 0, "starterIsland");
 	Qupies = Database::GetUserQpCount(UserID);
-	SubmitChange("QupyCount", std::to_string(Qupies));
+	SubmitQupies();
 }
 
 void UserEntity::AddQupies(size_t amount)
@@ -119,6 +119,8 @@ void UserEntity::ResubmitFullInventory()
 		SubmitChange("InvAdd", i.second.Item->ItemID + ":" + std::to_string(i.second.StackSize), false);
 	}
 }
+
+void UserEntity::SubmitQupies() { SubmitChange("QupyCount", std::to_string(Qupies)); }
 
 void UserEntity::SendClearInventory()
 {
