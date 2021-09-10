@@ -1,14 +1,16 @@
 // File: GridAttachment.h
 // Purpose: For placing arbitrary sized objects on airships :D
 
-#include "AirshipComponent.h"
+#pragma once
+
+#include "ComponentSlot.h"
 
 struct GridSpace {
  public:
 	unsigned int PosX, PosY;
 };
 
-class GridAttachment : public AirshipComponent
+class GridAttachment : public ComponentSlot
 {
  public:
 	std::vector<GridSpace> GridSpaces;
