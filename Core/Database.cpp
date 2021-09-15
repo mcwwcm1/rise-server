@@ -138,7 +138,7 @@ void DeletePlayer(const std::string& userID)
 void GetQpLeaderboard(uint64_t from, uint64_t to, std::vector<std::string>* userIDs, std::vector<uint64_t>* qpCounts)
 {
 	pqxx::work transaction{*dbConn};
-	pqxx::result leaderboardResults = transaction.exec("SELECT userid, qp FROM player ORDER BY qp DESC OFFSET " + std::to_string(from) + " LIMIT " + std::to_string(to - from) + ";");
+	pqxx::result leaderboardResults = transaction.exec("SELECT userid, qp FROM player WHERE userid LIKE 'U-%' ORDER BY qp DESC OFFSET " + std::to_string(from) + " LIMIT " + std::to_string(to - from) + ";");
 	//fill userIDs
 	if (userIDs) {
 		for (auto row : leaderboardResults) {
