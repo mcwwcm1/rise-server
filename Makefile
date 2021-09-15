@@ -1,7 +1,5 @@
 CC := g++-11
 
-TARGET := rise-test
-
 SRCDIR := .
 INCDIR := .
 BUILDDIR := Build
@@ -23,7 +21,7 @@ OBJECTS_RELEASE := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/Release/%,$(SOURCES:.$(SRC
 all: directories $(TARGET)
 
 directories:
-	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(BUILDDIR) $(TARGETDIR)/rise-test $(TARGETDIR)/rise-server
 
 clean:
 	@$(RM) -rf $(BUILDDIR)
@@ -31,10 +29,10 @@ clean:
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
 
 rise-test: $(OBJECTS_DEBUG)
-	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+	$(CC) -o $(TARGETDIR)/$@ $^ $(LIB)
 
 rise-server: $(OBJECTS_RELEASE)
-	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+	$(CC) -o $(TARGETDIR)/$@ $^ $(LIB)
 
 $(BUILDDIR)/Debug/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
