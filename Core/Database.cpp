@@ -161,4 +161,55 @@ uint64_t GetQpAbsoluteTotal()
 	return totalsResult.begin()["sum"].as<uint64_t>();
 }
 
+std::string GetUserActiveCrew(const std::string& userID, const std::string& crewID)
+{
+	pqxx::work transaction{*dbConn};
+	pqxx::result response = transaction.exec("SELECT * FROM crewmember c JOIN player pu ON(c.playerid = pu.id) JOIN player pc ON(c.crewid = pc.id) WHERE pu.userid = " + transaction.quote(userID) + " AND pc.userid = " + transaction.quote(crewID) + " AND c.active = true;");
+
+	return response.empty() ? "" : response.begin()["pc.userid"].c_str();
+}
+
+void SetUserActiveCrew(const std::string& userID, const std::string& crewID)
+{
+	pqxx::work transaction{*dbConn};
+	try {
+		transaction.exec("UPDATE crewmember c SET c.active = false FROM player p WHERE p.id = c.playerid AND p.userid = " + transaction.quote(userID) + ";");
+		transaction.exec("UPDATE crewmember c SET c.active = true FROM player p WHERE p.id = c.playerid AND p.userid = " + transaction.quote(userID) + ";");
+		transaction.commit();
+	} catch (const std::exception& exception) {
+		std::cout << "Error while setting active crew for player. User ID: '" << userID << "', Crew ID: '" + crewID + "' Aborting transaction." << std::endl
+							<< "Exception: " << std::endl
+							<< exception.what() << std::endl;
+		transaction.abort();
+	}
+}
+
+void AddUserToCrew(const std::string& userID, const std::string& crewID)
+{
+	pqxx::work transaction{*dbConn};
+	try {
+		transaction.exec("INSERT INTO crewmember(playerid, crewid, active) VALUES((SELECT id FROM player WHERE userid = " + transaction.quote(userID) + "), (SELECT id FROM player WHERE userid = " + transaction.quote(crewID) + "), false);");
+		transaction.commit();
+	} catch (const std::exception& exception) {
+		std::cout << "Error while adding player to crew. User ID: '" << userID << "', Crew ID: '" + crewID + "' Aborting transaction." << std::endl
+							<< "Exception: " << std::endl
+							<< exception.what() << std::endl;
+		transaction.abort();
+	}
+}
+
+void RemoveUserFromCrew(const std::string& userID, const std::string& crewID)
+{
+	pqxx::work transaction{*dbConn};
+	try {
+		transaction.exec("DELETE FROM crewmember c USING player pu, player pc WHERE c.playerid = pu.id AND c.crewID = pc.id AND pu.userid = " + transaction.quote(userID) + " AND pc.crewID = " + transaction.quote(crewID) + ";");
+		transaction.commit();
+	} catch (const std::exception& exception) {
+		std::cout << "Error while removing player from crew. User ID: '" << userID << "', Crew ID: '" + crewID + "' Aborting transaction." << std::endl
+							<< "Exception: " << std::endl
+							<< exception.what() << std::endl;
+		transaction.abort();
+	}
+}
+
 }  // namespace Database
