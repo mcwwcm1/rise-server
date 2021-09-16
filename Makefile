@@ -21,7 +21,7 @@ OBJECTS_RELEASE := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/Release/%,$(SOURCES:.$(SRC
 all: directories rise-test
 
 directories:
-	@mkdir -p $(BUILDDIR) $(TARGETDIR)/rise-test $(TARGETDIR)/rise-server
+	@mkdir -p $(BUILDDIR)
 
 clean:
 	@$(RM) -rf $(BUILDDIR)
