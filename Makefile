@@ -18,7 +18,7 @@ SOURCES := $(shell find $(SRCDIR) -type f -name \*.$(SRCEXT))
 OBJECTS_DEBUG := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/Debug/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 OBJECTS_RELEASE := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/Release/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
-all: directories $(TARGET)
+all: directories rise-test
 
 directories:
 	@mkdir -p $(BUILDDIR) $(TARGETDIR)/rise-test $(TARGETDIR)/rise-server
