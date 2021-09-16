@@ -41,4 +41,6 @@ void SetUserActiveCrew(const std::string& userID, const std::string& crewID);
 void AddUserToCrew(const std::string& userID, const std::string& crewID);
 //Simply removes a user from a crew.
 void RemoveUserFromCrew(const std::string& userID, const std::string& crewID);
+//returns an std::vector of strings. These strings are the crew IDs that the passed user is in.
+std::vector<std::string> GetUserCrews(const std::string& userID);
 }

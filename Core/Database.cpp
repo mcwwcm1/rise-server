@@ -212,4 +212,15 @@ void RemoveUserFromCrew(const std::string& userID, const std::string& crewID)
 	}
 }
 
+std::vector<std::string> GetUserCrews(const std::string& userID) {
+	std::vector<std::string> crewList;
+	pqxx::work transaction{*dbConn};
+	pqxx::result crews = transaction.exec("SELECT pc.userid FROM crewmember c JOIN player pu ON(c.playerid = pu.id) JOIN player pc ON(c.playerid = pc.id) WHERE c.playerid = " + transaction.quote(userID) + ";");
+
+	for (auto row : crews) {
+		crewList.push_back(row["pc.userid"].c_str());
+	}
+	return crewList;
+}
+
 }  // namespace Database
