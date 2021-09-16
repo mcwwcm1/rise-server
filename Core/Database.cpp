@@ -161,10 +161,10 @@ uint64_t GetQpAbsoluteTotal()
 	return totalsResult.begin()["sum"].as<uint64_t>();
 }
 
-std::string GetUserActiveCrew(const std::string& userID, const std::string& crewID)
+std::string GetUserActiveCrew(const std::string& userID )
 {
 	pqxx::work transaction{*dbConn};
-	pqxx::result response = transaction.exec("SELECT * FROM crewmember c JOIN player pu ON(c.playerid = pu.id) JOIN player pc ON(c.crewid = pc.id) WHERE pu.userid = " + transaction.quote(userID) + " AND pc.userid = " + transaction.quote(crewID) + " AND c.active = true;");
+	pqxx::result response = transaction.exec("SELECT * FROM crewmember c JOIN player pu ON(c.playerid = pu.id) JOIN player pc ON(c.crewid = pc.id) WHERE pu.userid = " + transaction.quote(userID) + " AND c.active = true;");
 
 	return response.empty() ? "" : response.begin()["pc.userid"].c_str();
 }
