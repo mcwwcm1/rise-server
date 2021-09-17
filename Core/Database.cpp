@@ -223,4 +223,31 @@ std::vector<std::string> GetUserCrews(const std::string& userID) {
 	return crewList;
 }
 
+
+//crew versions of user functions above
+void CreateCrew(const std::string& userID, int qpCount, std::string location)
+{
+	CreatePlayer(userID, qpCount, location);
+}
+uint64_t GetCrewQpCount(const std::string& userID)
+{
+	return GetUserQpCount(userID);
+}
+void AlterCrewQpCount(const std::string& userID, int64_t delta)
+{
+	AlterUserQpCount(userID, delta);
+}
+void AlterCrewInventoryItemCount(const std::string& userID, const std::string& itemLabel, int amount)
+{
+	AlterInventoryItemCount(userID, itemLabel, amount);
+}
+uint64_t GetCrewInventoryItemCount(const std::string& userID, const std::string& itemLabel)
+{
+	return GetInventoryItemCount(userID, itemLabel);
+}
+void DeleteCrew(const std::string& userID)
+{
+	DeletePlayer(userID);
+}
+
 }  // namespace Database
