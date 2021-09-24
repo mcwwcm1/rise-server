@@ -13,7 +13,7 @@ struct ItemProperty {
  public:
 	std::string Name;
 	double Value;  // I want this to be any arbitrary type ideally - Coffee :)
-	ItemProperty(std::string name, double value) : Name(name), Value(value){};
+	ItemProperty(std::string name, double value) : Name(name), Value(value) {}
 };
 
 struct ItemInfo {
@@ -30,7 +30,7 @@ struct ItemInfo {
 	static ItemInfo* GetItemByID(const std::string& id);
 	static void RegisterItem(ItemInfo* item);
 
-	ItemInfo(std::string itemID, std::vector<std::string> tags, bool stackable, size_t qupyValue, size_t dalfitchDepth) : ItemID(itemID), Tags(tags), Stackable(stackable), QupyValue(qupyValue), DalfitchDepth(dalfitchDepth){};
+	ItemInfo(std::string itemID, std::vector<std::string> tags, bool stackable, size_t qupyValue, size_t dalfitchDepth) : ItemID(itemID), Tags(tags), Stackable(stackable), QupyValue(qupyValue), DalfitchDepth(dalfitchDepth) {}
 };
 
 void AddDummyItemData();

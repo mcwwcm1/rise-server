@@ -35,8 +35,7 @@ void World::RunTick()
 	}
 
 	// Tick Entities
-	for (auto entity : Entities)
-		entity.second->RunTick(Space->FixedDT);
+	for (auto entity : Entities) entity.second->RunTick(Space->FixedDT);
 
 	// Tick physics
 	Space->RunTick();
@@ -45,9 +44,7 @@ void World::RunTick()
 	std::vector<Double3> positions;
 	positions.reserve(Users.size());
 
-	for (auto u : Users) {
-		positions.push_back(u.second->Position);
-	}
+	for (auto u : Users) { positions.push_back(u.second->Position); }
 
 	for (Distributor* d : Distributors) {
 		d->CleanupDistant(positions);
@@ -62,9 +59,7 @@ void World::RunTick()
 		}
 		if (entity.second->Dirty && !entity.second->DontSync) {
 			std::string changes = "ChangeTable " + entity.second->ID + "|";
-			for (auto change : entity.second->ChangeTable) {
-				changes += change.first + "|" + change.second + "|";
-			}
+			for (auto change : entity.second->ChangeTable) { changes += change.first + "|" + change.second + "|"; }
 
 			Send(changes);
 			entity.second->ChangeTable.clear();
@@ -86,8 +81,7 @@ bool World::RegisterEntity(Entity* entity)
 	auto e = Entities.find(entity->ID);
 	if (e != Entities.end()) {
 		// Entity is already registered :(
-		printf("Attempted to register entity that is already registered: %s\n",
-		       entity->ID.c_str());
+		printf("Attempted to register entity that is already registered: %s\n", entity->ID.c_str());
 		return false;
 	}
 
@@ -105,6 +99,8 @@ bool World::RegisterEntity(Entity* entity)
 	if (!entity->DontSync) {
 		Send(entity->GetCreationCommand());  // Send creation to headless
 	}
+
+	entity->OnRegistered();
 
 	printf("Registered entity: %s\n", entity->ID.c_str());
 
@@ -124,8 +120,7 @@ bool World::UnregisterEntity(Entity* entity)
 	auto e = Entities.find(entity->ID);
 	if (e == Entities.end()) {
 		// Entity is not registered :(
-		printf("Attempted to unregister entity that is not registered: %s\n",
-		       entity->ID.c_str());
+		printf("Attempted to unregister entity that is not registered: %s\n", entity->ID.c_str());
 		return false;
 	}
 
@@ -151,8 +146,7 @@ bool World::UnregisterEntity(Entity* entity)
 Entity* World::GetEntity(std::string entityId)
 {
 	auto found = Entities.find(entityId);
-	if (found != Entities.end())
-		return found->second;
+	if (found != Entities.end()) return found->second;
 	return nullptr;
 }
 bool World::HasEntity(std::string entityId) { return GetEntity(entityId) != nullptr; }

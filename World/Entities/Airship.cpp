@@ -2,10 +2,12 @@
 // Purpose: Implements airship.h
 
 #include "Airship.h"
+#include <functional>
 
 Airship::Airship() : Airship::Airship(Double3(0, 0, 0), Quaternion::identity) {}
 
-Airship::Airship(Double3 position, Quaternion rotation) : DynamicEntity(position, rotation, 10)
+Airship::Airship(Double3 position, Quaternion rotation)
+		: DynamicEntity(position, rotation, 10), RootComponent(VesselTemplates::Starter())
 {
 	// HARDCODED COLLIDER SHAPE = BAD
 	btSphereShape* sphereShape = new btSphereShape(2);
@@ -23,10 +25,7 @@ Airship::Airship(Double3 position, Quaternion rotation) : DynamicEntity(position
 	Yaw      = 0;
 }
 
-std::string Airship::GetCreationCommand()
-{
-	return "SpawnEntity StarterAirship|" + ID + "|";
-}
+std::string Airship::GetCreationCommand() { return "SpawnEntity StarterAirship|" + ID + "|"; }
 
 void Airship::RunTick(float dt)
 {
@@ -55,17 +54,25 @@ void Airship::RunTick(float dt)
 	RigidBody->applyTorque(Cross(Double3(0, -1, 0), up) * 200);
 }
 
-btVector3 Airship::GetForward()
+void Airship::OnRegistered()
 {
-	return Double3(0, 0, 1) * Rotation;
+	std::function<void(const std::shared_ptr<VesselComponent>&, const std::string&)> submit =
+			[&](const std::shared_ptr<VesselComponent>& comp, const std::string& location) {
+				std::ostringstream oss;
+				oss << location << "|";
+				oss << comp->Info().Name;
+				SubmitChange("VSComponent", oss.str(), true);
+
+				for (const auto& child : comp->Slots()) {
+					const std::string path = location + "." + child.first;
+					submit(child.second, path);
+				}
+			};
+	submit(RootComponent, "Root");
 }
 
-btVector3 Airship::GetUp()
-{
-	return Double3(0, 1, 0) * Rotation;
-}
+btVector3 Airship::GetForward() { return Double3(0, 0, 1) * Rotation; }
 
-btVector3 Airship::GetRight()
-{
-	return Double3(1, 0, 0) * Rotation;
-}
+btVector3 Airship::GetUp() { return Double3(0, 1, 0) * Rotation; }
+
+btVector3 Airship::GetRight() { return Double3(1, 0, 0) * Rotation; }

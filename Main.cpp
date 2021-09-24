@@ -39,6 +39,7 @@ using tcp           = boost::asio::ip::tcp;
 
 // Include dumb shit
 #include "Data/Items.h"
+#include "World/Entities/Airship/VesselComponent.h"
 
 void testDB()
 {
@@ -55,18 +56,15 @@ void testDB()
 
 	std::cout << "Giving Blobfish a BlobfishItem..." << std::endl;
 	Database::AlterInventoryItemCount("U-Blobfish", "BlobfishItem", 1);
-	std::cout << "Blobfish now has " << std::to_string(Database::GetInventoryItemCount("U-Blobfish", "BlobfishItem")) << " of BlobfishItem." << std::endl;
+	std::cout << "Blobfish now has " << std::to_string(Database::GetInventoryItemCount("U-Blobfish", "BlobfishItem"))
+						<< " of BlobfishItem." << std::endl;
 
 	std::cout << "Fetching Leaderboards..." << std::endl;
 	std::vector<uint64_t> moneys;
 	std::vector<std::string> people;
 	Database::GetQpLeaderboard(0, 100, &people, &moneys);
-	for (auto name : people) {
-		std::cout << name << std::endl;
-	}
-	for (auto qp : moneys) {
-		std::cout << std::to_string(qp) << std::endl;
-	}
+	for (auto name : people) { std::cout << name << std::endl; }
+	for (auto qp : moneys) { std::cout << std::to_string(qp) << std::endl; }
 }
 
 int main(int argc, char* argv[])
@@ -123,6 +121,10 @@ int main(int argc, char* argv[])
 	for (auto i = threads - 1; i > 0; --i) v.emplace_back([&ioc] { ioc.run(); });
 
 	AddDummyItemData();  // REMOVE THIS WHEN WE HAVE DB STUFF
+	VesselComponentInfo::PopulateRegistry();
+
+	VesselComponentInfo::Parse(
+			"StarterHull|100|6|True|1|104|True|2|103|203|False|1|1000|False|2|101|201|False|1|102|False|2|105|205|2|0|");
 
 	std::chrono::milliseconds timespan(1000 / 20);  //defines sleep timespan in ms
 	while (true) {
@@ -131,12 +133,9 @@ int main(int argc, char* argv[])
 		std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 		// Iterate over all elements in function buffer until empty
-		while (!Commands::functionBuffer.Empty()) {
-			Commands::functionBuffer.Get()();
-		}
+		while (!Commands::functionBuffer.Empty()) { Commands::functionBuffer.Get()(); }
 
-		if (Session::GetHeadless() == nullptr)
-			continue;
+		if (Session::GetHeadless() == nullptr) continue;
 
 		World::Singleton->RunTick();
 	}

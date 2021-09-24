@@ -11,9 +11,7 @@ std::vector<std::string> Split(const std::string& str, char delimiter)
 	std::vector<std::string> result;
 	std::istringstream iss(str);
 
-	for (std::string token; std::getline(iss, token, delimiter);) {
-		result.push_back(std::move(token));
-	}
+	for (std::string token; std::getline(iss, token, delimiter);) { result.push_back(std::move(token)); }
 
 	return result;
 }
@@ -21,17 +19,12 @@ std::vector<std::string> Split(const std::string& str, char delimiter)
 std::string VectorToString(const std::vector<std::string> vec, char delimiter, bool trailingDelimiter)
 {
 	std::string result;
-	for (std::string part : vec)
-		result += part + delimiter;
-	if (!trailingDelimiter)
-		result.pop_back();
+	for (std::string part : vec) result += part + delimiter;
+	if (!trailingDelimiter) result.pop_back();
 	return result;
 }
 
-void BoostFail(boost::beast::error_code ec, char const* what)
-{
-	printf("Boost failure (%s): %s\n", what, ec.message().c_str());
-}
+void BoostFail(boost::beast::error_code ec, char const* what) { printf("Boost failure (%s): %s\n", what, ec.message().c_str()); }
 
 std::string Vector3ToString(const btVector3& vec)
 {
@@ -52,10 +45,7 @@ namespace Random
 static std::random_device gRandomDevice;
 static std::mt19937 gMersenne(gRandomDevice());
 
-void Seed(unsigned int seed)
-{
-	gMersenne.seed(seed);
-}
+void Seed(unsigned int seed) { gMersenne.seed(seed); }
 
 unsigned int RandomUint(unsigned int min, unsigned int max)
 {
