@@ -123,9 +123,6 @@ int main(int argc, char* argv[])
 	AddDummyItemData();  // REMOVE THIS WHEN WE HAVE DB STUFF
 	VesselComponentInfo::PopulateRegistry();
 
-	VesselComponentInfo::Parse(
-			"StarterHull|100|6|True|1|104|True|2|103|203|False|1|1000|False|2|101|201|False|1|102|False|2|105|205|2|0|");
-
 	std::chrono::milliseconds timespan(1000 / 20);  //defines sleep timespan in ms
 	while (true) {
 		std::this_thread::sleep_for(timespan);
