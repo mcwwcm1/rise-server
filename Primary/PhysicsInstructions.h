@@ -18,9 +18,7 @@
 DynamicEntity* GetDynamicEntity(const std::string& id)
 {
 	auto e = World::Singleton->Entities.find(id);
-	if (e == World::Singleton->Entities.end()) {
-		return nullptr;
-	}
+	if (e == World::Singleton->Entities.end()) { return nullptr; }
 	return dynamic_cast<DynamicEntity*>(e->second);
 }
 
@@ -74,8 +72,7 @@ void AddForce()
 
 	if (entity != World::Singleton->Entities.end()) {
 		DynamicEntity* pe = dynamic_cast<DynamicEntity*>(entity->second);
-		if (pe != nullptr)
-			pe->RigidBody->applyForce(force, position);
+		if (pe != nullptr) pe->RigidBody->applyForce(force, position);
 	}
 }
 

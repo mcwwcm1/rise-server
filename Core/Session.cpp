@@ -40,25 +40,19 @@ Session::~Session()
 void Session::Run()
 {
 	//For async functionality and thread safety
-	boost::asio::dispatch(
-			_ws.get_executor(),
-			boost::beast::bind_front_handler(&Session::OnRun, shared_from_this()));
+	boost::asio::dispatch(_ws.get_executor(), boost::beast::bind_front_handler(&Session::OnRun, shared_from_this()));
 }
 
 void Session::OnRun()
 {
 	// Set the suggested tiemout settings for the websocket
-	_ws.set_option(boost::beast::websocket::stream_base::timeout::suggested(
-			boost::beast::role_type::server));
+	_ws.set_option(boost::beast::websocket::stream_base::timeout::suggested(boost::beast::role_type::server));
 	// Set a decorator to change the Server of the handshake
-	_ws.set_option(boost::beast::websocket::stream_base::decorator(
-			[](boost::beast::websocket::response_type& res) {
-				res.set(boost::beast::http::field::server,
-		            std::string(BOOST_BEAST_VERSION_STRING) + " rise-server");
-			}));
+	_ws.set_option(boost::beast::websocket::stream_base::decorator([](boost::beast::websocket::response_type& res) {
+		res.set(boost::beast::http::field::server, std::string(BOOST_BEAST_VERSION_STRING) + " rise-server");
+	}));
 	// Accept the websocket handshake
-	_ws.async_accept(
-			boost::beast::bind_front_handler(&Session::OnAccept, shared_from_this()));
+	_ws.async_accept(boost::beast::bind_front_handler(&Session::OnAccept, shared_from_this()));
 }
 
 void Session::OnAccept(boost::beast::error_code ec)
@@ -71,9 +65,7 @@ void Session::OnAccept(boost::beast::error_code ec)
 void Session::DoRead()
 {
 	// Read a message into our buffer
-	_ws.async_read(
-			_buffer,
-			boost::beast::bind_front_handler(&Session::OnRead, shared_from_this()));
+	_ws.async_read(_buffer, boost::beast::bind_front_handler(&Session::OnRead, shared_from_this()));
 }
 
 void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
@@ -89,9 +81,7 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 		if (_userID.length() > 0) {
 			printf("Websocket connection lost. Unregistering '%s'...\n", _userID.c_str());
 			auto it = _registeredUsers.find(_userID);
-			if (it != _registeredUsers.end()) {
-				_registeredUsers.erase(it);
-			}
+			if (it != _registeredUsers.end()) { _registeredUsers.erase(it); }
 		}
 		_ws.close(boost::beast::websocket::close_code::none);
 		return;
@@ -135,8 +125,7 @@ void Session::OnRead(boost::beast::error_code ec, std::size_t bytes_transferred)
 	DoRead();
 }
 
-void Session::OnWrite(boost::beast::error_code ec,
-                      std::size_t bytes_transferred)
+void Session::OnWrite(boost::beast::error_code ec, std::size_t bytes_transferred)
 {
 	boost::ignore_unused(bytes_transferred);
 	// Clear the buffer
@@ -152,12 +141,7 @@ void Session::OnSend(boost::shared_ptr<std::string const> const& ss)
 	// Grab a lock
 	_mutex.lock();
 	// We are not currently writing, so send this immediately
-	_ws.async_write(
-			boost::asio::buffer(*ss),
-			boost::beast::bind_front_handler(&Session::OnWrite, shared_from_this()));
+	_ws.async_write(boost::asio::buffer(*ss), boost::beast::bind_front_handler(&Session::OnWrite, shared_from_this()));
 }
 
-void Session::Send(const std::string& str)
-{
-	_ws.write(boost::asio::buffer(str));
-}
+void Session::Send(const std::string& str) { _ws.write(boost::asio::buffer(str)); }

@@ -16,6 +16,7 @@
 
 #include "Core/Commands.h"
 #include "MysticMath/Double3.h"
+#include "MysticMath/Quaternion.h"
 
 std::vector<std::string> Split(const std::string& str, char delimiter);
 std::string VectorToString(const std::vector<std::string> vec, char delimiter, bool trailingDelimiter = true);
@@ -63,4 +64,16 @@ template <>
 inline bool Parser::Get<bool>()
 {
 	return _parts[_index++] == "True";
+}
+
+template <>
+inline Double3 Parser::Get<Double3>()
+{
+	return Double3FromString(_parts[_index++]);
+}
+
+template <>
+inline Quaternion Parser::Get<Quaternion>()
+{
+	return QuaternionFromString(_parts[_index++]);
 }

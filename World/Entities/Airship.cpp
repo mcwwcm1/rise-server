@@ -9,12 +9,60 @@ Airship::Airship() : Airship::Airship(Double3(0, 0, 0), Quaternion::identity) {}
 Airship::Airship(Double3 position, Quaternion rotation)
 		: DynamicEntity(position, rotation, 10), RootComponent(VesselTemplates::Starter())
 {
-	// HARDCODED COLLIDER SHAPE = BAD
-	btSphereShape* sphereShape = new btSphereShape(2);
+	std::function<void(const std::shared_ptr<VesselComponent>&)> addColliders =
+			[&](const std::shared_ptr<VesselComponent>& component) -> void {
+		const auto& info = component->Info();
+		for (auto& collider : info.Colliders) {
+			btMatrix3x3 rotationScale(collider.Rotation);
+			rotationScale = rotationScale.scaled(collider.Scale);
+			btTransform transform(rotationScale, collider.Position);
 
-	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 2.5)), sphereShape);
-	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 0.5)), sphereShape);
-	Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, -2)), sphereShape);
+			const Double3 size = collider.Size;
+
+			btCollisionShape* shape = nullptr;
+
+			printf("Adding vessel collider: ");
+			switch (collider.Type) {
+				case ComponentColliderType::Box:
+					printf("Box\n");
+					shape = new btBoxShape(size * 0.5);
+					break;
+
+				case ComponentColliderType::Sphere:
+					printf("Sphere\n");
+					shape = new btSphereShape(size.x);
+					break;
+
+				case ComponentColliderType::Capsule:
+					printf("Capsule\n");
+					shape = new btCapsuleShape(size.x, size.y);
+					break;
+
+				case ComponentColliderType::Cylinder:
+					printf("Cylinder\n");
+					shape = new btCylinderShape(btVector3(size.x, size.y * 0.5, size.x));
+					break;
+			}
+
+			if (shape != nullptr) {
+				btVector3 aabbMin, aabbMax;
+				shape->getAabb(transform, aabbMin, aabbMax);
+				const btVector3 aabbSize = aabbMax - aabbMin;
+				printf("- AABB: %f %f %f\n", aabbSize.x(), aabbSize.y(), aabbSize.z());
+
+				Shape->addChildShape(transform, shape);
+			}
+		}
+
+		for (auto& child : component->Slots()) { addColliders(child.second); }
+	};
+	addColliders(RootComponent);
+
+	// HARDCODED COLLIDER SHAPE = BAD
+	// btSphereShape* sphereShape = new btSphereShape(2);
+	// Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 2.5)), sphereShape);
+	// Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, 0.5)), sphereShape);
+	// Shape->addChildShape(btTransform(btQuaternion(0, 0, 0), btVector3(0, 0, -2)), sphereShape);
 
 	btVector3 inertia;
 	Shape->calculateLocalInertia(RigidBody->getMass(), inertia);
@@ -59,7 +107,7 @@ void Airship::OnRegistered()
 	std::function<void(const std::shared_ptr<VesselComponent>&, const std::string&)> submit =
 			[&](const std::shared_ptr<VesselComponent>& comp, const std::string& location) {
 				std::ostringstream oss;
-				oss << location << "|";
+				oss << location << ":";
 				oss << comp->Info().Name;
 				SubmitChange("VSComponent", oss.str(), true);
 

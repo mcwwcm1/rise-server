@@ -9,13 +9,13 @@ std::unordered_map<std::string, VesselComponentInfo> VesselComponentInfo::Regist
 void VesselComponentInfo::PopulateRegistry()
 {
 	const std::string componentRegistry[] = {
-		"StarterHull|100|6|True|Engine|1|104|True|Balloon|2|103|203|False|Grid|1|1000|False|Wing|2|101|201|False|Rudder|1|102|False|Propeller|2|105|205|2|0|[0.1246022; -1.378965; 86.92015]|[0; 0; 0; 1]|[0.5203119; 1.499606; 2.670711]|[511.6618; 31.29639; 149.105]|3|[0.01932025; -0.763169; -97.58627]|[0; 0; 0; 1]|[1.661904; 1; 2.32487]|[80.52649; 45.26403; 67.1109]|",
-		"StarterEngine|104|0|0|",
-		"StarterBalloon|103|0|0|",
-		"StarterWing|101|0|0|",
-		"StarterRudder|102|0|0|",
-		"StarterPropeller|105|0|0|"
-	};
+			"StarterHull|100|10|True|Balloon|2|103|201|True|Engine|1|104|True|Wing|2|101|201|False|Grid|1|1000|True|Rudder|1|102|True|Flap|1|106|True|Wing1|2|101|201|True|Flap1|1|106|True|Propeller|1|105|True|Propeller1|1|105|2|0|[0; 0; 1.086504]|[1.282727E-10; -1.715759E-08; 5.346439E-10; 1]|[0.006503899; 0.0125; 0.03338389]|[511.6618; 45.26403; 149.105]|3|[0; 0; -1.219823]|[-8.821305E-11; -1.839161E-08; 3.507461E-10; 1]|[0.0207738; 0.0125; 0.02906088]|[80.52649; 45.26403; 67.1109]|",
+			"StarterEngine|104|0|0|",
+			"StarterBalloon|103|0|0|",
+			"StarterWing|101|0|0|",
+			"StarterRudder|102|0|0|",
+			"StarterPropeller|105|0|0|",
+			"StarterFlap|106|0|0"};
 	for (const auto& componentString : componentRegistry) {
 		const auto vesselComponent = VesselComponentInfo::Parse(componentString);
 		Registry.insert({vesselComponent.Name, vesselComponent});
@@ -29,6 +29,7 @@ VesselComponentInfo VesselComponentInfo::Parse(const std::string& str)
 	const std::string componentName         = parse.Get<std::string>();
 	const VesselComponentType componentType = static_cast<VesselComponentType>(parse.Get<uint32_t>());
 	std::vector<VesselComponentSlotInfo> componentSlots;
+	std::vector<VesselComponentColliderInfo> colliders;
 
 	printf("Name: %s\n", componentName.c_str());
 	printf("Type: %d\n", static_cast<uint32_t>(componentType));
@@ -51,11 +52,21 @@ VesselComponentInfo VesselComponentInfo::Parse(const std::string& str)
 	const int colliderCount = parse.Get<uint32_t>();
 	printf("Colliders: %d\n", colliderCount);
 	for (size_t i = 0; i < colliderCount; ++i) {
-		const int colliderType = parse.Get<uint32_t>();
-		printf("- Type: %d\n", colliderType);
+		const ComponentColliderType colliderType = static_cast<ComponentColliderType>(parse.Get<uint32_t>());
+		printf("- Type: %d\n", static_cast<int>(colliderType));
+		const Double3 colliderPosition = parse.Get<Double3>();
+		printf("- Position: %s\n", colliderPosition.ToString().c_str());
+		const Quaternion colliderRotation = parse.Get<Quaternion>();
+		printf("- Rotation: %s\n", colliderRotation.ToString().c_str());
+		const Double3 colliderScale = parse.Get<Double3>();
+		printf("- Scale: %s\n", colliderScale.ToString().c_str());
+		const Double3 colliderSize = parse.Get<Double3>();
+		printf("- Size: %s\n", colliderSize.ToString().c_str());
+
+		colliders.emplace_back(colliderType, colliderPosition, colliderRotation, colliderScale, colliderSize);
 	}
 
-	return VesselComponentInfo(componentName, componentType, componentSlots);
+	return VesselComponentInfo(componentName, componentType, componentSlots, colliders);
 }
 
 const VesselComponentInfo& VesselComponentInfo::Get(const std::string& name)
@@ -95,8 +106,12 @@ std::shared_ptr<VesselComponent> VesselTemplates::Starter()
 	hull->SetSlot("Balloon", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterBalloon")));
 	hull->SetSlot("Engine", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterEngine")));
 	hull->SetSlot("Wing", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterWing")));
+	hull->SetSlot("Wing1", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterWing")));
+	hull->SetSlot("Flap", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterFlap")));
+	hull->SetSlot("Flap1", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterFlap")));
 	hull->SetSlot("Rudder", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterRudder")));
 	hull->SetSlot("Propeller", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterPropeller")));
+	hull->SetSlot("Propeller1", std::make_shared<VesselComponent>(VesselComponentInfo::Get("StarterPropeller")));
 
 	return hull;
 }

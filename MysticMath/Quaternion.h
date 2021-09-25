@@ -30,7 +30,7 @@ struct Quaternion {
 
 	std::string ToString() const;
 
-	operator btQuaternion();
+	operator btQuaternion() const;
 	Quaternion& operator=(const btQuaternion& b);
 	Quaternion& operator+=(const Quaternion& b);
 	Quaternion& operator-=(const Quaternion& b);

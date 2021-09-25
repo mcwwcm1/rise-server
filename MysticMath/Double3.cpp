@@ -39,15 +39,9 @@ Double3 Double3::Normalized() const
 
 Double3 Double3::Absolute() const { return *this * this->Sign(); }
 
-Double3 Double3::Sign() const
-{
-	return Double3(x > 0, y > 0, z > 0) - Double3(x < 0, y < 0, z < 0);
-}
+Double3 Double3::Sign() const { return Double3(x > 0, y > 0, z > 0) - Double3(x < 0, y < 0, z < 0); }
 
-Double3 Double3::Round() const
-{
-	return Double3(std::round(x), std::round(y), std::round(z));
-}
+Double3 Double3::Round() const { return Double3(std::round(x), std::round(y), std::round(z)); }
 
 bool Double3::IsUniform() const { return x == y && y == z; }
 
@@ -78,44 +72,27 @@ bool TryDouble3FromString(const std::string& s, Double3& result)
 	}
 }
 
-double Dot(const Double3& a, const Double3& b)
-{
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-}
+double Dot(const Double3& a, const Double3& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 
 Double3 Cross(const Double3& a, const Double3& b)
 {
-	return Double3(
-			a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+	return Double3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
 }
 
-Double3 TripleProduct(const Double3& a, const Double3& b, const Double3& c)
-{
-	return Cross(a, Cross(b, c));
-}
+Double3 TripleProduct(const Double3& a, const Double3& b, const Double3& c) { return Cross(a, Cross(b, c)); }
 
-Double3 Reflect(const Double3& vec, const Double3& norm)
-{
-	return vec - (norm * 2 * Dot(vec, norm));
-}
+Double3 Reflect(const Double3& vec, const Double3& norm) { return vec - (norm * 2 * Dot(vec, norm)); }
 
 Double3 Clamp(const Double3& vec, const Double3& min, const Double3& max)
 {
-	return Double3(std::min(std::max(vec.x, min.x), max.x),
-	               std::min(std::max(vec.y, min.y), max.y),
-	               std::min(std::max(vec.z, min.z), max.z));
+	return Double3(
+			std::min(std::max(vec.x, min.x), max.x), std::min(std::max(vec.y, min.y), max.y), std::min(std::max(vec.z, min.z), max.z));
 }
 
-Double3 Lerp(const Double3& a, const Double3& b, double t)
-{
-	return a * (1 - t) + b * t;
-}
+Double3 Lerp(const Double3& a, const Double3& b, double t) { return a * (1 - t) + b * t; }
 
 // Assignment operator overloads
-Double3::operator btVector3()
-{
-	return btVector3(x, y, z);
-}
+Double3::operator btVector3() const { return btVector3(x, y, z); }
 
 Double3& Double3::operator=(const btVector3& b)
 {
@@ -162,32 +139,14 @@ Double3& Double3::operator/=(const double& b)
 }
 
 // Operator overloads
-Double3 operator+(const Double3& a, const Double3& b)
-{
-	return Double3(a.x + b.x, a.y + b.y, a.z + b.z);
-}
+Double3 operator+(const Double3& a, const Double3& b) { return Double3(a.x + b.x, a.y + b.y, a.z + b.z); }
 
-Double3 operator-(const Double3& a, const Double3& b)
-{
-	return Double3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
+Double3 operator-(const Double3& a, const Double3& b) { return Double3(a.x - b.x, a.y - b.y, a.z - b.z); }
 
-Double3 operator*(const Double3& a, const Double3& b)
-{
-	return Double3(a.x * b.x, a.y * b.y, a.z * b.z);
-}
+Double3 operator*(const Double3& a, const Double3& b) { return Double3(a.x * b.x, a.y * b.y, a.z * b.z); }
 
-Double3 operator*(const Double3& a, const double& b)
-{
-	return Double3(a.x * b, a.y * b, a.z * b);
-}
+Double3 operator*(const Double3& a, const double& b) { return Double3(a.x * b, a.y * b, a.z * b); }
 
-Double3 operator/(const Double3& a, const Double3& b)
-{
-	return Double3(a.x / b.x, a.y / b.y, a.z / b.z);
-}
+Double3 operator/(const Double3& a, const Double3& b) { return Double3(a.x / b.x, a.y / b.y, a.z / b.z); }
 
-Double3 operator/(const Double3& a, const double& b)
-{
-	return Double3(a.x / b, a.y / b, a.z / b);
-}
+Double3 operator/(const Double3& a, const double& b) { return Double3(a.x / b, a.y / b, a.z / b); }
