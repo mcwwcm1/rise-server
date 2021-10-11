@@ -35,6 +35,7 @@ using tcp           = boost::asio::ip::tcp;
 #include "Primary/EntityInstructions.h"
 #include "Primary/UserData.h"
 #include "Primary/Leaderboards.h"
+#include "Primary/BuyItems.h"
 
 // Include dumb shit
 #include "Data/Items.h"
@@ -95,6 +96,7 @@ int main(int argc, char* argv[])
 	Commands::Register("updateleaderboard", UpdateLeaderboardParser);
 	Commands::Register("requestinventory", RequestInventoryParser);
 	Commands::Register("requestuserdata", RequestUserDataParser);
+	Commands::Register("buyitems", BuyItemsParser);
 
 	//-----------------------End of function initialization step------------------------------------------
 
