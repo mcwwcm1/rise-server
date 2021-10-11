@@ -7,7 +7,7 @@
 
 std::unordered_map<std::string, ItemInfo*> ItemInfo::RegisteredItems;
 
-ItemInfo* ItemInfo::GetItemByID(std::string id)
+ItemInfo* ItemInfo::GetItemByID(const std::string& id)
 {
 	auto i = RegisteredItems.find(id);
 	return i != RegisteredItems.end() ? i->second : nullptr;
@@ -39,7 +39,7 @@ size_t ItemStack::HeldCapacity() const { return Item->DalfitchDepth * StackSize;
 bool ItemStack::IsEmpty() const { return StackSize == 0; }
 
 #pragma region inventory methods
-bool Inventory::HasItems(std::string itemID, size_t amount) const
+bool Inventory::HasItems(const std::string& itemID, size_t amount) const
 {
 	auto pair = Items.find(itemID);
 	if (pair != Items.end())
@@ -49,10 +49,11 @@ bool Inventory::HasItems(std::string itemID, size_t amount) const
 	return false;
 }
 bool Inventory::HasItems(ItemInfo* item, size_t amount) const { return HasItems(item->ItemID, amount); }
-bool Inventory::HasItem(std::string itemID) const { return HasItems(itemID, 1); }
+bool Inventory::HasItem(const std::string& itemID) const { return HasItems(itemID, 1); }
 bool Inventory::HasItem(ItemInfo* item) const { return HasItems(item->ItemID, 1); }
 
 bool Inventory::CanHoldInventory(const Inventory& inventory) const { return RemainingCapacity() >= inventory.HeldCapacity(); }
+bool Inventory::CanHoldItems(const ItemStack& items) const { return RemainingCapacity() >= items.HeldCapacity(); }
 bool Inventory::CanHoldItems(const ItemStack& items) const { return RemainingCapacity() >= items.HeldCapacity(); }
 
 bool Inventory::TransferItems(Inventory& inventory)
@@ -78,7 +79,7 @@ void Inventory::AddItems(const Inventory& inventory)
 	for (auto& item : inventory.Items)
 		AddItems(item.second);
 }
-void Inventory::AddItems(std::string itemID, size_t amount) { AddItems(ItemStack(ItemInfo::GetItemByID(itemID), amount)); }
+void Inventory::AddItems(const std::string& itemID, size_t amount) { AddItems(ItemStack(ItemInfo::GetItemByID(itemID), amount)); }
 void Inventory::AddItems(ItemInfo* item, size_t amount) { AddItems(ItemStack(item, amount)); }
 void Inventory::AddItems(const ItemStack& items)
 {
@@ -94,7 +95,7 @@ void Inventory::AddItems(const ItemStack& items)
 		}
 	}
 }
-void Inventory::AddItem(std::string itemID)
+void Inventory::AddItem(const std::string& itemID)
 {
 	ItemInfo* item = ItemInfo::GetItemByID(itemID);
 	if (item != nullptr)
@@ -102,8 +103,8 @@ void Inventory::AddItem(std::string itemID)
 }
 void Inventory::AddItem(ItemInfo* item) { AddItems(ItemStack(item)); }
 
-ItemStack Inventory::TakeItem(std::string itemID) { return TakeItems(ItemInfo::GetItemByID(itemID), 1); }
-ItemStack Inventory::TakeItems(std::string itemID, size_t amount) { return TakeItems(ItemInfo::GetItemByID(itemID), amount); }
+ItemStack Inventory::TakeItem(const std::string& itemID) { return TakeItems(ItemInfo::GetItemByID(itemID), 1); }
+ItemStack Inventory::TakeItems(const std::string& itemID, size_t amount) { return TakeItems(ItemInfo::GetItemByID(itemID), amount); }
 ItemStack Inventory::TakeItem(ItemInfo* item) { return TakeItems(item, 1); }
 ItemStack Inventory::TakeItems(ItemInfo* item, size_t amount)
 {
