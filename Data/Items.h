@@ -27,7 +27,7 @@ struct ItemInfo {
 	const size_t DalfitchDepth;
 	std::vector<ItemProperty*> Properties;  // Should eventually be const
 
-	static ItemInfo* GetItemByID(std::string id);
+	static ItemInfo* GetItemByID(const std::string& id);
 	static void RegisterItem(ItemInfo* item);
 
 	ItemInfo(std::string itemID, std::vector<std::string> tags, bool stackable, size_t qupyValue, size_t dalfitchDepth) : ItemID(itemID), Tags(tags), Stackable(stackable), QupyValue(qupyValue), DalfitchDepth(dalfitchDepth){};
@@ -55,11 +55,11 @@ struct Inventory {
 
 #pragma region Item handling
 	// Returns whether this inventory contains the given items
-	bool HasItems(std::string itemID, size_t amount) const;
+	bool HasItems(const std::string& itemID, size_t amount) const;
 	// Returns whether this inventory contains the given items
 	bool HasItems(ItemInfo* item, size_t amount) const;
 	// Returns whether this inventory contains the given item
-	bool HasItem(std::string itemID) const;
+	bool HasItem(const std::string& itemID) const;
 	// Returns whether this inventory contains the given item
 	bool HasItem(ItemInfo* item) const;
 
@@ -76,22 +76,22 @@ struct Inventory {
 	// Add the given inventory to this inventory. This will disregard items that exceed the inventories capacity
 	void AddItems(const Inventory& inventory);
 	// Add the given items to this inventory. This will disregard items that exceed the inventories capacity
-	void AddItems(std::string itemID, size_t amount);
+	void AddItems(const std::string& itemID, size_t amount);
 	// Add the given items to this inventory. This will disregard items that exceed the inventories capacity
 	void AddItems(ItemInfo* item, size_t amount);
 	// Add the given items to this inventory. This will disregard items that exceed the inventories capacity
 	void AddItems(const ItemStack& items);
 	// Add the given item to this inventory. This will disregard items that exceed the inventories capacity
-	void AddItem(std::string itemID);
+	void AddItem(const std::string& itemID);
 	// Add the given item to this inventory. This will disregard items that exceed the inventories capacity
 	void AddItem(ItemInfo* item);
 
 	// Attempts to take items from this inventory. This may fail, returning an empty stack.
 	ItemStack TakeItems(ItemInfo* item, size_t amount);
 	// Attempts to take items from this inventory. This may fail, returning an empty stack.
-	ItemStack TakeItems(std::string itemID, size_t amount);
+	ItemStack TakeItems(const std::string& itemID, size_t amount);
 	// Attempts to take an item from this inventory. This may fail, returning an empty stack.
-	ItemStack TakeItem(std::string itemID);
+	ItemStack TakeItem(const std::string& itemID);
 	// Attempts to take an item from this inventory. This may fail, returning an empty stack.
 	ItemStack TakeItem(ItemInfo* item);
 #pragma endregion
