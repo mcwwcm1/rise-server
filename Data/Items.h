@@ -67,6 +67,8 @@ struct Inventory {
 	bool CanHoldInventory(const Inventory& inventory) const;
 	// Returns whether there is enough capacity within this inventory to hold the given item stack
 	bool CanHoldItems(const ItemStack& items) const;
+	// Returns whether there is enough capacity within this inventory to hold the given amount of the given item
+	bool CanHoldItems(const std::string& itemID, size_t amount) const;
 
 	// This will take from the given inventory, transferring to this inventory until it reaches capacity. Returns whether it successfully transferred all items.
 	bool TransferItems(Inventory& inventory);

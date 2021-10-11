@@ -54,7 +54,7 @@ bool Inventory::HasItem(ItemInfo* item) const { return HasItems(item->ItemID, 1)
 
 bool Inventory::CanHoldInventory(const Inventory& inventory) const { return RemainingCapacity() >= inventory.HeldCapacity(); }
 bool Inventory::CanHoldItems(const ItemStack& items) const { return RemainingCapacity() >= items.HeldCapacity(); }
-bool Inventory::CanHoldItems(const ItemStack& items) const { return RemainingCapacity() >= items.HeldCapacity(); }
+bool Inventory::CanHoldItems(const std::string& itemID, size_t amount) const { return RemainingCapacity() >= ItemInfo::GetItemByID(itemID)->DalfitchDepth * amount; }
 
 bool Inventory::TransferItems(Inventory& inventory)
 {
