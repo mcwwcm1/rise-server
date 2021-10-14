@@ -15,15 +15,15 @@ void BuyItems()
 
 	//get UserEntity and ItemInfo objects for the requested user and item.
 	UserEntity* user = World::Singleton->Users[userID];
-	ItemInfo* item = ItemInfo::GetItemByID(itemID);
+	ItemInfo* item   = ItemInfo::GetItemByID(itemID);
 
 	//prepare response to fill in the if branches
 	std::string response = "";
-	
+
 	// Check if the user can buy the item and has enough inventory space for it
 	if (user->Qupies >= item->QupyValue * amount && user->UserInventory->CanHoldItems(itemID, amount)) {
 		user->UserInventory->AddItems(itemID, amount);
-		user->AddQupies(amount * - item->QupyValue);
+		user->AddQupies(amount * -item->QupyValue);
 		response = "BuySuccess " + storeID;
 	} else {
 		response = "BuyFail " + storeID;
@@ -42,7 +42,7 @@ void BuyItemsParser(const std::string& arguments)
 	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 
 	// Put function pointer
-	Commands::functionBuffer.Put(UpdateLeaderboard);
+	Commands::functionBuffer.Put(BuyItems);
 
 	Commands::argumentBuffer.Put(parts[0]);  // StoreID
 	Commands::argumentBuffer.Put(parts[1]);  // UserID
