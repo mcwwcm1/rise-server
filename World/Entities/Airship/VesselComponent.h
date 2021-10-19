@@ -39,14 +39,17 @@ enum class VesselComponentType : uint16_t {
 enum class ComponentColliderType : uint8_t { Box = 0, Sphere = 1, Capsule = 2, Cylinder = 3 };
 
 struct VesselComponentSlotInfo {
-	VesselComponentSlotInfo(const std::string& name, bool required, const std::vector<VesselComponentType>& types)
-			: Name(name), Required(required), AllowedTypes(types)
+	VesselComponentSlotInfo(const std::string& name, bool required, const std::vector<VesselComponentType>& types, const Double3& position, const Quaternion& rotation, const Double3& scale)
+			: Name(name), Required(required), AllowedTypes(types), Position(position), Rotation(rotation), Scale(scale)
 	{
 	}
 
 	const std::string Name;
 	const bool Required;
 	const std::vector<VesselComponentType> AllowedTypes;
+	const Double3 Position;
+	const Quaternion Rotation;
+	const Double3 Scale;
 };
 
 struct VesselComponentColliderInfo {
