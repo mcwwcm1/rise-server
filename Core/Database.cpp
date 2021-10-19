@@ -225,29 +225,76 @@ std::vector<std::string> GetUserCrews(const std::string& userID) {
 
 
 //crew versions of user functions above
-void CreateCrew(const std::string& userID, int qpCount, std::string location)
+void CreateCrew(const std::string& crewID, int qpCount, std::string name)
 {
-	CreatePlayer(userID, qpCount, location);
+	pqxx::work transaction{*dbConn};
+
+	try {
+		//check if the user already exists in the db
+		pqxx::result response = transaction.exec("SELECT * FROM player WHERE userid = " + transaction.quote(crewID) + ";");
+		if (!response.empty()) {
+			return;  //user already exists so we just don't create another entry.
+		}
+
+		//insert user into the DB
+		transaction.exec("INSERT INTO player(userid, qp, location) VALUES(" + transaction.quote(crewID) + ", " + std::to_string(qpCount) + ", '');");
+		transaction.exec("INSERT INTO crewinfo(crewid, name) VALUES(" + transaction.quote(crewID) + ", " + transaction.quote(name) + ");");
+		std::cout << "Created user '" + transaction.quote(crewID) + "'";
+
+		transaction.commit();
+	} catch (const std::exception& exception) {
+		std::cout << "Error while inserting crew into the DB Crew ID: '" << crewID << "' Aborting transaction." << std::endl
+							<< "Exception: " << std::endl
+							<< exception.what() << std::endl;
+		transaction.abort();
+	}
 }
-uint64_t GetCrewQpCount(const std::string& userID)
+
+uint64_t GetCrewQpCount(const std::string& crewID)
 {
-	return GetUserQpCount(userID);
+	return GetUserQpCount(crewID);
 }
-void AlterCrewQpCount(const std::string& userID, int64_t delta)
+
+void AlterCrewQpCount(const std::string& crewID, int64_t delta)
 {
-	AlterUserQpCount(userID, delta);
+	AlterUserQpCount(crewID, delta);
 }
-void AlterCrewInventoryItemCount(const std::string& userID, const std::string& itemLabel, int amount)
+
+void AlterCrewInventoryItemCount(const std::string& crewID, const std::string& itemLabel, int amount)
 {
-	AlterInventoryItemCount(userID, itemLabel, amount);
+	AlterInventoryItemCount(crewID, itemLabel, amount);
 }
-uint64_t GetCrewInventoryItemCount(const std::string& userID, const std::string& itemLabel)
+
+uint64_t GetCrewInventoryItemCount(const std::string& crewID, const std::string& itemLabel)
 {
-	return GetInventoryItemCount(userID, itemLabel);
+	return GetInventoryItemCount(crewID, itemLabel);
 }
-void DeleteCrew(const std::string& userID)
+
+void DeleteCrew(const std::string& crewID)
 {
-	DeletePlayer(userID);
+	DeletePlayer(crewID);
+}
+
+std::string GetCrewName(const std::string& crewID)
+{
+	pqxx::work transaction{*dbConn};
+	pqxx::result response = transaction.exec("SELECT * FROM crewinfo WHERE crewid = " + transaction.quote(crewID) + ";");
+
+	return response.empty() ? "" : response.begin()["name"].c_str();
+}
+
+void SetCrewName(const std::string& crewID, const std::string& newName)
+{
+	pqxx::work transaction{*dbConn};
+	try {
+		transaction.exec("UPDATE crewinfo SET name = " + transaction.quote(newName) + " WHERE crewid = " + transaction.quote(crewID) + ";");
+		transaction.commit();
+	} catch (const std::exception& exception) {
+		std::cout << "Error while setting crew name. Crew ID: '" << crewID << "' Name: '" << newName << "' Aborting transaction." << std::endl
+							<< "Exception: " << std::endl
+							<< exception.what() << std::endl;
+		transaction.abort();
+	}
 }
 
 }  // namespace Database

@@ -48,25 +48,25 @@ std::vector<std::string> GetUserCrews(const std::string& userID);
 
 //this creates a crew. If the crew already exists, it currently exits without creating it or throwing an error.
 //directly aliased to CreatePlayer().
-void CreateCrew(const std::string& userID, int qpCount, std::string location);
+void CreateCrew(const std::string& crewID, int qpCount, std::string name);
 //returns a crew's qp count.
 //directly aliased to GetUserQpCount().
-uint64_t GetCrewQpCount(const std::string& userID);
+uint64_t GetCrewQpCount(const std::string& crewID);
 //alters a crew's qp count. The passed delta is how many qpies to add/subtract from its current balance.
 //Positive values are added, negative ones subtracted.
 //NOTE: This does not do bounds checking. If used incorrectly, this can make a crews's qp count uder- or overflow.
 //directly aliased to AlterUserQpCount().
-void AlterCrewQpCount(const std::string& userID, int64_t delta);
+void AlterCrewQpCount(const std::string& crewID, int64_t delta);
 //Alters how many of a specific item a crew has. If the item does not exist yet, an entry will be created for it with the specified amount.
 //If the item does exist the amount indicates how many of the item to add or remove from a player's inventory.
 //Should this leave the item at an amount of 0 OR LESS, its entry will be removed from the DB.
 //directly aliased to AlterInventoryItemCount().
-void AlterCrewInventoryItemCount(const std::string& userID, const std::string& itemLabel, int amount);
+void AlterCrewInventoryItemCount(const std::string& crewID, const std::string& itemLabel, int amount);
 //retrieves the amount a crew has of an item in their inventory.
 //directly aliased to GetInventoryItemCount().
-uint64_t GetCrewInventoryItemCount(const std::string& userID, const std::string& itemLabel);
+uint64_t GetCrewInventoryItemCount(const std::string& crewID, const std::string& itemLabel);
 //deletes a crew and all associated data from the database.
 //this is irreversible.
 //directly aliased to DeletePlayer().
-void DeleteCrew(const std::string& userID);
+void DeleteCrew(const std::string& crewID);
 }
