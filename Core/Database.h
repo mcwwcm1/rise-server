@@ -47,7 +47,7 @@ std::vector<std::string> GetUserCrews(const std::string& userID);
 //crew versions of user functions above
 
 //this creates a crew. If the crew already exists, it currently exits without creating it or throwing an error.
-//directly aliased to CreatePlayer().
+//Created a crew with the specified ID, amount of QPs and name.
 void CreateCrew(const std::string& crewID, int qpCount, std::string name);
 //returns a crew's qp count.
 //directly aliased to GetUserQpCount().
@@ -69,4 +69,10 @@ uint64_t GetCrewInventoryItemCount(const std::string& crewID, const std::string&
 //this is irreversible.
 //directly aliased to DeletePlayer().
 void DeleteCrew(const std::string& crewID);
+
+//Gets the name of a crew.
+std::string GetCrewName(const std::string& crewID);
+//sets the name of a crew.
+void SetCrewName(const std::string& crewID, const std::string& newName);
+
 }
