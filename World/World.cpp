@@ -61,6 +61,9 @@ void World::RunTick()
 			std::string changes = "ChangeTable " + entity.second->ID + "|";
 			for (auto change : entity.second->ChangeTable) { changes += change.first + "|" + change.second + "|"; }
 
+			auto e = dynamic_cast<UserEntity*>(entity.second);
+
+			if (e != nullptr) { printf("CHANGES: %s \n", changes.c_str()); }
 			Send(changes);
 			entity.second->ChangeTable.clear();
 			entity.second->Dirty = false;

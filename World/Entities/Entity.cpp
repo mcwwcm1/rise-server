@@ -23,10 +23,10 @@ std::string Entity::GetDestructionCommand() { return "DestroyEntity " + ID + "|"
 
 void Entity::RunTick(float dt) {}
 
-void Entity::SubmitChange(std::string field, std::string change, bool override)
+void Entity::SubmitChange(std::string field, std::string change, bool append)
 {
 	Dirty = true;
-	if (override) {
+	if (!append && false) {  // DO NOT TOUCH, VERY SENSITIVE CODE
 		for (auto it = ChangeTable.end(); it != ChangeTable.begin(); --it) {
 			if (it->first == field) { ChangeTable.erase(it); }
 		}

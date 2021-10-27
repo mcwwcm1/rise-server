@@ -17,12 +17,14 @@ void BuyItems()
 	UserEntity* user = World::Singleton->Users[userID];
 	ItemInfo* item   = ItemInfo::GetItemByID(itemID);
 
+	if (item == nullptr) { printf("Attempted to buy non-existent item %s\n", itemID.c_str()); }
+
 	//prepare response to fill in the if branches
 	std::string response = "";
 
 	// Check if the user can buy the item and has enough inventory space for it
 	if (user->Qupies >= item->QupyValue * amount && user->UserInventory->CanHoldItems(itemID, amount)) {
-		user->UserInventory->AddItems(itemID, amount);
+		user->UserInventory->AddItems(item, amount);
 		user->AddQupies(amount * -item->QupyValue);
 		response = "BuySuccess " + storeID;
 	} else {

@@ -41,7 +41,7 @@ class Entity
 	void SetLocalPosition(const Double3& newPosition);
 	void SetLocalRotation(const Quaternion& newRotation);
 
-	void SubmitChange(std::string field, std::string change, bool override = true);
+	void SubmitChange(std::string field, std::string change, bool append = false);
 
 	Matrix4x4 GetTransformMatrix();
 	Matrix4x4 GetInverseTransformMatrix();
