@@ -49,13 +49,11 @@ bool UserEntity::EquipItem(std::string itemID, size_t slotIndex)
 		return false;
 	}
 
-	if (!UserInventory->HasItem(itemID))
-		return false;
+	if (!UserInventory->HasItem(itemID)) return false;
 
 	ItemInfo* item = ItemInfo::GetItemByID(itemID);
 
-	if (item == nullptr)
-		return false;
+	if (item == nullptr) return false;
 
 	EquipmentSlot& slot = EquipmentSlots[slotIndex];
 
@@ -67,12 +65,10 @@ bool UserEntity::EquipItem(std::string itemID, size_t slotIndex)
 				break;
 			}
 		}
-		if (allowed == true)
-			break;
+		if (allowed == true) break;
 	}
 
-	if (!allowed)
-		return false;
+	if (!allowed) return false;
 
 	slot.EquippedItem = itemID;
 	return true;
@@ -80,8 +76,7 @@ bool UserEntity::EquipItem(std::string itemID, size_t slotIndex)
 
 void UserEntity::DequipItem(size_t slotIndex)
 {
-	if (slotIndex + 1 > EquipmentSlots.size())
-		return;
+	if (slotIndex + 1 > EquipmentSlots.size()) return;
 
 	EquipmentSlots[slotIndex].EquippedItem = "";
 }
@@ -89,8 +84,7 @@ void UserEntity::DequipItem(size_t slotIndex)
 bool UserEntity::HasItemEquipped(std::string itemID)
 {
 	for (auto equipment : EquipmentSlots)
-		if (itemID == equipment.EquippedItem)
-			return true;
+		if (itemID == equipment.EquippedItem) return true;
 
 	return false;
 }
@@ -122,12 +116,6 @@ void UserEntity::ResubmitFullInventory()
 
 void UserEntity::SubmitQupies() { SubmitChange("QupyCount", std::to_string(Qupies)); }
 
-void UserEntity::SendClearInventory()
-{
-	SubmitChange("InvClear", "");
-}
+void UserEntity::SendClearInventory() { SubmitChange("InvClear", ""); }
 
-std::string UserEntity::GetCreationCommand()
-{
-	return "RegisterUser " + ID + "|";
-}
+std::string UserEntity::GetCreationCommand() { return "RegisterUser " + ID + "|"; }

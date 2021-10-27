@@ -16,25 +16,19 @@ Entity::Entity(Double3 position, Quaternion rotation)
 
 Entity::~Entity()
 {
-	if (World::Singleton->HasEntity(ID))
-		World::Singleton->UnregisterEntity(this);
+	if (World::Singleton->HasEntity(ID)) World::Singleton->UnregisterEntity(this);
 }
 
-std::string Entity::GetDestructionCommand()
-{
-	return "DestroyEntity " + ID + "|";
-}
+std::string Entity::GetDestructionCommand() { return "DestroyEntity " + ID + "|"; }
 
 void Entity::RunTick(float dt) {}
 
 void Entity::SubmitChange(std::string field, std::string change, bool override)
 {
 	Dirty = true;
-	if (!override) {
+	if (override) {
 		for (auto it = ChangeTable.end(); it != ChangeTable.begin(); --it) {
-			if (it->first == field) {
-				ChangeTable.erase(it);
-			}
+			if (it->first == field) { ChangeTable.erase(it); }
 		}
 	}
 
@@ -53,10 +47,7 @@ void Entity::SetLocalRotation(const Quaternion& newRotation)
 	SubmitChange("Rotation", newRotation.ToString());
 }
 
-Matrix4x4 Entity::GetTransformMatrix()
-{
-	return GetTRSMatrix(Position, Rotation, Double3(1, 1, 1));
-}
+Matrix4x4 Entity::GetTransformMatrix() { return GetTRSMatrix(Position, Rotation, Double3(1, 1, 1)); }
 
 Double3 Entity::LocalPointToGlobal(Double3 point) { return point * GetTransformMatrix(); }
 Quaternion Entity::LocalRotationToGlobal(Quaternion rotation) { return rotation * Rotation; }
