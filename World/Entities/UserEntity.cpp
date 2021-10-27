@@ -21,9 +21,9 @@ UserEntity::UserEntity(std::string userID) : Entity()
 	SendClearInventory();
 
 	UserInventory->AddItem("StarterNet");
-	UserInventory->AddItem("StarterGrapple");
+	//UserInventory->AddItem("StarterGrapple");
 	UserInventory->AddItem("StarterZap");
-	UserInventory->AddItem("FlareLauncher");
+	//UserInventory->AddItem("FlareLauncher");
 
 	// Create equipment slots that accept "Equippable" items
 	EquipmentSlots.reserve(2);
