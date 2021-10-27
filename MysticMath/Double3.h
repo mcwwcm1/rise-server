@@ -29,7 +29,7 @@ struct Double3 {
 	std::string ToString() const;
 
 	// Assignment operator overloads
-	operator btVector3();
+	operator btVector3() const;
 	Double3& operator=(const btVector3& b);
 	Double3& operator+=(const Double3& b);
 	Double3& operator-=(const Double3& b);

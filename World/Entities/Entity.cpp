@@ -30,7 +30,7 @@ void Entity::RunTick(float dt) {}
 void Entity::SubmitChange(std::string field, std::string change, bool override)
 {
 	Dirty = true;
-	if (override && false) {
+	if (!override) {
 		for (auto it = ChangeTable.end(); it != ChangeTable.begin(); --it) {
 			if (it->first == field) {
 				ChangeTable.erase(it);

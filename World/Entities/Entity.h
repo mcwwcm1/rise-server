@@ -19,8 +19,9 @@ class Entity
  public:
 	Entity();
 	Entity(Double3 position, Quaternion rotation);
-
 	virtual ~Entity();
+
+	virtual void OnRegistered() {}
 
 	bool DontSync = false;
 

@@ -20,17 +20,11 @@ Quaternion::Quaternion()
 }
 const Quaternion Quaternion::identity = Quaternion(0, 0, 0, 1);
 
-double Quaternion::MagnitudeSquared() const
-{
-	return x * x + y * y + z * z + w * w;
-}
+double Quaternion::MagnitudeSquared() const { return x * x + y * y + z * z + w * w; }
 
 double Quaternion::Magnitude() const { return sqrt(MagnitudeSquared()); }
 
-Quaternion Quaternion::Conjugate() const
-{
-	return Quaternion(x * -1, y * -1, z * -1, w);
-}
+Quaternion Quaternion::Conjugate() const { return Quaternion(x * -1, y * -1, z * -1, w); }
 
 Quaternion Quaternion::Normalized() const { return *this * Magnitude(); }
 
@@ -88,11 +82,8 @@ Quaternion Quaternion::FromEuler(Double3 euler)
 Quaternion QuaternionFromString(const std::string& s)
 {
 	auto parts = Split(s.substr(1, s.length() - 1), ';');
-	if (parts.size() != 4) {
-		throw std::invalid_argument("Invalid number of parts for quaternion, expected 4");
-	}
-	return Quaternion(
-			stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
+	if (parts.size() != 4) { throw std::invalid_argument("Invalid number of parts for quaternion, expected 4"); }
+	return Quaternion(stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
 }
 
 bool TryQuaternionFromString(const std::string& s, Quaternion& result)
@@ -105,26 +96,15 @@ bool TryQuaternionFromString(const std::string& s, Quaternion& result)
 	}
 }
 
-Quaternion FromToRotation(const Quaternion& a, const Quaternion& b)
-{
-	return a.Conjugate() * b;
-}
+Quaternion FromToRotation(const Quaternion& a, const Quaternion& b) { return a.Conjugate() * b; }
 
 Quaternion FromToRotation(const Double3& a, const Double3& b)
 {
 	Double3 c = Cross(a, b);
-	return Quaternion(
-						 c.x,
-						 c.y,
-						 c.z,
-						 sqrt(a.MagnitudeSquared() * b.MagnitudeSquared()) + Dot(a, b))
-	    .Normalized();
+	return Quaternion(c.x, c.y, c.z, sqrt(a.MagnitudeSquared() * b.MagnitudeSquared()) + Dot(a, b)).Normalized();
 }
 
-Quaternion::operator btQuaternion()
-{
-	return btQuaternion(x, y, z, w);
-}
+Quaternion::operator btQuaternion() const { return btQuaternion(x, y, z, w); }
 
 Quaternion& Quaternion::operator=(const btQuaternion& b)
 {
@@ -159,15 +139,9 @@ Quaternion& Quaternion::operator*=(double b)
 	return *this;
 }
 
-Quaternion operator+(const Quaternion& a, const Quaternion& b)
-{
-	return Quaternion(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
-}
+Quaternion operator+(const Quaternion& a, const Quaternion& b) { return Quaternion(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w); }
 
-Quaternion operator-(const Quaternion& a, const Quaternion& b)
-{
-	return Quaternion(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
-}
+Quaternion operator-(const Quaternion& a, const Quaternion& b) { return Quaternion(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w); }
 
 Quaternion operator*(const Quaternion& a, const Quaternion& b)
 {
@@ -184,7 +158,4 @@ Double3 operator*(const Double3& a, const Quaternion& b)
 	return Double3(r.x, r.y, r.z);
 }
 
-Quaternion operator*(const Quaternion& a, double b)
-{
-	return Quaternion(a.x * b, a.y * b, a.z * b, a.w * b);
-}
+Quaternion operator*(const Quaternion& a, double b) { return Quaternion(a.x * b, a.y * b, a.z * b, a.w * b); }
