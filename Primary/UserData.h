@@ -58,8 +58,7 @@ void SellItems()
 
 	auto userPair = World::Singleton->Users.find(userID);
 
-	if (userPair == World::Singleton->Users.end())
-		return;
+	if (userPair == World::Singleton->Users.end()) return;
 
 	UserEntity* user = userPair->second;
 
@@ -99,11 +98,12 @@ void UserSpawned()
 
 void UserSpawnedParser(const std::string& arguments)
 {
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
 	// Put function pointer
 	Commands::functionBuffer.Put(UserSpawned);
 
 	// Put arguments
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 	Commands::argumentBuffer.Put(arguments);
 }
 
@@ -131,11 +131,12 @@ void EquipItemParser(const std::string& arguments)
 
 	size_t slotIndex = stoull(parts[2]);
 
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
 	// Put function pointer
 	Commands::functionBuffer.Put(EquipItem);
 
 	// Put arguments
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 	Commands::argumentBuffer.Put(parts[0]);  // UserID
 	Commands::argumentBuffer.Put(parts[1]);  // ItemID
 	Commands::argumentBuffer.Put(slotIndex);
@@ -160,11 +161,12 @@ void DequipItemParser(const std::string& arguments)
 
 	size_t slotIndex = stoull(parts[1]);
 
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
 	// Put function pointer
 	Commands::functionBuffer.Put(DequipItem);
 
 	// Put arguments
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 	Commands::argumentBuffer.Put(parts[0]);  // UserID
 	Commands::argumentBuffer.Put(slotIndex);
 }
@@ -180,11 +182,12 @@ void RequestInventory()
 
 void RequestInventoryParser(const std::string& arguments)
 {
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
 	// Put function pointer
 	Commands::functionBuffer.Put(RequestInventory);
 
 	// Put arguments
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 	Commands::argumentBuffer.Put(arguments);  // UserID
 }
 
@@ -200,10 +203,11 @@ void RequestUserData()
 
 void RequestUserDataParser(const std::string& arguments)
 {
+	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
+
 	// Put function pointer
 	Commands::functionBuffer.Put(RequestUserData);
 
 	// Put arguments
-	std::lock_guard<std::mutex> lock(Commands::bufferAccessMutex);
 	Commands::argumentBuffer.Put(arguments);  // UserID
 }
