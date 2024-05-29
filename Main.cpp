@@ -37,7 +37,7 @@ using tcp           = boost::asio::ip::tcp;
 #include "Primary/Leaderboards.h"
 #include "Primary/BuyItems.h"
 
-// Include dumb shit
+// Include extras
 #include "Data/Items.h"
 #include "World/Entities/Airship/VesselComponent.h"
 
